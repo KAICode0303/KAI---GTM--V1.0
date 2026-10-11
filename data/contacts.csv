@@ -1,0 +1,110 @@
+contact_id,account_id,contact_name,title,email,is_primary,contact_status
+CON-3001,ACC-101,Tomas Zielinski,VP of AI Research,tomas.zielinski@deepcurrentlabs.example.com,True,Contacted
+CON-3002,ACC-101,Mateo Ekström,VP of AI Research,mateo.ekstrm@deepcurrentlabs.example.com,False,Meeting held
+CON-3003,ACC-102,Aiko Castillo,Head of ML Platform,aiko.castillo@tesseracloud.example.com,True,Contacted
+CON-3004,ACC-102,Zara Quinn,Head of ML Platform,zara.quinn@tesseracloud.example.com,False,Contacted
+CON-3005,ACC-103,Ingrid Rossi,Head of Perception Data,ingrid.rossi@tarnwickmotors.example.com,True,Replied
+CON-3006,ACC-103,Omar Vargas,Director of Simulation,omar.vargas@tarnwickmotors.example.com,False,Contacted
+CON-3007,ACC-104,Elena Rossi,VP of AI Transformation,elena.rossi@pinecrestinsurance.example.com,True,Replied
+CON-3008,ACC-104,Leila Petrov,Chief Data Officer,leila.petrov@pinecrestinsurance.example.com,False,Meeting held
+CON-3009,ACC-105,Noah Quinn,Chief AI Officer,noah.quinn@ledgerly.example.com,True,Not contacted
+CON-3010,ACC-105,Felix Moreau,Head of Risk Models,felix.moreau@ledgerly.example.com,False,Not contacted
+CON-3011,ACC-106,Hana Rossi,Head of Risk Models,hana.rossi@moneyloom.example.com,True,Not contacted
+CON-3012,ACC-106,Mateo Castillo,Head of Risk Models,mateo.castillo@moneyloom.example.com,False,Not contacted
+CON-3013,ACC-107,Zara Nakamura,Chief Data Officer,zara.nakamura@cobaltretailgroup.example.com,True,Meeting held
+CON-3014,ACC-107,Sofia Hayashi,VP of AI Transformation,sofia.hayashi@cobaltretailgroup.example.com,False,Meeting held
+CON-3015,ACC-108,Chloe Nakamura,Head of Data / Research Ops,chloe.nakamura@neurovaneai.example.com,True,Meeting held
+CON-3016,ACC-109,Chloe Dhillon,VP of AI Research,chloe.dhillon@quantaralabs.example.com,True,Contacted
+CON-3017,ACC-109,Ethan Tanaka,Head of Data / Research Ops,ethan.tanaka@quantaralabs.example.com,False,Replied
+CON-3018,ACC-110,Aiko Yilmaz,Chief AI Officer,aiko.yilmaz@quickpaynova.example.com,True,Not contacted
+CON-3019,ACC-111,Amara Ekström,Director of Simulation,amara.ekstrm@driveonautonomy.example.com,True,Contacted
+CON-3020,ACC-112,Tomas Jensen,Head of Robotics Data,tomas.jensen@kinetiqrobotics.example.com,True,Replied
+CON-3021,ACC-113,Diego Hayashi,VP of AI Research,diego.hayashi@axiomcognition.example.com,True,Meeting held
+CON-3022,ACC-113,Noah Petrov,Head of Data / Research Ops,noah.petrov@axiomcognition.example.com,False,Replied
+CON-3023,ACC-114,Amara Whitfield,Head of ML Platform,amara.whitfield@stackhaven.example.com,True,Meeting held
+CON-3024,ACC-114,Maya Moreau,Head of ML Platform,maya.moreau@stackhaven.example.com,False,Contacted
+CON-3025,ACC-115,Amara Underhill,VP of Autonomy,amara.underhill@tinkerliftrobotics.example.com,True,Contacted
+CON-3026,ACC-115,Ingrid Gomez,Head of Robotics Data,ingrid.gomez@tinkerliftrobotics.example.com,False,Contacted
+CON-3027,ACC-116,Nina Zielinski,Chief Data Officer,nina.zielinski@redwoodmanufacturing.example.com,True,Replied
+CON-3028,ACC-116,Kenji Kowalski,VP of AI Transformation,kenji.kowalski@redwoodmanufacturing.example.com,False,Contacted
+CON-3029,ACC-117,Rania Gomez,Chief AI Officer,rania.gomez@vaultwise.example.com,True,Not contacted
+CON-3030,ACC-118,Lucas Ekström,Head of Risk Models,lucas.ekstrm@payvista.example.com,True,Not contacted
+CON-3031,ACC-119,Hana Dhillon,Chief Data Officer,hana.dhillon@evergreenhealthnetwork.example.com,True,Meeting held
+CON-3032,ACC-119,Ethan Rossi,Chief Data Officer,ethan.rossi@evergreenhealthnetwork.example.com,False,Contacted
+CON-3033,ACC-120,Nina Vargas,Director of Simulation,nina.vargas@trackwiseautonomy.example.com,True,Not contacted
+CON-3034,ACC-120,Noah Gomez,Director of Simulation,noah.gomez@trackwiseautonomy.example.com,False,Replied
+CON-3035,ACC-121,Aiko Quinn,Head of Robotics Data,aiko.quinn@stridewellmachines.example.com,True,Replied
+CON-3036,ACC-122,Tomas Gomez,Head of ML Platform,tomas.gomez@fernhollowapps.example.com,True,Not contacted
+CON-3037,ACC-122,Mateo Dhillon,VP of Engineering,mateo.dhillon@fernhollowapps.example.com,False,Not contacted
+CON-3038,ACC-123,Felix Quinn,VP of Engineering,felix.quinn@cloudweavetechnologies.example.com,True,Meeting held
+CON-3039,ACC-123,Elena Gomez,VP of Engineering,elena.gomez@cloudweavetechnologies.example.com,False,Not contacted
+CON-3040,ACC-124,Kenji Fischer,Head of Perception Data,kenji.fischer@pilotlinevehicles.example.com,True,Replied
+CON-3041,ACC-125,Noah Sato,VP of Engineering,noah.sato@gridlinedigital.example.com,True,Not contacted
+CON-3042,ACC-125,Elena Vargas,Head of ML Platform,elena.vargas@gridlinedigital.example.com,False,Not contacted
+CON-3043,ACC-126,Chloe Moreau,Head of ML Platform,chloe.moreau@brightpathsoftware.example.com,True,Meeting held
+CON-3044,ACC-127,Ingrid Lindqvist,Head of ML Platform,ingrid.lindqvist@nimbusforge.example.com,True,Meeting held
+CON-3045,ACC-127,Amara Tanaka,Head of ML Platform,amara.tanaka@nimbusforge.example.com,False,Not contacted
+CON-3046,ACC-128,Aiko Brooks,Head of Data / Research Ops,aiko.brooks@synthwaveresearch.example.com,True,Contacted
+CON-3047,ACC-128,Kenji Nakamura,VP of AI Research,kenji.nakamura@synthwaveresearch.example.com,False,Replied
+CON-3048,ACC-129,Diego Moreau,Head of Data / Research Ops,diego.moreau@novaformlabs.example.com,True,Contacted
+CON-3049,ACC-129,Felix Fischer,Head of Data / Research Ops,felix.fischer@novaformlabs.example.com,False,Not contacted
+CON-3050,ACC-130,Priya Zielinski,VP of Autonomy,priya.zielinski@gearbloomrobotics.example.com,True,Meeting held
+CON-3051,ACC-130,Leila Tanaka,Head of Robotics Data,leila.tanaka@gearbloomrobotics.example.com,False,Replied
+CON-3052,ACC-131,Sofia Dhillon,Head of Robotics Data,sofia.dhillon@handsfreeautomation.example.com,True,Contacted
+CON-3053,ACC-131,Hana Ekström,VP of Autonomy,hana.ekstrm@handsfreeautomation.example.com,False,Replied
+CON-3054,ACC-132,Rania Fischer,VP of Engineering,rania.fischer@pixelforgesystems.example.com,True,Meeting held
+CON-3055,ACC-132,Amara Xu,VP of Engineering,amara.xu@pixelforgesystems.example.com,False,Not contacted
+CON-3056,ACC-133,Omar Petrov,Head of ML Platform,omar.petrov@fluxnotetechnologies.example.com,True,Not contacted
+CON-3057,ACC-133,Maya Lindqvist,VP of Engineering,maya.lindqvist@fluxnotetechnologies.example.com,False,Contacted
+CON-3058,ACC-134,Chloe Gomez,VP of Autonomy,chloe.gomez@mechanovarobotics.example.com,True,Meeting held
+CON-3059,ACC-134,Leila Fischer,Head of Robotics Data,leila.fischer@mechanovarobotics.example.com,False,Meeting held
+CON-3060,ACC-135,Mateo Underhill,Chief AI Officer,mateo.underhill@banklyorbit.example.com,True,Contacted
+CON-3061,ACC-135,Aiko Dhillon,Chief AI Officer,aiko.dhillon@banklyorbit.example.com,False,Not contacted
+CON-3062,ACC-136,Felix Dhillon,Head of Risk Models,felix.dhillon@coinhavenfinance.example.com,True,Contacted
+CON-3063,ACC-137,Zara Moreau,Director of Simulation,zara.moreau@lanewiseav.example.com,True,Not contacted
+CON-3064,ACC-137,Nina Moreau,Head of Perception Data,nina.moreau@lanewiseav.example.com,False,Not contacted
+CON-3065,ACC-138,Sofia Ibrahim,VP of Autonomy,sofia.ibrahim@atlasdynamo.example.com,True,Replied
+CON-3066,ACC-138,Arjun Rossi,VP of Autonomy,arjun.rossi@atlasdynamo.example.com,False,Not contacted
+CON-3067,ACC-139,Zara Zielinski,Director of Simulation,zara.zielinski@autopathmobility.example.com,True,Not contacted
+CON-3068,ACC-139,Arjun Tanaka,Head of Perception Data,arjun.tanaka@autopathmobility.example.com,False,Meeting held
+CON-3069,ACC-140,Hana Petrov,VP of AI Transformation,hana.petrov@harborviewholdings.example.com,True,Contacted
+CON-3070,ACC-141,Felix Brooks,Director of Simulation,felix.brooks@skyroadmobility.example.com,True,Meeting held
+CON-3071,ACC-141,Mateo Nakamura,Director of Simulation,mateo.nakamura@skyroadmobility.example.com,False,Meeting held
+CON-3072,ACC-142,Omar Lindqvist,Head of ML Platform,omar.lindqvist@orbitlyplatforms.example.com,True,Replied
+CON-3073,ACC-142,Sofia Rossi,Head of ML Platform,sofia.rossi@orbitlyplatforms.example.com,False,Replied
+CON-3074,ACC-143,Maya Yilmaz,Chief Data Officer,maya.yilmaz@ironbridgeindustries.example.com,True,Contacted
+CON-3075,ACC-144,Liam Underhill,Head of Data / Research Ops,liam.underhill@cortexalabs.example.com,True,Contacted
+CON-3076,ACC-144,Ethan Yilmaz,VP of AI Research,ethan.yilmaz@cortexalabs.example.com,False,Not contacted
+CON-3077,ACC-145,Callum Moreau,VP of AI Transformation,callum.moreau@meridianlogistics.example.com,True,Not contacted
+CON-3078,ACC-145,Leila Xu,VP of AI Transformation,leila.xu@meridianlogistics.example.com,False,Not contacted
+CON-3079,ACC-146,Ethan Xu,Head of Data / Research Ops,ethan.xu@lumenmindai.example.com,True,Meeting held
+CON-3080,ACC-147,Rania Hayashi,Chief AI Officer,rania.hayashi@trustleafcapital.example.com,True,Not contacted
+CON-3081,ACC-147,Ingrid Dhillon,Chief AI Officer,ingrid.dhillon@trustleafcapital.example.com,False,Contacted
+CON-3082,ACC-148,Felix Whitfield,VP of AI Transformation,felix.whitfield@summitridgegroup.example.com,True,Not contacted
+CON-3083,ACC-149,Felix Nakamura,VP of AI Research,felix.nakamura@parallaxintelligence.example.com,True,Meeting held
+CON-3084,ACC-150,Amara Brooks,Head of Robotics Data,amara.brooks@roverlysystems.example.com,True,Replied
+CON-3085,ACC-151,Elena Dhillon,Head of Data / Research Ops,elena.dhillon@helixmindlabs.example.com,True,Replied
+CON-3086,ACC-151,Zara Ekström,VP of AI Research,zara.ekstrm@helixmindlabs.example.com,False,Meeting held
+CON-3087,ACC-152,Sofia Underhill,VP of AI Research,sofia.underhill@auroracognition.example.com,True,Meeting held
+CON-3088,ACC-152,Diego Yilmaz,Head of Data / Research Ops,diego.yilmaz@auroracognition.example.com,False,Replied
+CON-3089,ACC-153,Elena Hayashi,Head of ML Platform,elena.hayashi@brightloopapps.example.com,True,Meeting held
+CON-3090,ACC-153,Omar Zielinski,Head of ML Platform,omar.zielinski@brightloopapps.example.com,False,Replied
+CON-3091,ACC-154,Felix Vargas,VP of Engineering,felix.vargas@nexoraplatforms.example.com,True,Contacted
+CON-3092,ACC-154,Nina Ibrahim,VP of Engineering,nina.ibrahim@nexoraplatforms.example.com,False,Contacted
+CON-3093,ACC-155,Ingrid Underhill,VP of Engineering,ingrid.underhill@softwavestudio.example.com,True,Contacted
+CON-3094,ACC-156,Liam Alder,VP of Autonomy,liam.alder@pivotalarmsrobotics.example.com,True,Replied
+CON-3095,ACC-156,Sofia Nakamura,Head of Robotics Data,sofia.nakamura@pivotalarmsrobotics.example.com,False,Not contacted
+CON-3096,ACC-157,Lucas Rossi,Head of Robotics Data,lucas.rossi@walkaboutmachines.example.com,True,Replied
+CON-3097,ACC-158,Rania Castillo,Head of Perception Data,rania.castillo@crestlineautonomy.example.com,True,Contacted
+CON-3098,ACC-159,Lucas Underhill,Head of Perception Data,lucas.underhill@roadsproutav.example.com,True,Replied
+CON-3099,ACC-159,Mateo Petrov,Director of Simulation,mateo.petrov@roadsproutav.example.com,False,Contacted
+CON-3100,ACC-160,Chloe Petrov,Chief Data Officer,chloe.petrov@blueharborenergy.example.com,True,Contacted
+CON-3101,ACC-160,Noah Okafor,Chief Data Officer,noah.okafor@blueharborenergy.example.com,False,Meeting held
+CON-3102,ACC-161,Callum Ibrahim,VP of AI Transformation,callum.ibrahim@alderwoodretail.example.com,True,Meeting held
+CON-3103,ACC-161,Gabriel Ekström,VP of AI Transformation,gabriel.ekstrm@alderwoodretail.example.com,False,Contacted
+CON-3104,ACC-162,Felix Kowalski,Head of Risk Models,felix.kowalski@pennyorbit.example.com,True,Replied
+CON-3105,ACC-162,Arjun Yilmaz,Head of Risk Models,arjun.yilmaz@pennyorbit.example.com,False,Meeting held
+CON-3106,ACC-163,Diego Sato,Chief AI Officer,diego.sato@safeledgerpay.example.com,True,Not contacted
+CON-3107,ACC-163,Zara Kowalski,Head of Risk Models,zara.kowalski@safeledgerpay.example.com,False,Not contacted
+CON-3108,ACC-164,Leila Sato,Head of Risk Models,leila.sato@clearpathlending.example.com,True,Meeting held
+CON-3109,ACC-164,Tomas Okafor,Chief AI Officer,tomas.okafor@clearpathlending.example.com,False,Not contacted

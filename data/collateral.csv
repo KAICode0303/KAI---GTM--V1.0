@@ -1,0 +1,55 @@
+item_id,title,content_type,owner,account_id,opportunity_id,customer_segment,status,approval_stage,priority,due_date,completed_date,effort_hours,next_action
+COL-001,Capability Deck - AI Labs,Capability Deck,Ryan,,,AI Labs,Drafting,Draft,Medium,2026-10-15,,6,Complete first draft
+COL-002,Capability Deck - Product and Technology Companies,Capability Deck,Sara,,,Product and Technology Companies,Delivered,Approved,Medium,2026-09-22,2026-09-18,2,Collect feedback
+COL-003,Capability Deck - Robotics and Physical AI Companies,Capability Deck,Emma,,,Robotics and Physical AI Companies,In Review,Manager Review,Medium,2026-11-01,,24,Address review comments
+COL-004,Capability Deck - Autonomous Vehicle Companies,Capability Deck,Ryan,,,Autonomous Vehicle Companies,Delivered,Approved,Medium,2026-08-26,2026-08-20,2,Collect feedback
+COL-005,Capability Deck - Enterprises,Capability Deck,Ryan,,,Enterprises,Delivered,Approved,Medium,2026-08-29,2026-09-01,2,Collect feedback
+COL-006,Capability Deck - Fintech Companies,Capability Deck,Sara,,,Fintech Companies,Approved,Approved,Medium,2026-08-25,2026-08-28,12,Send to client
+COL-007,Case Study - Egocentric data program,Case Study,Alex,,,AI Labs,Not Started,Draft,Medium,2026-11-11,,12,Kick off draft
+COL-008,Case Study - RLHF quality uplift,Case Study,Alex,,,Product and Technology Companies,Delivered,Approved,Medium,2026-09-03,2026-09-05,16,Collect feedback
+COL-009,Case Study - Model evaluation suite,Case Study,Emma,,,Robotics and Physical AI Companies,Not Started,Draft,Medium,2026-11-17,,6,Kick off draft
+COL-010,Case Study - Multimodal data pipeline,Case Study,Alex,,,Enterprises,In Review,Manager Review,Medium,2026-09-21,,6,Address review comments
+COL-011,Case Study - Managed annotation team,Case Study,Sara,,,Product and Technology Companies,Drafting,Draft,Medium,2026-11-30,,16,Complete first draft
+COL-012,Case Study - AV edge-case labeling,Case Study,Jon,,,Enterprises,Approved,Approved,Medium,2026-09-14,2026-09-16,8,Send to client
+COL-013,Case Study - Fintech model audit,Case Study,Sara,,,Robotics and Physical AI Companies,Not Started,Draft,Medium,2026-12-06,,4,Kick off draft
+COL-014,Case Study - Enterprise AI roadmap,Case Study,Ryan,,,Robotics and Physical AI Companies,Drafting,Draft,Medium,2026-09-26,,4,Complete first draft
+COL-015,One-Pager - AI Training Data Collection,One-Pager,Emma,,,Enterprises,Drafting,Draft,Low,2026-11-23,,2,Complete first draft
+COL-016,One-Pager - Annotation and Labeling,One-Pager,Jon,,,Product and Technology Companies,Drafting,Draft,Low,2026-11-10,,16,Complete first draft
+COL-017,One-Pager - Model Evaluation and Benchmarking,One-Pager,Sara,,,Robotics and Physical AI Companies,Approved,Approved,Low,2026-09-09,2026-09-07,16,Send to client
+COL-018,One-Pager - RLHF and Human-in-the-Loop,One-Pager,Emma,,,Robotics and Physical AI Companies,Delivered,Approved,Low,2026-09-14,2026-09-08,6,Collect feedback
+COL-019,One-Pager - Robotics and Egocentric Data,One-Pager,Emma,,,Autonomous Vehicle Companies,Not Started,Draft,Low,2026-10-14,,6,Kick off draft
+COL-020,One-Pager - Managed AI Programs,One-Pager,Jon,,,Autonomous Vehicle Companies,Delivered,Approved,Low,2026-08-29,2026-08-25,12,Collect feedback
+COL-021,Proposal - Deepcurrent Labs,Proposal,Ryan,ACC-101,OPP-1001,AI Labs,Not Started,Draft,Medium,2026-11-19,,4,Kick off draft
+COL-022,Pitch Deck - Deepcurrent Labs,Pitch Deck,Ryan,ACC-101,OPP-1001,AI Labs,Delivered,Approved,Medium,2026-08-31,2026-09-01,8,Collect feedback
+COL-023,Pitch Deck - Tarnwick Motors,Pitch Deck,Jon,ACC-103,OPP-1003,Autonomous Vehicle Companies,Delivered,Approved,Medium,2026-09-16,2026-09-10,12,Collect feedback
+COL-024,Proposal - Pinecrest Insurance,Proposal,Emma,ACC-104,OPP-1004,Enterprises,Drafting,Draft,High,2026-10-27,,12,Complete first draft
+COL-025,Pitch Deck - Neurovane AI,Pitch Deck,Sara,ACC-108,OPP-1008,AI Labs,In Review,Manager Review,Medium,2026-10-16,,4,Address review comments
+COL-026,Proposal - Quantara Labs,Proposal,Ryan,ACC-109,OPP-1009,AI Labs,Drafting,Draft,High,2026-10-14,,24,Complete first draft
+COL-027,Proposal - Quickpay Nova,Proposal,Emma,ACC-110,OPP-1010,Fintech Companies,Not Started,Draft,High,2026-10-27,,4,Kick off draft
+COL-028,Proposal - Axiom Cognition,Proposal,Emma,ACC-113,OPP-1013,AI Labs,Delivered,Approved,High,2026-09-25,2026-09-23,16,Collect feedback
+COL-029,Proposal - Vaultwise,Proposal,Sara,ACC-117,OPP-1017,Fintech Companies,Delivered,Approved,High,2026-09-19,2026-09-19,24,Collect feedback
+COL-030,Pitch Deck - Vaultwise,Pitch Deck,Sara,ACC-117,OPP-1017,Fintech Companies,Delivered,Approved,Medium,2026-09-09,2026-09-12,2,Collect feedback
+COL-031,Proposal - Evergreen Health Network,Proposal,Alex,ACC-119,OPP-1019,Enterprises,Drafting,Draft,High,2026-09-24,,6,Complete first draft
+COL-032,Proposal - Fernhollow Apps,Proposal,Sara,ACC-122,OPP-1022,Product and Technology Companies,Approved,Approved,Medium,2026-09-24,2026-09-19,12,Send to client
+COL-033,Pitch Deck - Brightpath Software,Pitch Deck,Ryan,ACC-126,OPP-1026,Product and Technology Companies,Not Started,Draft,Medium,2026-11-23,,4,Kick off draft
+COL-034,Proposal - Mechanova Robotics,Proposal,Alex,ACC-134,OPP-1034,Robotics and Physical AI Companies,Not Started,Draft,Medium,2026-11-20,,8,Kick off draft
+COL-035,Proposal - Bankly Orbit,Proposal,Alex,ACC-135,OPP-1035,Fintech Companies,Drafting,Draft,High,2026-10-22,,12,Complete first draft
+COL-036,Pitch Deck - Atlas Dynamo,Pitch Deck,Jon,ACC-138,OPP-1038,Robotics and Physical AI Companies,In Review,Legal Review,Medium,2026-10-01,,12,Address review comments
+COL-037,Proposal - Autopath Mobility,Proposal,Jon,ACC-139,OPP-1039,Autonomous Vehicle Companies,Drafting,Draft,High,2026-11-15,,16,Complete first draft
+COL-038,Proposal - Orbitly Platforms,Proposal,Jon,ACC-142,OPP-1042,Product and Technology Companies,Not Started,Draft,Medium,2026-11-16,,4,Kick off draft
+COL-039,Proposal - Summit Ridge Group,Proposal,Jon,ACC-148,OPP-1048,Enterprises,Drafting,Draft,High,2026-09-26,,4,Complete first draft
+COL-040,Proposal - Roverly Systems,Proposal,Jon,ACC-150,OPP-1050,Robotics and Physical AI Companies,In Review,Manager Review,Medium,2026-10-02,,24,Address review comments
+COL-041,RFP Response - Ironbridge Industries,RFP Response,Sara,ACC-143,,Enterprises,Drafting,Draft,High,2026-11-01,,8,Complete first draft
+COL-042,RFP Response - Vaultwise,RFP Response,Sara,ACC-117,,Fintech Companies,Drafting,Draft,High,2026-10-31,,24,Complete first draft
+COL-043,RFP Response - Harborview Holdings,RFP Response,Emma,ACC-140,,Enterprises,Not Started,Draft,High,2026-12-06,,16,Kick off draft
+COL-044,Email Campaign - Enterprises Q4 outreach,Email Campaign,Sara,,,Enterprises,Drafting,Draft,Medium,2026-09-30,,12,Complete first draft
+COL-045,Email Campaign - AI Labs Q4 outreach,Email Campaign,Emma,,,AI Labs,In Review,Manager Review,Medium,2026-10-20,,8,Address review comments
+COL-046,Email Campaign - Autonomous Vehicle Companies Q4 outreach,Email Campaign,Alex,,,Autonomous Vehicle Companies,Drafting,Draft,Medium,2026-09-28,,6,Complete first draft
+COL-047,Email Campaign - Robotics and Physical AI Companies Q4 outreach,Email Campaign,Ryan,,,Robotics and Physical AI Companies,In Review,Manager Review,Medium,2026-08-25,,12,Address review comments
+COL-048,Email Campaign - Product and Technology Companies Q4 outreach,Email Campaign,Alex,,,Product and Technology Companies,Drafting,Draft,Medium,2026-10-17,,12,Complete first draft
+COL-049,LinkedIn Post Series - Physical AI data quality,LinkedIn Content,Sara,,,Enterprises,Drafting,Draft,Low,2026-12-01,,12,Complete first draft
+COL-050,LinkedIn Post Series - Why human experts matter,LinkedIn Content,Emma,,,Product and Technology Companies,Not Started,Draft,Low,2026-11-29,,12,Kick off draft
+COL-051,LinkedIn Post Series - Evaluation beyond benchmarks,LinkedIn Content,Sara,,,Product and Technology Companies,Approved,Approved,Low,2026-09-07,2026-09-07,6,Send to client
+COL-052,LinkedIn Post Series - Behind the scenes: managed programs,LinkedIn Content,Emma,,,Enterprises,Drafting,Draft,Low,2026-11-03,,4,Complete first draft
+COL-053,LinkedIn Post Series - Customer story spotlight,LinkedIn Content,Ryan,,,Fintech Companies,In Review,Manager Review,Low,2026-11-08,,2,Address review comments
+COL-054,LinkedIn Post Series - Hiring and expert network,LinkedIn Content,Ryan,,,Enterprises,In Review,Manager Review,Low,2026-10-17,,6,Address review comments

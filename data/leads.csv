@@ -1,0 +1,301 @@
+lead_id,account_id,contact_id,lead_source,created_date,owner,qualification_status,qualified_date,meeting_booked_date,meeting_held_date,opportunity_id,disqualification_reason
+LEAD-2001,ACC-101,CON-3001,Outbound SDR,2026-08-10,Ryan,Qualified,2026-08-21,2026-08-28,2026-09-02,OPP-1001,
+LEAD-2002,ACC-102,CON-3003,Outbound SDR,2026-05-18,Emma,Qualified,2026-05-22,2026-05-26,2026-06-02,OPP-1002,
+LEAD-2003,ACC-103,CON-3005,Referral,2026-03-20,Jon,Qualified,2026-03-27,2026-03-30,2026-04-06,OPP-1003,
+LEAD-2004,ACC-104,CON-3007,Referral,2026-04-07,Emma,Qualified,2026-04-17,2026-04-21,2026-04-27,OPP-1004,
+LEAD-2005,ACC-105,CON-3009,Partner,2026-06-16,Emma,Qualified,2026-06-24,2026-06-26,2026-07-03,OPP-1005,
+LEAD-2006,ACC-106,CON-3011,Referral,2026-02-25,Ryan,Qualified,2026-03-04,2026-03-05,2026-03-10,OPP-1006,
+LEAD-2007,ACC-107,CON-3013,Referral,2026-08-20,Ryan,Qualified,2026-08-28,2026-09-03,2026-09-11,OPP-1007,
+LEAD-2008,ACC-108,CON-3015,Conference,2026-04-13,Sara,Qualified,2026-04-17,2026-04-22,2026-04-30,OPP-1008,
+LEAD-2009,ACC-109,CON-3016,Conference,2026-04-15,Ryan,Qualified,2026-04-24,2026-04-27,2026-05-01,OPP-1009,
+LEAD-2010,ACC-110,CON-3018,LinkedIn Outreach,2026-07-01,Emma,Qualified,2026-07-03,2026-07-08,2026-07-13,OPP-1010,
+LEAD-2011,ACC-111,CON-3019,Outbound SDR,2026-03-09,Sara,Qualified,2026-03-17,2026-03-23,2026-03-25,OPP-1011,
+LEAD-2012,ACC-112,CON-3020,Outbound SDR,2026-05-12,Jon,Qualified,2026-05-15,2026-05-19,2026-05-22,OPP-1012,
+LEAD-2013,ACC-113,CON-3021,Inbound Website,2026-08-07,Emma,Qualified,2026-08-20,2026-08-21,2026-08-26,OPP-1013,
+LEAD-2014,ACC-114,CON-3023,LinkedIn Outreach,2026-07-31,Alex,Qualified,2026-08-07,2026-08-14,2026-08-21,OPP-1014,
+LEAD-2015,ACC-115,CON-3025,Outbound SDR,2026-04-20,Jon,Qualified,2026-04-27,2026-05-01,2026-05-11,OPP-1015,
+LEAD-2016,ACC-116,CON-3027,Referral,2026-04-10,Emma,Qualified,2026-04-20,2026-04-24,2026-05-04,OPP-1016,
+LEAD-2017,ACC-117,CON-3029,LinkedIn Outreach,2026-07-22,Sara,Qualified,2026-08-03,2026-08-07,2026-08-10,OPP-1017,
+LEAD-2018,ACC-118,CON-3030,Inbound Website,2026-07-27,Alex,Qualified,2026-08-06,2026-08-10,2026-08-13,OPP-1018,
+LEAD-2019,ACC-119,CON-3031,LinkedIn Outreach,2026-04-24,Alex,Qualified,2026-04-29,2026-05-06,2026-05-08,OPP-1019,
+LEAD-2020,ACC-120,CON-3033,Partner,2026-02-09,Emma,Qualified,2026-02-13,2026-02-20,2026-02-27,OPP-1020,
+LEAD-2021,ACC-121,CON-3035,LinkedIn Outreach,2026-02-26,Ryan,Qualified,2026-03-06,2026-03-09,2026-03-16,OPP-1021,
+LEAD-2022,ACC-122,CON-3036,Referral,2026-06-26,Sara,Qualified,2026-07-03,2026-07-07,2026-07-09,OPP-1022,
+LEAD-2023,ACC-123,CON-3038,Outbound SDR,2026-03-24,Jon,Qualified,2026-04-02,2026-04-03,2026-04-07,OPP-1023,
+LEAD-2024,ACC-124,CON-3040,Outbound SDR,2026-05-08,Sara,Qualified,2026-05-14,2026-05-15,2026-05-22,OPP-1024,
+LEAD-2025,ACC-125,CON-3041,Inbound Website,2026-03-04,Emma,Qualified,2026-03-13,2026-03-20,2026-03-25,OPP-1025,
+LEAD-2026,ACC-126,CON-3043,Outbound SDR,2026-07-09,Ryan,Qualified,2026-07-17,2026-07-20,2026-07-24,OPP-1026,
+LEAD-2027,ACC-127,CON-3044,LinkedIn Outreach,2026-04-22,Ryan,Qualified,2026-04-28,2026-05-05,2026-05-14,OPP-1027,
+LEAD-2028,ACC-128,CON-3046,LinkedIn Outreach,2026-05-27,Alex,Qualified,2026-06-01,2026-06-05,2026-06-10,OPP-1028,
+LEAD-2029,ACC-129,CON-3048,Referral,2026-06-09,Sara,Qualified,2026-06-19,2026-06-25,2026-07-03,OPP-1029,
+LEAD-2030,ACC-130,CON-3050,Conference,2026-08-19,Emma,Qualified,2026-08-28,2026-09-04,2026-09-08,OPP-1030,
+LEAD-2031,ACC-131,CON-3052,LinkedIn Outreach,2026-05-25,Sara,Qualified,2026-05-29,2026-06-05,2026-06-15,OPP-1031,
+LEAD-2032,ACC-132,CON-3054,Outbound SDR,2026-06-09,Sara,Qualified,2026-06-19,2026-06-26,2026-07-02,OPP-1032,
+LEAD-2033,ACC-133,CON-3056,Outbound SDR,2026-03-10,Ryan,Qualified,2026-03-20,2026-03-27,2026-04-02,OPP-1033,
+LEAD-2034,ACC-134,CON-3058,Referral,2026-04-20,Alex,Qualified,2026-04-24,2026-04-27,2026-04-29,OPP-1034,
+LEAD-2035,ACC-135,CON-3060,Outbound SDR,2026-07-28,Alex,Qualified,2026-08-07,2026-08-14,2026-08-21,OPP-1035,
+LEAD-2036,ACC-136,CON-3062,LinkedIn Outreach,2026-05-01,Alex,Qualified,2026-05-12,2026-05-18,2026-05-21,OPP-1036,
+LEAD-2037,ACC-137,CON-3063,LinkedIn Outreach,2026-05-01,Alex,Qualified,2026-05-06,2026-05-13,2026-05-15,OPP-1037,
+LEAD-2038,ACC-138,CON-3065,LinkedIn Outreach,2026-03-18,Jon,Qualified,2026-03-20,2026-03-24,2026-04-02,OPP-1038,
+LEAD-2039,ACC-139,CON-3067,Outbound SDR,2026-04-21,Jon,Qualified,2026-04-27,2026-05-04,2026-05-08,OPP-1039,
+LEAD-2040,ACC-140,CON-3069,Referral,2026-02-04,Ryan,Qualified,2026-02-16,2026-02-20,2026-02-27,OPP-1040,
+LEAD-2041,ACC-141,CON-3070,LinkedIn Outreach,2026-02-06,Sara,Qualified,2026-02-20,2026-02-23,2026-02-27,OPP-1041,
+LEAD-2042,ACC-142,CON-3072,Referral,2026-05-08,Jon,Qualified,2026-05-18,2026-05-19,2026-05-28,OPP-1042,
+LEAD-2043,ACC-143,CON-3074,LinkedIn Outreach,2026-05-05,Sara,Qualified,2026-05-08,2026-05-15,2026-05-22,OPP-1043,
+LEAD-2044,ACC-144,CON-3075,LinkedIn Outreach,2026-02-06,Alex,Qualified,2026-02-20,2026-02-23,2026-02-27,OPP-1044,
+LEAD-2045,ACC-145,CON-3077,Inbound Website,2026-04-14,Emma,Qualified,2026-04-22,2026-04-29,2026-05-06,OPP-1045,
+LEAD-2046,ACC-146,CON-3079,Referral,2026-08-11,Ryan,Qualified,2026-08-19,2026-08-21,2026-08-28,OPP-1046,
+LEAD-2047,ACC-147,CON-3080,Referral,2026-04-08,Alex,Qualified,2026-04-17,2026-04-24,2026-05-01,OPP-1047,
+LEAD-2048,ACC-148,CON-3082,Outbound SDR,2026-06-12,Jon,Qualified,2026-06-17,2026-06-18,2026-06-26,OPP-1048,
+LEAD-2049,ACC-149,CON-3083,LinkedIn Outreach,2026-08-14,Jon,Qualified,2026-08-21,2026-08-24,2026-08-28,OPP-1049,
+LEAD-2050,ACC-150,CON-3084,Outbound SDR,2026-05-13,Jon,Qualified,2026-05-18,2026-05-19,2026-05-22,OPP-1050,
+LEAD-2051,ACC-116,CON-3027,Outbound SDR,2026-02-25,Emma,Qualified,2026-02-27,2026-03-06,,,
+LEAD-2052,ACC-127,CON-3044,LinkedIn Outreach,2026-07-22,Ryan,Disqualified,,,,,Unresponsive
+LEAD-2053,ACC-153,CON-3089,Inbound Website,2026-09-28,Emma,Contacted,,,,,
+LEAD-2054,ACC-141,CON-3070,Outbound SDR,2026-06-02,Sara,Qualified,2026-06-12,2026-06-15,2026-06-22,,
+LEAD-2055,ACC-157,CON-3096,Inbound Website,2026-08-12,Alex,Qualified,2026-08-17,2026-08-24,,,
+LEAD-2056,ACC-121,CON-3035,LinkedIn Outreach,2026-05-29,Ryan,Disqualified,,,,,No near-term AI data need
+LEAD-2057,ACC-146,CON-3079,Partner,2026-01-22,Ryan,Qualified,2026-02-02,,,,
+LEAD-2058,ACC-126,CON-3043,Outbound SDR,2026-09-22,Ryan,Qualified,2026-09-25,,,,
+LEAD-2059,ACC-162,CON-3104,Conference,2026-03-06,Sara,Qualified,2026-03-13,2026-03-20,2026-03-27,,
+LEAD-2060,ACC-158,CON-3097,Inbound Website,2026-07-28,Jon,Contacted,,,,,
+LEAD-2061,ACC-109,CON-3016,Referral,2026-05-22,Ryan,Contacted,,,,,
+LEAD-2062,ACC-143,CON-3074,Referral,2026-07-23,Sara,Contacted,,,,,
+LEAD-2063,ACC-137,CON-3063,Inbound Website,2026-04-02,Alex,Contacted,,,,,
+LEAD-2064,ACC-122,CON-3036,Conference,2026-07-02,Sara,Qualified,2026-07-03,2026-07-07,,,
+LEAD-2065,ACC-118,CON-3030,Inbound Website,2026-05-01,Alex,Disqualified,,,,,Unresponsive
+LEAD-2066,ACC-103,CON-3005,LinkedIn Outreach,2026-07-16,Jon,Contacted,,,,,
+LEAD-2067,ACC-119,CON-3031,LinkedIn Outreach,2026-03-20,Alex,Contacted,,,,,
+LEAD-2068,ACC-144,CON-3075,Outbound SDR,2026-01-12,Alex,Contacted,,,,,
+LEAD-2069,ACC-143,CON-3074,Referral,2026-09-08,Sara,Qualified,2026-09-10,,,,
+LEAD-2070,ACC-152,CON-3087,LinkedIn Outreach,2026-01-23,Jon,Qualified,2026-01-30,2026-02-04,,,
+LEAD-2071,ACC-160,CON-3100,Inbound Website,2026-03-10,Emma,Disqualified,,,,,No budget
+LEAD-2072,ACC-143,CON-3074,Conference,2026-01-12,Sara,Qualified,2026-01-14,2026-01-15,2026-01-21,,
+LEAD-2073,ACC-149,CON-3083,Conference,2026-04-24,Jon,Disqualified,,,,,No near-term AI data need
+LEAD-2074,ACC-109,CON-3016,LinkedIn Outreach,2026-06-02,Ryan,Contacted,,,,,
+LEAD-2075,ACC-151,CON-3085,Partner,2026-09-09,Alex,Qualified,2026-09-11,2026-09-11,2026-09-17,,
+LEAD-2076,ACC-109,CON-3016,Inbound Website,2026-03-31,Ryan,Disqualified,,,,,Unresponsive
+LEAD-2077,ACC-122,CON-3036,Outbound SDR,2026-06-12,Sara,Qualified,2026-06-19,2026-06-19,2026-06-22,,
+LEAD-2078,ACC-159,CON-3098,Referral,2026-10-05,Sara,New,,,,,
+LEAD-2079,ACC-104,CON-3007,LinkedIn Outreach,2026-04-22,Emma,Contacted,,,,,
+LEAD-2080,ACC-158,CON-3097,Inbound Website,2026-03-16,Jon,Contacted,,,,,
+LEAD-2081,ACC-130,CON-3050,Outbound SDR,2026-09-11,Emma,Qualified,2026-09-18,,,,
+LEAD-2082,ACC-164,CON-3108,Conference,2026-07-24,Ryan,Disqualified,,,,,Unresponsive
+LEAD-2083,ACC-126,CON-3043,Outbound SDR,2026-05-07,Ryan,Disqualified,,,,,No budget
+LEAD-2084,ACC-146,CON-3079,Inbound Website,2026-02-06,Ryan,New,,,,,
+LEAD-2085,ACC-126,CON-3043,Conference,2026-06-05,Ryan,Contacted,,,,,
+LEAD-2086,ACC-107,CON-3013,Outbound SDR,2026-08-12,Ryan,Qualified,2026-08-19,,,,
+LEAD-2087,ACC-154,CON-3091,Outbound SDR,2026-07-28,Jon,Qualified,2026-08-06,2026-08-07,,,
+LEAD-2088,ACC-126,CON-3043,Outbound SDR,2026-05-21,Ryan,Contacted,,,,,
+LEAD-2089,ACC-138,CON-3065,Conference,2026-05-19,Jon,Qualified,2026-05-29,2026-05-29,,,
+LEAD-2090,ACC-124,CON-3040,Inbound Website,2026-06-12,Sara,Contacted,,,,,
+LEAD-2091,ACC-112,CON-3020,Conference,2026-02-11,Jon,Disqualified,,,,,Unresponsive
+LEAD-2092,ACC-110,CON-3018,Inbound Website,2026-09-11,Emma,New,,,,,
+LEAD-2093,ACC-133,CON-3056,Outbound SDR,2026-03-03,Ryan,Disqualified,,,,,No budget
+LEAD-2094,ACC-125,CON-3041,Referral,2026-06-02,Emma,Contacted,,,,,
+LEAD-2095,ACC-104,CON-3007,Partner,2026-07-02,Emma,Disqualified,,,,,Not ICP fit
+LEAD-2096,ACC-105,CON-3009,Outbound SDR,2026-02-11,Emma,Disqualified,,,,,Unresponsive
+LEAD-2097,ACC-164,CON-3108,Inbound Website,2026-09-04,Ryan,Contacted,,,,,
+LEAD-2098,ACC-147,CON-3080,Referral,2026-04-24,Alex,Qualified,2026-04-24,2026-04-29,2026-05-01,,
+LEAD-2099,ACC-115,CON-3025,LinkedIn Outreach,2026-02-24,Jon,Contacted,,,,,
+LEAD-2100,ACC-133,CON-3056,LinkedIn Outreach,2026-06-05,Ryan,Contacted,,,,,
+LEAD-2101,ACC-164,CON-3108,Inbound Website,2026-05-25,Ryan,New,,,,,
+LEAD-2102,ACC-107,CON-3013,Outbound SDR,2026-02-18,Ryan,Disqualified,,,,,Not ICP fit
+LEAD-2103,ACC-103,CON-3005,Referral,2026-01-23,Jon,Disqualified,,,,,Unresponsive
+LEAD-2104,ACC-104,CON-3007,Outbound SDR,2026-08-28,Emma,Contacted,,,,,
+LEAD-2105,ACC-131,CON-3052,LinkedIn Outreach,2026-07-23,Sara,Contacted,,,,,
+LEAD-2106,ACC-141,CON-3070,Outbound SDR,2026-05-22,Sara,Disqualified,,,,,Unresponsive
+LEAD-2107,ACC-122,CON-3036,Outbound SDR,2026-03-26,Sara,Contacted,,,,,
+LEAD-2108,ACC-159,CON-3098,Referral,2026-09-04,Sara,Qualified,2026-09-11,2026-09-11,2026-09-11,,
+LEAD-2109,ACC-118,CON-3030,Outbound SDR,2026-07-23,Alex,Disqualified,,,,,No budget
+LEAD-2110,ACC-153,CON-3089,Inbound Website,2026-07-24,Emma,Contacted,,,,,
+LEAD-2111,ACC-161,CON-3102,Inbound Website,2026-03-02,Sara,Disqualified,,,,,No budget
+LEAD-2112,ACC-130,CON-3050,Inbound Website,2026-05-07,Emma,Contacted,,,,,
+LEAD-2113,ACC-131,CON-3052,LinkedIn Outreach,2026-03-05,Sara,Qualified,2026-03-10,2026-03-13,2026-03-18,,
+LEAD-2114,ACC-108,CON-3015,Outbound SDR,2026-04-13,Sara,Qualified,2026-04-24,,,,
+LEAD-2115,ACC-151,CON-3085,LinkedIn Outreach,2026-06-18,Alex,Qualified,2026-06-19,2026-06-22,2026-06-26,,
+LEAD-2116,ACC-121,CON-3035,Outbound SDR,2026-02-02,Ryan,Contacted,,,,,
+LEAD-2117,ACC-160,CON-3100,Inbound Website,2026-05-01,Emma,Qualified,2026-05-08,,,,
+LEAD-2118,ACC-163,CON-3106,Outbound SDR,2026-06-23,Emma,Qualified,2026-07-01,2026-07-07,2026-07-13,,
+LEAD-2119,ACC-103,CON-3005,Outbound SDR,2026-01-13,Jon,Contacted,,,,,
+LEAD-2120,ACC-151,CON-3085,LinkedIn Outreach,2026-06-16,Alex,Contacted,,,,,
+LEAD-2121,ACC-120,CON-3033,Outbound SDR,2026-04-03,Emma,Contacted,,,,,
+LEAD-2122,ACC-116,CON-3027,Conference,2026-09-25,Emma,Qualified,2026-10-02,,,,
+LEAD-2123,ACC-142,CON-3072,Outbound SDR,2026-05-27,Jon,Disqualified,,,,,No budget
+LEAD-2124,ACC-131,CON-3052,Outbound SDR,2026-01-28,Sara,New,,,,,
+LEAD-2125,ACC-117,CON-3029,LinkedIn Outreach,2026-09-18,Sara,Contacted,,,,,
+LEAD-2126,ACC-162,CON-3104,Outbound SDR,2026-07-28,Sara,Qualified,2026-08-07,2026-08-13,2026-08-21,,
+LEAD-2127,ACC-127,CON-3044,Outbound SDR,2026-05-15,Ryan,Qualified,2026-05-22,2026-05-26,2026-06-02,,
+LEAD-2128,ACC-145,CON-3077,Conference,2026-06-17,Emma,Contacted,,,,,
+LEAD-2129,ACC-162,CON-3104,Partner,2026-09-30,Sara,Contacted,,,,,
+LEAD-2130,ACC-139,CON-3067,Inbound Website,2026-09-01,Jon,Disqualified,,,,,Not ICP fit
+LEAD-2131,ACC-146,CON-3079,Outbound SDR,2026-08-04,Ryan,Disqualified,,,,,No near-term AI data need
+LEAD-2132,ACC-134,CON-3058,LinkedIn Outreach,2026-08-20,Alex,Disqualified,,,,,No budget
+LEAD-2133,ACC-108,CON-3015,Conference,2026-01-28,Sara,Qualified,2026-02-04,2026-02-10,2026-02-16,,
+LEAD-2134,ACC-126,CON-3043,Inbound Website,2026-02-04,Ryan,Disqualified,,,,,No near-term AI data need
+LEAD-2135,ACC-131,CON-3052,LinkedIn Outreach,2026-01-12,Sara,Contacted,,,,,
+LEAD-2136,ACC-155,CON-3093,Inbound Website,2026-07-20,Jon,Qualified,2026-07-24,,,,
+LEAD-2137,ACC-103,CON-3005,Conference,2026-03-19,Jon,Contacted,,,,,
+LEAD-2138,ACC-152,CON-3087,LinkedIn Outreach,2026-05-19,Jon,Contacted,,,,,
+LEAD-2139,ACC-139,CON-3067,Outbound SDR,2026-02-06,Jon,Disqualified,,,,,No near-term AI data need
+LEAD-2140,ACC-105,CON-3009,LinkedIn Outreach,2026-04-10,Emma,Qualified,2026-04-17,2026-04-20,2026-04-24,,
+LEAD-2141,ACC-144,CON-3075,Referral,2026-04-03,Alex,New,,,,,
+LEAD-2142,ACC-128,CON-3046,Outbound SDR,2026-08-28,Alex,Qualified,2026-09-08,2026-09-11,2026-09-18,,
+LEAD-2143,ACC-160,CON-3100,LinkedIn Outreach,2026-02-17,Emma,Qualified,2026-02-25,2026-02-27,2026-03-05,,
+LEAD-2144,ACC-103,CON-3005,Outbound SDR,2026-07-21,Jon,Qualified,2026-07-27,2026-07-31,2026-08-05,,
+LEAD-2145,ACC-151,CON-3085,LinkedIn Outreach,2026-10-02,Alex,New,,,,,
+LEAD-2146,ACC-111,CON-3019,Outbound SDR,2026-04-17,Sara,Contacted,,,,,
+LEAD-2147,ACC-103,CON-3005,Inbound Website,2026-04-28,Jon,Disqualified,,,,,Not ICP fit
+LEAD-2148,ACC-121,CON-3035,Outbound SDR,2026-06-29,Ryan,Disqualified,,,,,Not ICP fit
+LEAD-2149,ACC-163,CON-3106,Outbound SDR,2026-05-08,Emma,Qualified,2026-05-14,2026-05-20,2026-05-29,,
+LEAD-2150,ACC-142,CON-3072,Conference,2026-07-06,Jon,Disqualified,,,,,Not ICP fit
+LEAD-2151,ACC-109,CON-3016,Outbound SDR,2026-08-14,Ryan,Disqualified,,,,,No near-term AI data need
+LEAD-2152,ACC-158,CON-3097,Outbound SDR,2026-01-16,Jon,Disqualified,,,,,Unresponsive
+LEAD-2153,ACC-153,CON-3089,Outbound SDR,2026-01-30,Emma,Contacted,,,,,
+LEAD-2154,ACC-151,CON-3085,LinkedIn Outreach,2026-05-29,Alex,Disqualified,,,,,No near-term AI data need
+LEAD-2155,ACC-142,CON-3072,Referral,2026-07-03,Jon,Qualified,2026-07-08,,,,
+LEAD-2156,ACC-154,CON-3091,Outbound SDR,2026-07-31,Jon,Qualified,2026-08-06,,,,
+LEAD-2157,ACC-149,CON-3083,Outbound SDR,2026-05-08,Jon,Contacted,,,,,
+LEAD-2158,ACC-102,CON-3003,Inbound Website,2026-02-06,Emma,Qualified,2026-02-10,2026-02-13,2026-02-20,,
+LEAD-2159,ACC-150,CON-3084,Referral,2026-07-24,Jon,New,,,,,
+LEAD-2160,ACC-116,CON-3027,LinkedIn Outreach,2026-09-14,Emma,Contacted,,,,,
+LEAD-2161,ACC-116,CON-3027,Conference,2026-03-12,Emma,Qualified,2026-03-13,,,,
+LEAD-2162,ACC-122,CON-3036,LinkedIn Outreach,2026-03-27,Sara,Contacted,,,,,
+LEAD-2163,ACC-137,CON-3063,Outbound SDR,2026-06-12,Alex,Qualified,2026-06-23,2026-06-25,2026-07-03,,
+LEAD-2164,ACC-137,CON-3063,Outbound SDR,2026-07-22,Alex,Qualified,2026-07-24,2026-07-27,2026-08-05,,
+LEAD-2165,ACC-103,CON-3005,Outbound SDR,2026-05-20,Jon,Qualified,2026-05-22,2026-05-26,2026-06-01,,
+LEAD-2166,ACC-126,CON-3043,Outbound SDR,2026-04-01,Ryan,Qualified,2026-04-10,2026-04-10,,,
+LEAD-2167,ACC-111,CON-3019,LinkedIn Outreach,2026-10-02,Sara,New,,,,,
+LEAD-2168,ACC-126,CON-3043,Outbound SDR,2026-03-10,Ryan,Qualified,2026-03-18,2026-03-23,2026-03-31,,
+LEAD-2169,ACC-133,CON-3056,Outbound SDR,2026-05-15,Ryan,Contacted,,,,,
+LEAD-2170,ACC-132,CON-3054,Inbound Website,2026-02-20,Sara,Qualified,2026-02-20,2026-02-20,2026-02-24,,
+LEAD-2171,ACC-135,CON-3060,Inbound Website,2026-04-03,Alex,New,,,,,
+LEAD-2172,ACC-109,CON-3016,Outbound SDR,2026-01-15,Ryan,Qualified,2026-01-20,2026-01-23,,,
+LEAD-2173,ACC-132,CON-3054,Referral,2026-01-23,Sara,Qualified,2026-02-02,,,,
+LEAD-2174,ACC-113,CON-3021,Outbound SDR,2026-01-30,Emma,Qualified,2026-02-06,2026-02-11,2026-02-13,,
+LEAD-2175,ACC-142,CON-3072,Referral,2026-03-20,Jon,Disqualified,,,,,No near-term AI data need
+LEAD-2176,ACC-147,CON-3080,Outbound SDR,2026-02-17,Alex,Qualified,2026-02-23,2026-02-27,2026-03-06,,
+LEAD-2177,ACC-128,CON-3046,Referral,2026-07-03,Alex,Contacted,,,,,
+LEAD-2178,ACC-139,CON-3067,Outbound SDR,2026-06-22,Jon,Contacted,,,,,
+LEAD-2179,ACC-119,CON-3031,Outbound SDR,2026-03-27,Alex,Qualified,2026-04-03,2026-04-07,2026-04-09,,
+LEAD-2180,ACC-127,CON-3044,Outbound SDR,2026-09-25,Ryan,Contacted,,,,,
+LEAD-2181,ACC-114,CON-3023,Outbound SDR,2026-04-24,Alex,Qualified,2026-04-29,2026-05-06,,,
+LEAD-2182,ACC-150,CON-3084,LinkedIn Outreach,2026-04-24,Jon,Disqualified,,,,,No near-term AI data need
+LEAD-2183,ACC-102,CON-3003,Conference,2026-07-22,Emma,Disqualified,,,,,Unresponsive
+LEAD-2184,ACC-108,CON-3015,Conference,2026-06-19,Sara,Qualified,2026-06-26,,,,
+LEAD-2185,ACC-155,CON-3093,Outbound SDR,2026-01-20,Jon,Disqualified,,,,,No budget
+LEAD-2186,ACC-159,CON-3098,LinkedIn Outreach,2026-02-24,Sara,Qualified,2026-03-04,,,,
+LEAD-2187,ACC-149,CON-3083,Outbound SDR,2026-09-14,Jon,Qualified,2026-09-16,2026-09-18,2026-09-25,,
+LEAD-2188,ACC-107,CON-3013,LinkedIn Outreach,2026-04-22,Ryan,Contacted,,,,,
+LEAD-2189,ACC-133,CON-3056,LinkedIn Outreach,2026-04-28,Ryan,Contacted,,,,,
+LEAD-2190,ACC-152,CON-3087,Referral,2026-09-09,Jon,Disqualified,,,,,Not ICP fit
+LEAD-2191,ACC-163,CON-3106,Conference,2026-08-10,Emma,Contacted,,,,,
+LEAD-2192,ACC-119,CON-3031,Partner,2026-08-07,Alex,Disqualified,,,,,No near-term AI data need
+LEAD-2193,ACC-109,CON-3016,Outbound SDR,2026-07-03,Ryan,Disqualified,,,,,No near-term AI data need
+LEAD-2194,ACC-145,CON-3077,Outbound SDR,2026-02-13,Emma,Contacted,,,,,
+LEAD-2195,ACC-155,CON-3093,LinkedIn Outreach,2026-06-26,Jon,Qualified,2026-07-08,2026-07-09,,,
+LEAD-2196,ACC-131,CON-3052,Referral,2026-08-28,Sara,Disqualified,,,,,No budget
+LEAD-2197,ACC-109,CON-3016,Outbound SDR,2026-07-20,Ryan,Disqualified,,,,,Not ICP fit
+LEAD-2198,ACC-105,CON-3009,Conference,2026-04-10,Emma,Disqualified,,,,,Not ICP fit
+LEAD-2199,ACC-116,CON-3027,LinkedIn Outreach,2026-03-06,Emma,Contacted,,,,,
+LEAD-2200,ACC-160,CON-3100,Partner,2026-01-28,Emma,Contacted,,,,,
+LEAD-2201,ACC-127,CON-3044,Inbound Website,2026-04-27,Ryan,Disqualified,,,,,Not ICP fit
+LEAD-2202,ACC-156,CON-3094,Outbound SDR,2026-03-26,Ryan,New,,,,,
+LEAD-2203,ACC-141,CON-3070,Outbound SDR,2026-05-15,Sara,Qualified,2026-05-20,,,,
+LEAD-2204,ACC-117,CON-3029,LinkedIn Outreach,2026-07-10,Sara,Qualified,2026-07-17,2026-07-20,2026-07-23,,
+LEAD-2205,ACC-146,CON-3079,Partner,2026-05-01,Ryan,Contacted,,,,,
+LEAD-2206,ACC-127,CON-3044,Outbound SDR,2026-04-03,Ryan,Disqualified,,,,,Unresponsive
+LEAD-2207,ACC-110,CON-3018,Partner,2026-05-22,Emma,Qualified,2026-06-02,2026-06-05,2026-06-09,,
+LEAD-2208,ACC-145,CON-3077,LinkedIn Outreach,2026-01-15,Emma,Disqualified,,,,,Not ICP fit
+LEAD-2209,ACC-116,CON-3027,Conference,2026-05-13,Emma,Contacted,,,,,
+LEAD-2210,ACC-111,CON-3019,LinkedIn Outreach,2026-02-13,Sara,Contacted,,,,,
+LEAD-2211,ACC-126,CON-3043,LinkedIn Outreach,2026-03-06,Ryan,Qualified,2026-03-13,,,,
+LEAD-2212,ACC-143,CON-3074,Outbound SDR,2026-05-14,Sara,Qualified,2026-05-26,,,,
+LEAD-2213,ACC-102,CON-3003,LinkedIn Outreach,2026-06-02,Emma,New,,,,,
+LEAD-2214,ACC-133,CON-3056,Outbound SDR,2026-03-20,Ryan,Qualified,2026-03-27,2026-04-03,2026-04-06,,
+LEAD-2215,ACC-127,CON-3044,LinkedIn Outreach,2026-08-21,Ryan,Disqualified,,,,,No budget
+LEAD-2216,ACC-145,CON-3077,Outbound SDR,2026-09-24,Emma,Qualified,2026-09-28,2026-10-01,2026-10-05,,
+LEAD-2217,ACC-108,CON-3015,LinkedIn Outreach,2026-06-12,Sara,Disqualified,,,,,Unresponsive
+LEAD-2218,ACC-130,CON-3050,Partner,2026-08-10,Emma,Disqualified,,,,,No budget
+LEAD-2219,ACC-152,CON-3087,Outbound SDR,2026-06-16,Jon,Qualified,2026-06-26,2026-06-29,2026-07-03,,
+LEAD-2220,ACC-111,CON-3019,Inbound Website,2026-10-02,Sara,New,,,,,
+LEAD-2221,ACC-133,CON-3056,LinkedIn Outreach,2026-02-05,Ryan,Disqualified,,,,,No budget
+LEAD-2222,ACC-120,CON-3033,LinkedIn Outreach,2026-09-25,Emma,New,,,,,
+LEAD-2223,ACC-104,CON-3007,LinkedIn Outreach,2026-08-11,Emma,Qualified,2026-08-21,2026-08-21,2026-08-24,,
+LEAD-2224,ACC-116,CON-3027,LinkedIn Outreach,2026-09-01,Emma,Qualified,2026-09-04,,,,
+LEAD-2225,ACC-140,CON-3069,Outbound SDR,2026-05-08,Ryan,Qualified,2026-05-13,2026-05-15,2026-05-22,,
+LEAD-2226,ACC-158,CON-3097,Inbound Website,2026-07-10,Jon,Qualified,2026-07-17,2026-07-17,2026-07-21,,
+LEAD-2227,ACC-123,CON-3038,Referral,2026-03-11,Jon,Qualified,2026-03-13,2026-03-13,2026-03-18,,
+LEAD-2228,ACC-149,CON-3083,Inbound Website,2026-07-17,Jon,Contacted,,,,,
+LEAD-2229,ACC-152,CON-3087,Conference,2026-08-10,Jon,Qualified,2026-08-20,,,,
+LEAD-2230,ACC-106,CON-3011,LinkedIn Outreach,2026-03-20,Ryan,Qualified,2026-03-23,2026-03-27,2026-03-30,,
+LEAD-2231,ACC-163,CON-3106,Inbound Website,2026-06-23,Emma,Qualified,2026-07-03,,,,
+LEAD-2232,ACC-113,CON-3021,Outbound SDR,2026-03-18,Emma,Qualified,2026-03-24,,,,
+LEAD-2233,ACC-148,CON-3082,Outbound SDR,2026-08-21,Jon,Qualified,2026-08-28,2026-09-03,2026-09-11,,
+LEAD-2234,ACC-140,CON-3069,LinkedIn Outreach,2026-09-04,Ryan,Contacted,,,,,
+LEAD-2235,ACC-142,CON-3072,Referral,2026-03-13,Jon,Disqualified,,,,,No budget
+LEAD-2236,ACC-105,CON-3009,LinkedIn Outreach,2026-04-28,Emma,Qualified,2026-05-01,2026-05-06,2026-05-15,,
+LEAD-2237,ACC-114,CON-3023,LinkedIn Outreach,2026-10-02,Alex,Contacted,,,,,
+LEAD-2238,ACC-132,CON-3054,Conference,2026-04-01,Sara,Disqualified,,,,,No near-term AI data need
+LEAD-2239,ACC-127,CON-3044,Outbound SDR,2026-09-07,Ryan,Qualified,2026-09-16,2026-09-23,2026-09-30,,
+LEAD-2240,ACC-133,CON-3056,Inbound Website,2026-05-20,Ryan,Disqualified,,,,,Unresponsive
+LEAD-2241,ACC-148,CON-3082,Inbound Website,2026-03-13,Jon,Contacted,,,,,
+LEAD-2242,ACC-113,CON-3021,Outbound SDR,2026-08-21,Emma,Qualified,2026-08-26,,,,
+LEAD-2243,ACC-141,CON-3070,Inbound Website,2026-07-21,Sara,Disqualified,,,,,No near-term AI data need
+LEAD-2244,ACC-108,CON-3015,Inbound Website,2026-01-27,Sara,New,,,,,
+LEAD-2245,ACC-118,CON-3030,Inbound Website,2026-04-14,Alex,Qualified,2026-04-16,,,,
+LEAD-2246,ACC-128,CON-3046,LinkedIn Outreach,2026-10-02,Alex,Contacted,,,,,
+LEAD-2247,ACC-143,CON-3074,Outbound SDR,2026-08-28,Sara,Contacted,,,,,
+LEAD-2248,ACC-118,CON-3030,Referral,2026-03-26,Alex,Disqualified,,,,,Unresponsive
+LEAD-2249,ACC-157,CON-3096,Conference,2026-04-24,Alex,Disqualified,,,,,No budget
+LEAD-2250,ACC-146,CON-3079,Outbound SDR,2026-08-07,Ryan,Disqualified,,,,,Unresponsive
+LEAD-2251,ACC-115,CON-3025,Outbound SDR,2026-06-19,Jon,Contacted,,,,,
+LEAD-2252,ACC-118,CON-3030,Outbound SDR,2026-08-03,Alex,Contacted,,,,,
+LEAD-2253,ACC-153,CON-3089,Outbound SDR,2026-09-18,Emma,Disqualified,,,,,Unresponsive
+LEAD-2254,ACC-164,CON-3108,Conference,2026-01-26,Ryan,Qualified,2026-02-03,2026-02-06,2026-02-09,,
+LEAD-2255,ACC-142,CON-3072,Referral,2026-06-24,Jon,New,,,,,
+LEAD-2256,ACC-145,CON-3077,LinkedIn Outreach,2026-03-26,Emma,Qualified,2026-04-03,,,,
+LEAD-2257,ACC-160,CON-3100,LinkedIn Outreach,2026-04-03,Emma,Disqualified,,,,,Not ICP fit
+LEAD-2258,ACC-151,CON-3085,LinkedIn Outreach,2026-04-21,Alex,Contacted,,,,,
+LEAD-2259,ACC-134,CON-3058,Outbound SDR,2026-04-09,Alex,Disqualified,,,,,No budget
+LEAD-2260,ACC-109,CON-3016,Partner,2026-05-28,Ryan,Qualified,2026-06-02,2026-06-05,2026-06-08,,
+LEAD-2261,ACC-159,CON-3098,LinkedIn Outreach,2026-03-20,Sara,Qualified,2026-03-25,2026-03-30,2026-04-02,,
+LEAD-2262,ACC-120,CON-3033,Inbound Website,2026-09-18,Emma,Disqualified,,,,,No near-term AI data need
+LEAD-2263,ACC-163,CON-3106,Referral,2026-04-17,Emma,Qualified,2026-04-24,,,,
+LEAD-2264,ACC-139,CON-3067,Outbound SDR,2026-08-14,Jon,Contacted,,,,,
+LEAD-2265,ACC-126,CON-3043,Referral,2026-04-10,Ryan,Contacted,,,,,
+LEAD-2266,ACC-122,CON-3036,Conference,2026-03-31,Sara,Qualified,2026-04-07,2026-04-14,2026-04-20,,
+LEAD-2267,ACC-134,CON-3058,Outbound SDR,2026-08-10,Alex,Contacted,,,,,
+LEAD-2268,ACC-133,CON-3056,Inbound Website,2026-05-08,Ryan,Contacted,,,,,
+LEAD-2269,ACC-134,CON-3058,Outbound SDR,2026-01-30,Alex,Contacted,,,,,
+LEAD-2270,ACC-136,CON-3062,LinkedIn Outreach,2026-01-16,Alex,Contacted,,,,,
+LEAD-2271,ACC-117,CON-3029,LinkedIn Outreach,2026-08-21,Sara,Qualified,2026-08-25,2026-08-31,2026-09-04,,
+LEAD-2272,ACC-147,CON-3080,LinkedIn Outreach,2026-06-08,Alex,Qualified,2026-06-19,2026-06-25,,,
+LEAD-2273,ACC-145,CON-3077,LinkedIn Outreach,2026-06-09,Emma,Contacted,,,,,
+LEAD-2274,ACC-110,CON-3018,Conference,2026-05-04,Emma,Disqualified,,,,,No budget
+LEAD-2275,ACC-116,CON-3027,LinkedIn Outreach,2026-06-26,Emma,Disqualified,,,,,No near-term AI data need
+LEAD-2276,ACC-119,CON-3031,Outbound SDR,2026-09-04,Alex,Disqualified,,,,,No budget
+LEAD-2277,ACC-153,CON-3089,LinkedIn Outreach,2026-07-24,Emma,Disqualified,,,,,No budget
+LEAD-2278,ACC-124,CON-3040,Conference,2026-08-21,Sara,Qualified,2026-08-28,,,,
+LEAD-2279,ACC-114,CON-3023,Outbound SDR,2026-03-06,Alex,Contacted,,,,,
+LEAD-2280,ACC-163,CON-3106,Referral,2026-09-18,Emma,Qualified,2026-09-28,2026-10-01,2026-10-07,,
+LEAD-2281,ACC-120,CON-3033,Inbound Website,2026-07-17,Emma,Disqualified,,,,,No budget
+LEAD-2282,ACC-141,CON-3070,LinkedIn Outreach,2026-07-10,Sara,Contacted,,,,,
+LEAD-2283,ACC-105,CON-3009,Conference,2026-08-11,Emma,Contacted,,,,,
+LEAD-2284,ACC-104,CON-3007,Referral,2026-03-06,Emma,New,,,,,
+LEAD-2285,ACC-111,CON-3019,Partner,2026-10-05,Sara,New,,,,,
+LEAD-2286,ACC-128,CON-3046,LinkedIn Outreach,2026-03-17,Alex,Disqualified,,,,,Unresponsive
+LEAD-2287,ACC-129,CON-3048,Outbound SDR,2026-04-10,Sara,Qualified,2026-04-15,2026-04-20,2026-04-27,,
+LEAD-2288,ACC-146,CON-3079,LinkedIn Outreach,2026-02-13,Ryan,Qualified,2026-02-20,2026-02-20,2026-02-25,,
+LEAD-2289,ACC-143,CON-3074,Inbound Website,2026-07-03,Sara,Contacted,,,,,
+LEAD-2290,ACC-134,CON-3058,Outbound SDR,2026-01-09,Alex,Qualified,2026-01-20,,,,
+LEAD-2291,ACC-130,CON-3050,Outbound SDR,2026-09-02,Emma,Qualified,2026-09-09,,,,
+LEAD-2292,ACC-105,CON-3009,LinkedIn Outreach,2026-06-01,Emma,Qualified,2026-06-04,,,,
+LEAD-2293,ACC-157,CON-3096,Inbound Website,2026-06-16,Alex,New,,,,,
+LEAD-2294,ACC-118,CON-3030,Partner,2026-03-30,Alex,Qualified,2026-04-02,,,,
+LEAD-2295,ACC-150,CON-3084,Outbound SDR,2026-07-28,Jon,Qualified,2026-08-07,,,,
+LEAD-2296,ACC-127,CON-3044,LinkedIn Outreach,2026-03-25,Ryan,Disqualified,,,,,No budget
+LEAD-2297,ACC-102,CON-3003,LinkedIn Outreach,2026-09-09,Emma,Qualified,2026-09-17,,,,
+LEAD-2298,ACC-121,CON-3035,Outbound SDR,2026-07-24,Ryan,Contacted,,,,,
+LEAD-2299,ACC-164,CON-3108,Outbound SDR,2026-06-12,Ryan,Disqualified,,,,,No near-term AI data need
+LEAD-2300,ACC-118,CON-3030,Partner,2026-07-24,Alex,Disqualified,,,,,No near-term AI data need

@@ -1,0 +1,34 @@
+# --- Python environments and caches (never publish; recreated by pip / Python) ---
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# --- macOS and editor files ---
+.DS_Store
+.vscode/
+.idea/
+
+# --- Secrets: this project uses none, but keep it that way ---
+.env
+.env.*
+*.pem
+*.key
+.streamlit/secrets.toml
+
+# --- Local app data: the SQLite database is created from the CSV files on first run ---
+*.db
+*.sqlite
+*.sqlite3
+
+# --- Personal working files (not part of the product) ---
+backup_v1/
+docs/screenshots/v1/
+SUBMISSION_GUIDE.md
+docs/PROJECT_DOCUMENT_DRAFT.md
