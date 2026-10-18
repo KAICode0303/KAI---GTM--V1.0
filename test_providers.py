@@ -174,3 +174,31 @@ def test_env_is_ignored_by_git_but_the_example_is_not():
         assert ignored(".env") and ignored(".env.local") and not ignored(".env.example")
     except FileNotFoundError:
         pytest.skip("git not available")
+
+
+# ---------------------------------------------------------------- token usage reported by the provider
+class UsageModel:
+    def __init__(self, **attrs):
+        self.attrs = attrs
+
+    def invoke(self, prompt):
+        return type("Msg", (), {"content": "ok", **self.attrs})()
+
+
+def test_usage_is_captured_from_usage_metadata_or_response_metadata_and_totalled():
+    meta = {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15, "extra": 1}
+    a = pv.LLMClient(cfg(allow_hosted_calls=True), model=UsageModel(usage_metadata=meta))
+    a("p")
+    assert a.usage == [{"input_tokens": 10, "output_tokens": 5, "total_tokens": 15}]
+    b = pv.LLMClient(cfg(allow_hosted_calls=True),
+                     model=UsageModel(response_metadata={"token_usage": {"prompt_tokens": 7, "completion_tokens": 3, "total_tokens": 10}}))
+    b("p")
+    b("p")
+    assert b.usage[0] == {"input_tokens": 7, "output_tokens": 3, "total_tokens": 10}
+    assert b.total_usage() == {"input_tokens": 14, "output_tokens": 6, "total_tokens": 20}
+
+
+def test_missing_usage_is_empty_not_invented():
+    c = pv.LLMClient(cfg(allow_hosted_calls=True), model=FakeModel("x"))
+    c("p")
+    assert c.usage == [{}] and c.total_usage() == {"input_tokens": None, "output_tokens": None, "total_tokens": None}

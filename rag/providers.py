@@ -120,6 +120,18 @@ def _text(content):
     return str(content)
 
 
+def _usage(message):
+    """Token counts the provider reported for one reply, or {} when it reported none."""
+    meta = getattr(message, "usage_metadata", None)
+    if isinstance(meta, dict) and meta:
+        return {k: meta.get(k) for k in ("input_tokens", "output_tokens", "total_tokens")}
+    raw = (getattr(message, "response_metadata", None) or {}).get("token_usage")
+    if isinstance(raw, dict) and raw:
+        return {"input_tokens": raw.get("prompt_tokens"), "output_tokens": raw.get("completion_tokens"),
+                "total_tokens": raw.get("total_tokens")}
+    return {}
+
+
 @dataclass(frozen=True)
 class SendRecord:
     """What was sent, without the text: enough to audit that a hosted call happened and how much left the machine."""
@@ -137,6 +149,7 @@ class LLMClient:
         self._model = model                          # injectable for tests; otherwise built lazily on the first approved call
         self._on_send = on_send
         self.sent = []
+        self.usage = []                              # one dict per call: provider-reported token counts ({} if none)
 
     def __call__(self, prompt):
         if not self.config.allow_hosted_calls:
@@ -148,4 +161,14 @@ class LLMClient:
         self.sent.append(record)
         if self._on_send:
             self._on_send(record)
-        return _text(self._model.invoke(prompt).content)
+        message = self._model.invoke(prompt)
+        self.usage.append(_usage(message))
+        return _text(message.content)
+
+    def total_usage(self):
+        """Sum of the token counts that were reported (None for a field no call reported)."""
+        total = {}
+        for field_name in ("input_tokens", "output_tokens", "total_tokens"):
+            values = [u[field_name] for u in self.usage if isinstance(u.get(field_name), int)]
+            total[field_name] = sum(values) if values else None
+        return total
