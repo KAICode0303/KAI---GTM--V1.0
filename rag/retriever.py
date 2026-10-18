@@ -43,10 +43,27 @@ def get_store(embeddings, persist_dir=INDEX_DIR, collection=COLLECTION):
                   client_settings=Settings(is_persistent=True, persist_directory=persist_dir, anonymized_telemetry=False))
 
 
-def build_index(store, chunks=None):
-    """Add (or update) chunks. Stable ids make re-running safe: no duplicates. Returns the chunk count."""
+def embedding_text(chunk):
+    """What gets EMBEDDED: document title and section heading in front of the chunk text. A bare chunk such as
+    'Lessons' says nothing about its client; the header gives it that context. The stored text is NOT changed."""
+    return f"{chunk.metadata['title']} › {chunk.metadata['section']}\n\n{chunk.page_content}"
+
+
+def build_index(store, chunks=None, contextual=True):
+    """Add (or update) chunks. Stable ids make re-running safe: no duplicates. Returns the chunk count.
+
+    contextual=True embeds `embedding_text(chunk)`; False embeds the bare text (the earlier behaviour, kept for comparison).
+    Either way the Chroma document is the ORIGINAL chunk text and the metadata (source, section, page...) is unchanged,
+    so answers, evidence checks and citations never see the title header. Each chunk records how it was embedded.
+    """
     chunks = chunks if chunks is not None else chunk_documents(load_documents())
-    store.add_documents(chunks, ids=[c.metadata["chunk_id"] for c in chunks])
+    texts = [embedding_text(c) if contextual else c.page_content for c in chunks]
+    mode = "title+section" if contextual else "text"
+    store._collection.upsert(
+        ids=[c.metadata["chunk_id"] for c in chunks],
+        embeddings=store.embeddings.embed_documents(texts),
+        documents=[c.page_content for c in chunks],
+        metadatas=[{**c.metadata, "embedded_with": mode} for c in chunks])
     return len(chunks)
 
 

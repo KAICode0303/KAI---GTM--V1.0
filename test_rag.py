@@ -12,6 +12,7 @@ from langchain_core.embeddings import Embeddings
 
 from rag import embeddings as emb
 from rag import answer, ingest, retriever
+from rag.answer import ContextPolicy
 
 DIM = 256
 
@@ -191,3 +192,83 @@ def test_threshold_is_configurable_through_environment(store, monkeypatch):
     assert not answer.answer_question(store, GOOD_Q, _never_called).grounded
     monkeypatch.setenv("RAG_MAX_DISTANCE", "1.2")
     assert answer.answer_question(store, GOOD_Q, lambda p: "ok [x]").grounded
+
+
+# ---------------------------------------------------------------- contextual embedding text
+def test_embedding_text_adds_title_and_section_but_stored_text_is_original(tmp_path, chunks):
+    lessons = next(c for c in chunks if c.metadata["section"] == "Lessons")
+    text = retriever.embedding_text(lessons)
+    assert text.startswith("Case Study - Northwind Health (synthetic) › Lessons") and text.endswith(lessons.page_content)
+    store = retriever.get_store(HashingEmbeddings(), persist_dir=tmp_path / "c")
+    retriever.build_index(store, chunks)
+    got = store._collection.get(ids=["03_case_study.md#4"], include=["documents", "metadatas"])
+    assert got["documents"][0] == lessons.page_content                      # original text, no header, is what is stored
+    md = got["metadatas"][0]
+    assert md["source"] == "03_case_study.md" and md["section"] == "Lessons" and "page" not in md
+    assert md["embedded_with"] == "title+section"
+    hit = retriever.retrieve(store, "Northwind Health analysts trained to maintain pipelines", k=1)[0]
+    assert hit.citation == "[03_case_study.md › Lessons]" and "Case Study" not in hit.text
+
+
+def test_contextual_embedding_pulls_context_free_chunks_closer(tmp_path, chunks):
+    q = "Northwind Health analysts trained to maintain pipelines"          # the Lessons chunk never says 'Northwind'
+    dist = {}
+    for mode in (False, True):
+        store = retriever.get_store(HashingEmbeddings(), persist_dir=tmp_path / f"c{mode}")
+        retriever.build_index(store, chunks, contextual=mode)
+        dist[mode] = next(h for h in retriever.retrieve(store, q, k=15) if h.section == "Lessons").distance
+        md = store._collection.get(limit=1, include=["metadatas"])["metadatas"][0]
+        assert md["embedded_with"] == ("title+section" if mode else "text")
+    assert dist[True] < dist[False]
+
+
+# ---------------------------------------------------------------- context selection is separate from the gate
+def test_select_indices_rules():
+    d = [0.5, 0.6, 0.9, 1.0]
+    assert answer.select_indices(d, ContextPolicy(k=3)) == [0, 1, 2]                          # rank-based
+    assert answer.select_indices(d, ContextPolicy(k=4, max_distance=0.7)) == [0, 1]            # absolute cap
+    assert answer.select_indices(d, ContextPolicy(k=4, relative_margin=0.15)) == [0, 1]        # within best + 0.15
+    assert answer.select_indices([0.9, 1.5], ContextPolicy(k=2, max_distance=0.7)) == [0]      # min_chunks keeps the best
+    assert answer.select_indices(d, ContextPolicy(k=3, max_distance=0.0, min_chunks=2)) == [0, 1]
+    assert answer.select_indices([], ContextPolicy()) == []
+
+
+def test_context_policy_validation_and_description():
+    for bad in (dict(k=0), dict(k=2, min_chunks=3), dict(max_distance=-1), dict(relative_margin=-0.1)):
+        with pytest.raises(ValueError):
+            ContextPolicy(**bad)
+    assert ContextPolicy(k=6, relative_margin=0.25).describe() == "top-6, best+0.25"
+
+
+def test_context_policy_environment(monkeypatch):
+    for v in ("RAG_CONTEXT_K", "RAG_CONTEXT_MAX_DISTANCE", "RAG_CONTEXT_MARGIN", "RAG_CONTEXT_MIN_CHUNKS"):
+        monkeypatch.delenv(v, raising=False)
+    assert answer.resolve_context_policy() == ContextPolicy()
+    monkeypatch.setenv("RAG_CONTEXT_K", "3")
+    monkeypatch.setenv("RAG_CONTEXT_MARGIN", "0.2")
+    assert answer.resolve_context_policy() == ContextPolicy(k=3, relative_margin=0.2)
+    explicit = ContextPolicy(k=5)
+    assert answer.resolve_context_policy(explicit) is explicit                                # argument beats environment
+    monkeypatch.setenv("RAG_CONTEXT_K", "many")
+    with pytest.raises(ValueError, match="RAG_CONTEXT_K"):
+        answer.resolve_context_policy()
+
+
+def test_context_chunks_are_not_filtered_by_the_gate_distance(store):
+    best = answer.gather_evidence(store, GOOD_Q, max_distance=9.0, context=ContextPolicy(k=1)).best_distance
+    gate = best + 0.01                                         # only the closest chunk is within the gate distance
+    ev = answer.gather_evidence(store, GOOD_Q, max_distance=gate, context=ContextPolicy(k=3))
+    assert ev.sufficient and len(ev.hits) == 3 and ev.hits[-1].distance > gate     # supporting chunks lie beyond the gate
+    assert ev.max_distance == gate and ev.context == ContextPolicy(k=3)
+
+
+def test_failed_gate_gives_no_context_whatever_the_policy(store):
+    ev = answer.gather_evidence(store, GOOD_Q, max_distance=0.0, context=ContextPolicy(k=10))
+    assert not ev.sufficient and ev.hits == [] and ev.best_distance > 0
+
+
+def test_context_policy_reaches_the_model_prompt(store):
+    seen = {}
+    out = answer.answer_question(store, GOOD_Q, lambda p: seen.setdefault("p", p) and "ok [x]", max_distance=9.0,
+                                 context=ContextPolicy(k=2))
+    assert out.grounded and len(out.evidence.hits) == 2 and seen["p"].count("\n\n2. [") == 1 and "3. [" not in seen["p"]

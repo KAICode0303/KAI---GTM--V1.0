@@ -10,6 +10,7 @@ import pytest
 
 from rag import evaluate as ev
 from rag import ingest, retriever
+from rag.answer import ContextPolicy
 from test_rag import HashingEmbeddings
 
 
@@ -75,7 +76,7 @@ def test_run_ranks_every_chunk_for_every_question(results, chunks):
 
 def test_report_renders_and_does_not_claim_answer_accuracy(results):
     report = ev.render_report(results, notes="hand-written note")
-    for heading in ["## 1. Retrieval quality", "## 2. Threshold comparison", "## 3. Question-level results",
+    for heading in ["## 1. Retrieval quality", "## 2. Gate comparison", "## 3. Question-level results",
                     "## 4. Cross-document", "## 5. Analysis", "## Limitations"]:
         assert heading in report
     assert "hand-written note" in report and "nothing about generated-answer accuracy" in report
@@ -144,3 +145,51 @@ def test_k_coverage_counts_complex_questions_fully_covered():
     r2 = fake("C2", True, [0.5, 0.6, 0.7], expected=[1, 2])
     r1["category"] = r2["category"] = "complex"
     assert ev.k_coverage([r1, r2], 2) == (1, 2) and ev.k_coverage([r1, r2], 3) == (2, 2)
+
+
+# ---------------------------------------------------------------- gate vs context in the scoring, and the comparison
+def test_context_at_old_rule_vs_new_policy():
+    r = fake("H", True, [0.5, 0.9, 0.95, 1.0], ["a", "b", "gold", "d"], expected=[1, 3])
+    assert len(ev.context_at(r, 0.7)) == 1                                   # old rule: only chunks within the gate
+    assert [h["rank"] for h in ev.context_at(r, 0.7, ContextPolicy(k=3))] == [1, 2, 3]
+    assert ev.context_at(r, 0.4, ContextPolicy(k=3)) == []                   # failed gate: nothing is given
+    assert not ev.evidence_complete(r, 0.7) and ev.evidence_complete(r, 0.7, ContextPolicy(k=3))
+    assert ev.sections_in_context(r, 0.7) == 1 and ev.sections_in_context(r, 0.7, ContextPolicy(k=3)) == 2
+
+
+def test_score_with_policy_changes_evidence_but_not_gate_outcomes():
+    rs = [fake("A", True, [0.5, 0.9, 0.95], ["x", "y", "gold"], expected=[1, 3]), fake("U", False, [0.9, 1.0])]
+    old, new = ev.score(rs, 0.7), ev.score(rs, 0.7, ContextPolicy(k=3))
+    for k in ("correct_accept", "false_rejection", "correct_refusal", "false_acceptance"):
+        assert old[k] == new[k]
+    assert (old["evidence_complete"], new["evidence_complete"]) == (0, 1)
+    assert (old["context_chunks"], new["context_chunks"]) == (1, 3)
+
+
+def test_verdict_improved_regressed_same():
+    st = lambda acc, complete, top1: {"accepted": acc, "complete": complete, "top1": top1}
+    ans_q, un_q = {"answerable": True}, {"answerable": False}
+    assert ev.verdict(ans_q, st(True, False, False), st(True, True, False)) == "improved"
+    assert ev.verdict(ans_q, st(True, True, True), st(True, False, True)) == "regressed"
+    assert ev.verdict(ans_q, st(True, True, True), st(True, True, True)) == "same"
+    assert ev.verdict(ans_q, st(True, True, True), st(False, False, True)) == "regressed"       # new false rejection
+    assert ev.verdict(un_q, st(False, False, False), st(True, False, False)) == "regressed"     # new false acceptance
+    assert ev.verdict(un_q, st(True, False, False), st(False, False, False)) == "improved"
+
+
+def test_report_with_baseline_has_comparison_and_policy_grid(results):
+    baseline = [dict(r) for r in results]
+    report = ev.render_report(results, baseline=baseline, policy=ContextPolicy(k=6))
+    assert "## Comparison with the baseline" in report and "Question-level changes, A → C" in report
+    for label in ("A. Baseline", "B. Old embedding", "D. New embedding", "C. New embedding"):
+        assert label in report
+    assert "Context-selection policies" in report and "top-6" in report
+    assert "Improved (0)" in report and "Regressed (0)" in report                  # identical runs: nothing changes
+    assert "## Comparison with the baseline" not in ev.render_report(results, policy=ContextPolicy(k=6))
+
+
+def test_questions_file_is_unchanged_by_this_work(questions):
+    import hashlib
+    # fingerprint of eval/questions.json as committed in the evaluation checkpoint: the questions must not be edited
+    # to improve scores. If you intentionally add questions, update this fingerprint and re-baseline.
+    assert hashlib.md5(ev.QUESTIONS.read_bytes()).hexdigest() == "c2eb015f3b3d6c0b190ce73da3010d1f"
