@@ -57,6 +57,12 @@ def completeness(data):
     return round(sum(bool(d[k]) for k in REQUIRED_FOR_COMPLETE) / len(REQUIRED_FOR_COMPLETE), 3)
 
 
+def csv_safe(cell):
+    """Neutralise spreadsheet formula injection: a cell starting with = + - @ (or tab/CR) is prefixed with an apostrophe."""
+    s = "" if cell is None else str(cell)
+    return "'" + s if s[:1] in ("=", "+", "-", "@", "\t", "\r") else s
+
+
 def template_csv(account_id="", account_name=""):
     """A blank, downloadable KYC template: one header row of labels and one empty row to fill in."""
     buf = io.StringIO()
@@ -71,7 +77,7 @@ def profile_csv(account_id, account_name, data):
     buf = io.StringIO()
     w = csv.writer(buf)
     w.writerow(["account_id", "account_name"] + KEYS)
-    w.writerow([account_id, account_name] + [d[k] for k in KEYS])
+    w.writerow([csv_safe(account_id), csv_safe(account_name)] + [csv_safe(d[k]) for k in KEYS])
     return buf.getvalue().encode("utf-8")
 
 

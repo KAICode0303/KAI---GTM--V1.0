@@ -39,6 +39,10 @@ def _fail(message):
     raise ValidationError(message)
 
 
+class _DryRun(Exception):
+    """Raised inside a transaction to roll it back after a successful validation (used for previews)."""
+
+
 class GTMStore:
     def __init__(self, path=None, seed=True):
         self.path = Path(path) if path else default_path()
@@ -249,7 +253,14 @@ class GTMStore:
             raise ValidationError(f"Duplicate: a prospect named {full_name!r} already exists at this account ({row['prospect_id']}).")
         return ek, lk
 
-    def add_prospect(self, data, actor="demo"):
+    def add_prospect(self, data, actor="demo", dry_run=False):
+        """Validate, de-duplicate and insert one prospect. dry_run=True runs every check and rolls back: nothing is written."""
+        try:
+            return self._add_prospect(data, actor, dry_run)
+        except _DryRun as ok:
+            return ok.args[0]
+
+    def _add_prospect(self, data, actor, dry_run):
         name = v.text(data.get("full_name"), 120)
         email, linkedin = v.text(data.get("email"), 200), v.text(data.get("linkedin_url"), 300)
         checks = [lambda: _fail("Full name is required.") if not name else None,
@@ -280,6 +291,8 @@ class GTMStore:
             self._audit(con, "prospects", pid, "insert", {"full_name": name, "account_id": acct["account_id"]}, actor)
             if response in schema.RESPONSE_STOPS:
                 self._stop(con, pid, schema.RESPONSE_STOPS[response], actor)
+            if dry_run:
+                raise _DryRun(pid)
         return pid
 
     PROSPECT_EDITABLE = ("full_name", "title", "email", "linkedin_url", "phone", "owner", "lead_source",

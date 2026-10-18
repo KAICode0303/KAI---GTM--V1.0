@@ -137,6 +137,7 @@ class FactResult:
     chunk_ids: list = field(default_factory=list)     # ONLY chunks that contain the verified quote
     quote: str = ""
     reason: str = ""                                  # why a fact is unsupported
+    score: float = None                               # similarity of the chosen sentence (offline extractive engine only)
 
 
 def build_verification_prompt(evidence, facts, draft):
@@ -212,6 +213,7 @@ class VerifiedAnswer:
     detail: str = ""                                  # diagnostic text (never contains the prompt or any key)
     evidence: object = None
     model_calls: int = 0
+    engine: str = ""                                  # e.g. "offline-extractive"; empty for the model-backed pipeline
 
 
 def assemble(facts, hits):
@@ -221,7 +223,7 @@ def assemble(facts, hits):
     by_id = {h.chunk_id: h for h in hits}
     ids = list(dict.fromkeys(i for f in supported for i in f.chunk_ids))
     sources = [by_id[i].citation for i in ids]
-    text = " ".join(f.claim for f in supported)
+    text = " ".join(dict.fromkeys(f.claim for f in supported))                 # two facts can share one verified sentence
     missing = [f.fact for f in facts if not f.supported]
     if missing:
         text = f"{PARTIAL_HEADER}\n\n{text}\n\n{UNSUPPORTED_LABEL} " + "; ".join(missing)

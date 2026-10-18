@@ -68,13 +68,14 @@ def build_index(store, chunks=None, contextual=True):
     return len(chunks)
 
 
-def retrieve(store, query, k=3, max_distance=None):
+def retrieve(store, query, k=3, max_distance=None, where=None):
     """Top-k chunks for `query`, closest first, each with a ready-to-print citation.
 
     max_distance: drop chunks farther than this. None = keep all k (raw retrieval, no judgement about relevance).
+    where: optional Chroma metadata filter, e.g. {"doc_type": {"$ne": "kyc"}}.
     """
     hits = []
-    for doc, dist in store.similarity_search_with_score(query, k=k):
+    for doc, dist in store.similarity_search_with_score(query, k=k, filter=where):
         if max_distance is not None and dist > max_distance:
             continue
         md = doc.metadata

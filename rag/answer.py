@@ -135,10 +135,10 @@ class Answer:
     evidence: Evidence = None
 
 
-def gather_evidence(store, question, max_distance=None, context=None):
+def gather_evidence(store, question, max_distance=None, context=None, where=None):
     gate = resolve_max_distance(max_distance)
     policy = resolve_context_policy(context)
-    ranked = retrieve(store, question, k=policy.k)
+    ranked = retrieve(store, question, k=policy.k, where=where)
     best = ranked[0].distance if ranked else None
     passed = bool(ranked) and best <= gate
     hits = [ranked[i] for i in select_indices([h.distance for h in ranked], policy)] if passed else []
