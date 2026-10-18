@@ -6,7 +6,7 @@ against real company material slipping into the index by accident.
 from pathlib import Path
 
 from langchain_core.documents import Document
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
 
 CORPUS_DIR = Path(__file__).resolve().parent.parent / "rag_corpus"
 
@@ -35,14 +35,22 @@ def load_documents(corpus_dir=CORPUS_DIR):
             raise ValueError(f"{path.name} is not marked 'sanitized: true' - refusing to index it.")
         docs.append(Document(page_content=body, metadata={
             "source": path.name, "title": meta.get("title", path.stem), "doc_type": meta.get("doc_type", "other"),
-            "page": 1, "sanitized": True}))       # Markdown has no pages; PDFs will carry real page numbers
+            "sanitized": True}))      # no `page` for Markdown; a PDF loader will set the real page number on each Document
     return docs
 
 
 def chunk_documents(docs, chunk_size=450, chunk_overlap=60):
-    """Split into chunks; each keeps its source metadata and gets a stable `chunk_id` (used as the Chroma id)."""
-    splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-    chunks = splitter.split_documents(docs)
+    """Split by Markdown heading first, then by size. Each chunk keeps its source metadata plus the `section`
+    (nearest `##` heading, else `#`) and a stable `chunk_id` (used as the Chroma id). A `page` set on the
+    Document (PDFs) is inherited by its chunks."""
+    by_heading = MarkdownHeaderTextSplitter([("#", "h1"), ("##", "h2")], strip_headers=False)
+    by_size = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    chunks = []
+    for doc in docs:
+        for part in by_heading.split_text(doc.page_content):
+            section = part.metadata.get("h2") or part.metadata.get("h1") or doc.metadata["title"]
+            piece = Document(page_content=part.page_content, metadata={**doc.metadata, "section": section})
+            chunks.extend(by_size.split_documents([piece]))
     counts = {}
     for c in chunks:
         n = counts[c.metadata["source"]] = counts.get(c.metadata["source"], -1) + 1
