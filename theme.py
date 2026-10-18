@@ -1,6 +1,6 @@
-"""Look & feel for Kai's Company Sales & GTM Command Center.
+"""Look & feel for Kai's GTM V2 (Hoomi).
 
-- Light mode is the default; dark mode uses deep teal/navy (no black).
+- Light mode is the default (blue and white); dark mode uses midnight blue (no black).
 - `apply_theme(dark)` injects all CSS (colours are CSS variables, so switching themes only swaps the variables).
 - Small reusable UI helpers: kpi_card, page_header, section, empty_state, sparkles.
 - Sparkles / falling particles are pure CSS, sit behind content (pointer-events: none),
@@ -10,22 +10,24 @@ import random
 
 import streamlit as st
 
-LIGHT = dict(bg1="#F2FCFA", bg2="#E4F7F4", surface="#FFFFFF", surface2="#F1FBF9", text="#0A2E36", muted="#547A83",
-             border="rgba(0,160,170,.18)", teal="#00C7D1", teal_d="#007F8A", green="#2BE57E", green_d="#0E9F52",
-             shadow="0 6px 24px rgba(0,150,160,.10)", star="#00D6D6", chip="rgba(0,214,214,.12)", amber="#F59E0B",
-             sb1="#E9FAF7", sb2="#DDF5F2")
-DARK = dict(bg1="#06222B", bg2="#082D38", surface="#0E3340", surface2="#123C4A", text="#E6FBFA", muted="#8CBAC1",
-            border="rgba(0,214,214,.20)", teal="#00D6D6", teal_d="#3EE6E6", green="#39FF88", green_d="#39FF88",
-            shadow="0 8px 28px rgba(0,0,0,.28)", star="#7DFFE0", chip="rgba(0,214,214,.14)", amber="#FFC857",
-            sb1="#072833", sb2="#0A3340")
+# V2 palette: blue / white / midnight blue with subtle pink and lavender. The token names `teal` and `green` are kept from V1
+# so every existing page re-themes without edits: `teal` is now the primary blue and `green` the violet/lavender accent.
+LIGHT = dict(bg1="#F7F9FF", bg2="#ECF1FF", surface="#FFFFFF", surface2="#F2F5FF", text="#0B1437", muted="#58679A",
+             border="rgba(60,100,230,.18)", teal="#3B6BFF", teal_d="#1F43C9", green="#8B6CFF", green_d="#5B3FD0",
+             shadow="0 6px 24px rgba(40,70,200,.10)", star="#8FA8FF", chip="rgba(59,107,255,.10)", amber="#F59E0B",
+             sb1="#EFF3FF", sb2="#E3EAFF", pink="#FFB9D6", lavender="#D9CCFF", on_accent="#FFFFFF")
+DARK = dict(bg1="#070D24", bg2="#0B1535", surface="#111C45", surface2="#16235A", text="#E8EEFF", muted="#97A6D6",
+            border="rgba(120,150,255,.24)", teal="#7C99FF", teal_d="#A9BDFF", green="#B79BFF", green_d="#CDBBFF",
+            shadow="0 8px 28px rgba(0,0,10,.40)", star="#B9C8FF", chip="rgba(124,153,255,.16)", amber="#FFC857",
+            sb1="#080F2B", sb2="#0C1738", pink="#FF9EC8", lavender="#3A2F6B", on_accent="#0B1437")
 
-CHART_COLORS = ["#00C7D1", "#2BE57E", "#5B8DEF", "#F5A524", "#FF7AA8", "#9B7BFF", "#FF8A5B", "#7FD6A8"]
+CHART_COLORS = ["#3B6BFF", "#8B6CFF", "#FF8FBF", "#2BB4E6", "#F5A524", "#6C8CFF", "#C9A8F5", "#37D0A0"]
 FONT_IMPORT = "@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap');"
 
 CSS = """
 html, body, [class*="css"], .stApp, button, input, textarea {font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;}
 .stApp {background: radial-gradient(900px 500px at 92% -8%, color-mix(in srgb, var(--teal) 22%, transparent), transparent 70%),
-                    radial-gradient(800px 500px at -5% 105%, color-mix(in srgb, var(--green) 18%, transparent), transparent 70%),
+                    radial-gradient(800px 500px at -5% 105%, color-mix(in srgb, var(--pink) 30%, transparent), transparent 70%),
                     linear-gradient(180deg, var(--bg1), var(--bg2)); color: var(--text);}
 [data-testid="stHeader"] {background: transparent;}
 [data-testid="stToolbar"], [data-testid="stDecoration"], footer {visibility:hidden; height:0;}
@@ -44,7 +46,7 @@ a {color:var(--teal_d);}
 [data-testid="stSidebar"] [role="radiogroup"] label:hover {background:var(--chip); transform:translateX(2px);}
 [data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) {background:linear-gradient(90deg,var(--teal),var(--green));
     box-shadow:0 4px 14px color-mix(in srgb,var(--teal) 40%,transparent);}
-[data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) p {color:#053640 !important; font-weight:700;}
+[data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) p {color:var(--on_accent) !important; font-weight:700;}
 [data-testid="stSidebar"] [role="radiogroup"] p {font-size:.92rem; font-weight:600;}
 .sb-brand {font-family:'Sora',sans-serif; font-weight:800; font-size:1.15rem; color:var(--text); line-height:1.1;}
 .sb-sub {font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--teal_d); font-weight:700;}
@@ -58,7 +60,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {background:var(--surface); bord
       transition:transform .2s ease, box-shadow .2s ease; height:100%; position:relative; overflow:hidden;}
 .kpi:hover {transform:translateY(-3px); box-shadow:0 12px 30px color-mix(in srgb,var(--teal) 22%,transparent);}
 .kpi::after {content:""; position:absolute; right:-30px; top:-30px; width:90px; height:90px; border-radius:50%;
-    background:radial-gradient(circle,color-mix(in srgb,var(--green) 28%,transparent),transparent 70%);}
+    background:radial-gradient(circle,color-mix(in srgb,var(--pink) 45%,transparent),transparent 70%);}
 .kpi .top {display:flex; align-items:center; gap:.5rem; margin-bottom:.55rem;}
 .kpi .ico {width:30px; height:30px; border-radius:10px; display:flex; align-items:center; justify-content:center; background:var(--chip); font-size:1rem;}
 .kpi .label {font-size:.7rem; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); font-weight:700;}
@@ -71,7 +73,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {background:var(--surface); bord
 
 /* header / hero */
 .hero {position:relative; overflow:hidden; border-radius:26px; padding:1.4rem 1.8rem; margin-bottom:1.1rem; border:1px solid var(--border);
-       background:linear-gradient(120deg, color-mix(in srgb,var(--teal) 16%,var(--surface)), var(--surface) 55%, color-mix(in srgb,var(--green) 14%,var(--surface)));
+       background:linear-gradient(120deg, color-mix(in srgb,var(--teal) 14%,var(--surface)), var(--surface) 55%, color-mix(in srgb,var(--pink) 26%,var(--surface)));
        box-shadow:var(--shadow);}
 .hero .eyebrow {font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--teal_d); font-weight:800;}
 .hero h1 {margin:.25rem 0 .3rem; font-size:2rem; font-weight:800; background:linear-gradient(90deg,var(--teal_d),var(--green_d));
@@ -92,11 +94,11 @@ div[data-testid="stVerticalBlockBorderWrapper"] {background:var(--surface); bord
 .stTabs [data-baseweb="tab"] {border-radius:99px; padding:.35rem 1rem; background:var(--chip); height:auto; transition:all .15s;}
 .stTabs [data-baseweb="tab"]:hover {background:color-mix(in srgb,var(--teal) 24%,transparent);}
 .stTabs [aria-selected="true"] {background:linear-gradient(90deg,var(--teal),var(--green)) !important;}
-.stTabs [aria-selected="true"] p {color:#053640 !important; font-weight:700;}
+.stTabs [aria-selected="true"] p {color:var(--on_accent) !important; font-weight:700;}
 .stTabs [data-baseweb="tab-highlight"], .stTabs [data-baseweb="tab-border"] {display:none;}
 .stButton > button, .stDownloadButton > button, .stFormSubmitButton > button {border-radius:12px; border:1px solid var(--border); transition:all .18s ease; font-weight:600;}
 .stButton > button:hover, .stDownloadButton > button:hover {transform:translateY(-1px); border-color:var(--teal); box-shadow:0 4px 14px color-mix(in srgb,var(--teal) 25%,transparent);}
-.stButton > button[kind="primary"], .stFormSubmitButton > button[kind="primary"] {background:linear-gradient(90deg,var(--teal),var(--green)); color:#053640; border:none;}
+.stButton > button[kind="primary"], .stFormSubmitButton > button[kind="primary"] {background:linear-gradient(90deg,var(--teal),var(--green)); color:var(--on_accent); border:none;}
 [data-testid="stExpander"] {border-radius:16px; border:1px solid var(--border); background:var(--surface);}
 [data-testid="stDataFrame"] {border-radius:14px; overflow:hidden;}
 
@@ -111,6 +113,40 @@ div[data-testid="stVerticalBlockBorderWrapper"] {background:var(--surface); bord
 @keyframes fall {0%{transform:translate3d(0,-20px,0); opacity:0} 10%{opacity:.5} 90%{opacity:.35} 100%{transform:translate3d(30px,105vh,0); opacity:0}}
 @media (prefers-reduced-motion: reduce) {.star, .field i {animation:none !important;} .star{opacity:.6} .field{display:none}
   .kpi, .stButton > button, [data-testid="stSidebar"] [role="radiogroup"] label {transition:none !important;}}
+"""
+
+
+V2_CSS = """
+/* ---- V2: welcome, role cards, mascot placeholder, chat, badges, footer ---- */
+.mascot-ph {display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:.4rem; padding:1.2rem 1rem;
+    border-radius:28px; border:2px dashed color-mix(in srgb,var(--teal) 45%,transparent); background:
+    linear-gradient(160deg,color-mix(in srgb,var(--teal) 10%,var(--surface)),color-mix(in srgb,var(--pink) 22%,var(--surface)));}
+.mascot-ph .orb {width:92px; height:92px; border-radius:50%; display:flex; align-items:center; justify-content:center; font:800 2rem 'Sora',sans-serif;
+    color:var(--on_accent); background:linear-gradient(135deg,var(--teal),var(--green)); box-shadow:0 8px 24px color-mix(in srgb,var(--teal) 35%,transparent);}
+.mascot-ph b {color:var(--text); font-family:'Sora',sans-serif;} .mascot-ph small {color:var(--muted); line-height:1.35; max-width:230px;}
+.mascot-img {border-radius:28px; overflow:hidden;}
+.role-card {background:var(--surface); border:1px solid var(--border); border-radius:22px; padding:1.1rem 1.2rem .9rem; box-shadow:var(--shadow); height:100%;}
+.role-card h3 {margin:.1rem 0 .35rem;} .role-card p {color:var(--muted); font-size:.9rem; margin:0 0 .5rem;}
+.role-card ul {margin:.2rem 0 .6rem 1.1rem; padding:0; color:var(--text); font-size:.88rem;}
+.badge {display:inline-block; font-size:.68rem; font-weight:800; letter-spacing:.05em; padding:2px 10px; border-radius:99px; text-transform:uppercase;}
+.badge.demo {background:color-mix(in srgb,var(--green) 18%,transparent); color:var(--green_d);}
+.badge.ok {background:color-mix(in srgb,#2BB673 20%,transparent); color:#1B8C57;}
+.badge.warn {background:color-mix(in srgb,var(--amber) 22%,transparent); color:#A86400;}
+.badge.off {background:color-mix(in srgb,var(--muted) 18%,transparent); color:var(--muted);}
+.badge.stop {background:color-mix(in srgb,#E5484D 16%,transparent); color:#C0262B;}
+.badge.hot {background:color-mix(in srgb,#FF6B9A 22%,transparent); color:#C2336B;} .badge.warm {background:color-mix(in srgb,#F5A524 22%,transparent); color:#A86400;}
+.badge.cold {background:color-mix(in srgb,var(--teal) 16%,transparent); color:var(--teal_d);}
+.footer-cta {margin:2rem 0 .5rem; text-align:center; padding:1.3rem 1rem; border-radius:24px; border:1px solid var(--border);
+    background:linear-gradient(120deg,color-mix(in srgb,var(--teal) 14%,var(--surface)),color-mix(in srgb,var(--pink) 24%,var(--surface)));}
+.footer-cta b {font:800 1.35rem 'Sora',sans-serif; background:linear-gradient(90deg,var(--teal_d),var(--green_d)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
+.panel {background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:.8rem 1rem; box-shadow:var(--shadow); height:100%;}
+.panel h4 {margin:.1rem 0 .4rem; font-size:.95rem;} .panel ul {margin:.2rem 0 0 1.05rem; padding:0; font-size:.86rem;} .panel li {margin:.22rem 0;}
+.src {border-left:3px solid var(--teal); background:var(--chip); border-radius:8px; padding:.45rem .7rem; margin:.3rem 0; font-size:.84rem;}
+.src .cite {font-weight:700; color:var(--teal_d);} .src q {color:var(--muted); font-style:italic;}
+.mode-bar {display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; margin:.2rem 0 .6rem;}
+.sb-role {font-size:.8rem; padding:.45rem .7rem; border-radius:12px; background:var(--chip); border:1px solid var(--border);}
+[data-testid="stChatMessage"] {background:var(--surface); border:1px solid var(--border); border-radius:18px; box-shadow:var(--shadow);}
+@media (max-width: 760px) {.block-container {padding-left:.8rem; padding-right:.8rem;} .hero h1 {font-size:1.5rem;} .kpi .value {font-size:1.4rem;}}
 """
 
 
@@ -132,7 +168,7 @@ def apply_theme():
         except Exception:
             pass                                          # if Streamlit changes this, our CSS still themes the page
     variables = ";".join(f"--{k}:{v}" for k, v in p.items())
-    st.markdown(f"<style>{FONT_IMPORT}:root{{{variables}}}{CSS}</style>", unsafe_allow_html=True)
+    st.markdown(f"<style>{FONT_IMPORT}:root{{{variables}}}{CSS}{V2_CSS}</style>", unsafe_allow_html=True)
     st.markdown(particle_field(), unsafe_allow_html=True)
 
 

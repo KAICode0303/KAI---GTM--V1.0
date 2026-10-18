@@ -91,7 +91,7 @@ def answer_offline(store, question, max_distance=None, context=None, where=None,
                 # the best sentence, plus the runner-up when it is nearly as good: a little more context, still verbatim
                 keep = [best] + [i for i in order[1:2] if sims[i] >= floor and sims[i] >= sims[best] - RUNNER_UP_MARGIN]
                 facts.append(FactResult(part, True, claim=" ".join(cands[i][1] for i in keep), chunk_ids=list(dict.fromkeys(cands[i][0] for i in keep)),
-                                        quote=cands[best][1], score=float(sims[best])))
+                                        quote=cands[best][1], score=float(sims[best]), quotes=[(cands[i][0], cands[i][1]) for i in keep]))
             else:
                 facts.append(FactResult(part, False, reason=f"best sentence similarity {sims[best]:.2f} is below {floor:.2f}", score=float(sims[best])))
     status, text, sources, ids, reason = assemble(facts, evidence.hits)

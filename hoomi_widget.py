@@ -39,11 +39,11 @@ WIDGET_CSS = """
 .hm-bubble{background:var(--hs2);border:1px solid var(--hb);border-radius:16px 16px 16px 4px;padding:.6rem .8rem;margin-bottom:.4rem}
 .hm-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin:.4rem 0}
 .hm-chip{border:1px solid var(--hb);background:var(--hs);color:var(--ht);border-radius:99px;padding:.3rem .7rem;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
-.hm-chip:hover{background:linear-gradient(90deg,var(--hteal),var(--hgreen));color:#053640;border-color:transparent}
+.hm-chip:hover{background:linear-gradient(90deg,var(--hteal),var(--hgreen));color:var(--on_accent);border-color:transparent}
 #hm-answer{margin-top:.4rem;min-height:20px}
 .hm-foot{font-size:10.5px;color:var(--hm);padding:.4rem 1rem;border-top:1px solid var(--hb)}
 .hm-welcome{text-align:center;position:relative;padding:.3rem 0 .6rem}
-.hm-welcome button{margin-top:.5rem;border:0;border-radius:99px;padding:.5rem 1.1rem;font-weight:800;color:#053640;cursor:pointer;background:linear-gradient(90deg,var(--hteal),var(--hgreen))}
+.hm-welcome button{margin-top:.5rem;border:0;border-radius:99px;padding:.5rem 1.1rem;font-weight:800;color:var(--on_accent);cursor:pointer;background:linear-gradient(90deg,var(--hteal),var(--hgreen))}
 .hm-star{position:absolute;background:var(--hteal);clip-path:polygon(50%% 0,61%% 39%%,100%% 50%%,61%% 61%%,50%% 100%%,39%% 61%%,0 50%%,39%% 39%%);animation:hm-tw 2.6s ease-in-out infinite;pointer-events:none}
 @keyframes hm-tw{0%%,100%%{opacity:.2;transform:scale(.6)}50%%{opacity:1;transform:scale(1.1) rotate(25deg)}}
 @media (prefers-reduced-motion: reduce){.hm-star,.hm-tease,#hm-panel.open{animation:none !important}}

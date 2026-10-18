@@ -7,8 +7,33 @@ import theme
 from theme import page_header, section
 
 
+def v2_notes():
+    section("Kai's GTM V2.0 and Hoomi", "what is new, and what is honestly limited")
+    with st.container(border=True):
+        st.markdown("""
+**What V2 adds.** A Welcome screen with two navigation views (Leadership Hub, GTM Team: *not* a login), the **Executive Pulse**, the **GTM Workspace**
+(linked accounts, prospects, outreach activities and opportunities) and a grounded **Ask Hoomi** chat. The V1 views are kept under *Classic views*.
+
+**How Ask Hoomi answers (all local, zero hosted calls).**
+- *Numbers* (pipeline, revenue, win rate, follow-ups, top SDR…) are **calculated** from the workspace, never retrieved or generated.
+- *Documents* (services, ICPs, positioning, case studies, KYC profiles) go through local retrieval (FastEmbed vectors in a Chroma index) and an
+  **answerability gate**. The offline demo engine then **quotes the closest sentences** with citations. It is extractive: it cannot reason or paraphrase.
+- If the evidence is not close enough, Hoomi says **insufficient evidence** instead of guessing.
+- A hosted model pipeline (Fireworks AI, with generate-then-verify) exists in `rag/` and is covered by mocked tests, but it is **disabled in the app**.
+  Nothing leaves this computer.
+
+**Data.** Two separate local, git-ignored SQLite stores of *synthetic* records: the V2 workspace (`data/gtm_v2.db`) and the V1 store (`data/kai_gtm.db`).
+They start from the same demo records but are edited independently. There is no CRM integration; the CSV import is a local file feature.
+
+**Known limits.** Retrieval distance alone cannot separate every unanswerable question from an answerable one (see `eval/`), the demo engine
+shows verbatim sentences rather than composed answers, the Hoomi mascot is a placeholder until the real artwork is supplied, and there is no authentication.
+""")
+    st.divider()
+
+
 def render():
     page_header("About & Technical Notes", "How this product is built, how the numbers are defined, and where it could go next.")
+    v2_notes()
     c1, c2 = st.columns([1, 3], vertical_alignment="center")
     with c1:
         st.markdown(hoomi.hoomi_svg(150, "greet"), unsafe_allow_html=True)
@@ -17,7 +42,7 @@ def render():
         "Data Analysis with Vibe Coding" project. All companies, people, emails and figures are invented. No real or confidential data is used,
         and no paid APIs or external services are connected.""")
 
-    section("How Hoomi works (Version 1)")
+    section("Classic Hoomi (Version 1)")
     with st.container(border=True):
         st.markdown("""
 - Hoomi is a **rule-based assistant**. It is *not* an LLM and *not* an autonomous agent.

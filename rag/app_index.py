@@ -56,8 +56,8 @@ def kyc_documents(gtm_store):
     return docs
 
 
-def build_documents(gtm_store=None, corpus_dir=APP_CORPUS_DIR):
-    docs = load_documents(corpus_dir)                                  # refuses anything not marked `sanitized: true`
+def build_documents(gtm_store=None, corpus_dir=None):
+    docs = load_documents(corpus_dir or APP_CORPUS_DIR)                                  # refuses anything not marked `sanitized: true`
     return docs + (kyc_documents(gtm_store) if gtm_store is not None else [])
 
 
@@ -76,13 +76,13 @@ def fingerprint(docs, params=PARAMS):
     return h.hexdigest()
 
 
-def ensure_index(embeddings, gtm_store=None, persist_dir=APP_INDEX_DIR, corpus_dir=APP_CORPUS_DIR):
+def ensure_index(embeddings, gtm_store=None, persist_dir=None, corpus_dir=None):
     """Open the app index, refreshing ONLY the documents that changed (a KYC edit re-embeds that account's few chunks).
 
     A marker file records each document's hash. Documents that were added, edited or removed have their old chunks deleted
     (by `source`) and their new chunks written; everything else is reused. Returns (store, info).
     """
-    persist_dir = Path(persist_dir)
+    persist_dir, corpus_dir = Path(persist_dir or APP_INDEX_DIR), Path(corpus_dir or APP_CORPUS_DIR)     # resolved at call time
     docs = build_documents(gtm_store, corpus_dir)
     params = f"{getattr(embeddings, 'model_name', 'custom')}|title+section|450|60"
     store = get_store(embeddings, persist_dir=persist_dir, collection=COLLECTION)
@@ -106,7 +106,8 @@ def ensure_index(embeddings, gtm_store=None, persist_dir=APP_INDEX_DIR, corpus_d
     if changed or removed or not marker.exists():
         persist_dir.mkdir(parents=True, exist_ok=True)
         marker.write_text(json.dumps({"params": params, "docs": new}))
-    return store, {"chunks": store._collection.count(), "documents": len(docs), "updated": len(changed), "removed": len(removed),
+    kyc_n = sum(d.metadata.get("doc_type") == "kyc" for d in docs)
+    return store, {"chunks": store._collection.count(), "documents": len(docs), "kyc_documents": kyc_n, "updated": len(changed), "removed": len(removed),
                    "rebuilt": bool(changed or removed), "fingerprint": fingerprint(docs, params)[:12]}
 
 

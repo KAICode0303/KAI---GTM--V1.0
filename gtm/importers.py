@@ -112,3 +112,25 @@ def import_rows(store, raw, owner=None):
         except ValidationError as exc:                                         # e.g. a duplicate created by an earlier row of this import
             errors.append(f"row {rec['row']}: {'; '.join(exc.messages)}")
     return {"imported": imported, "skipped": len(prev) - imported, "errors": errors}
+
+
+PROSPECT_TEMPLATE_HEADERS = ["First Name", "Last Name", "Title", "Company", "Email", "LinkedIn URL", "Phone"]
+
+
+def prospect_template_csv():
+    """A blank prospect import template (header plus one empty row). Company must match an existing account."""
+    buf = io.StringIO()
+    w = csv.writer(buf)
+    w.writerow(PROSPECT_TEMPLATE_HEADERS)
+    w.writerow([""] * len(PROSPECT_TEMPLATE_HEADERS))
+    return buf.getvalue().encode("utf-8")
+
+
+def to_safe_csv(df):
+    """Export a DataFrame as CSV with spreadsheet-formula injection neutralised (cells starting = + - @ get an apostrophe)."""
+    from gtm.kyc import csv_safe
+    out = df.copy()
+    for col in out.columns:
+        if out[col].dtype == object or str(out[col].dtype).startswith("str"):
+            out[col] = out[col].map(lambda x: csv_safe(x) if isinstance(x, str) else x)
+    return out.to_csv(index=False).encode("utf-8")

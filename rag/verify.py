@@ -138,6 +138,7 @@ class FactResult:
     quote: str = ""
     reason: str = ""                                  # why a fact is unsupported
     score: float = None                               # similarity of the chosen sentence (offline extractive engine only)
+    quotes: list = field(default_factory=list)        # [(chunk_id, verbatim sentence)] when a fact is backed by sentences from several chunks
 
 
 def build_verification_prompt(evidence, facts, draft):
