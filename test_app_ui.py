@@ -84,8 +84,12 @@ def test_welcome_screen_shows_greeting_placeholder_and_both_views():
     at.run()
     clean(at)
     page = texts(at.markdown)
-    assert "Meet Hoomi" in page and "Where's your GTM headed? Let's find out." in page
-    assert "Mascot placeholder" in page and "Pixel Creative Strategist" in page          # a labelled placeholder, no invented artwork
+    assert "Meet Hoomi" in page and "Hey, I'm Hoomi! Your GTM copilot. Ready to make some moves?" in page
+    from views import mascot
+    if mascot.asset_path():                                                              # the supplied artwork is shown, with its caption
+        assert "data:image/png;base64" in page and mascot.CAPTION in page and "Mascot placeholder" not in page
+    else:                                                                                # otherwise a labelled placeholder, no invented artwork
+        assert "Mascot placeholder" in page and "Pixel Creative Strategist" in page
     assert "not a login" in page.lower() and "no authentication" in page.lower()
     assert {b.label for b in at.button} == {"Enter the Leadership Hub", "Enter the GTM Team"}
     assert "Leadership Hub" in page and "GTM Team" in page and "Executive Pulse" in page and "GTM Workspace" in page
@@ -137,8 +141,11 @@ def test_display_name_is_sanitised_before_it_reaches_html_or_script():
     at.run()
     at.text_input(key="user_name").set_value("</script><img src=x onerror=alert(1)>Ana").run()
     page = texts(at.markdown)
-    assert "<img" not in page and "onerror=alert" not in page and "</script>" not in page and "Ana" in page
+    assert "<img src=x" not in page and "onerror" not in page and "</script>" not in page and "scriptimg" not in page     # (the mascot's own <img> is legitimate)
+    assert "Hey, I'm Hoomi!" in page                                                       # a hostile name is rejected outright: the plain greeting remains
     clean(at)
+    at.text_input(key="user_name").set_value("Ana-María O'Neil").run()                      # while an ordinary name is used
+    assert "Hey Ana-María O'Neil, I'm Hoomi!" in texts(at.markdown)
 
 
 def test_classic_v1_views_are_kept_and_still_run():
@@ -203,22 +210,182 @@ def last_reply(at):
     return texts(at.chat_message[-1].markdown)
 
 
-def test_hoomi_labels_the_offline_demo_and_keeps_fireworks_disabled():
+def test_hoomi_chat_is_visible_with_a_working_input_and_defaults_to_offline():
     at = goto(start(), HOOMI)
     clean(at)
-    page = texts(at.markdown)
-    assert "Offline demo" in page and "zero hosted calls" in page and "Fireworks mode is disabled" in page
-    toggle = at.toggle(key="hoomi_hosted_toggle")
-    assert toggle.value is False and toggle.disabled is True
-    from views import hoomi_page
-    assert hoomi_page.HOSTED_MODE_AVAILABLE is False
+    assert len(at.chat_input) == 1 and "Ask Hoomi about" in at.chat_input[0].placeholder       # a chat input is on the page (pinned at the bottom)
+    page = texts(at.markdown).lower()
+    assert "offline demo" in page and "nothing leaves this computer unless you choose fireworks and approve it" in page
+    assert at.radio(key="hoomi_engine").value.startswith("Offline demo")                          # hosted answers are not the default
+    assert not any(c.key == "hoomi_hosted_ok" for c in at.checkbox)                              # no approval box until Fireworks is chosen
     import ast
     for path in ("views/hoomi_page.py", "rag/chat.py", "rag/offline.py", "rag/app_index.py"):
         tree = ast.parse((ROOT / path).read_text())
-        imported = {n.module or "" for n in ast.walk(tree) if isinstance(n, ast.ImportFrom)} | {a.name for n in ast.walk(tree) if isinstance(n, ast.Import) for a in n.names}
-        names = {a.name for n in ast.walk(tree) if isinstance(n, ast.ImportFrom) for a in n.names}
-        assert not {m for m in imported if "providers" in m or m in ("langchain_fireworks", "fireworks", "openai", "requests", "httpx")}, (path, imported)
-        assert not names & {"providers", "LLMClient", "ChatFireworks", "answer_verified"}, (path, names)
+        top = [n for n in tree.body if isinstance(n, (ast.Import, ast.ImportFrom))]
+        mods = {n.module or "" for n in top if isinstance(n, ast.ImportFrom)} | {a.name for n in top if isinstance(n, ast.Import) for a in n.names}
+        assert not [m for m in mods if "providers" in m or m in ("langchain_fireworks", "fireworks", "openai", "requests", "httpx")], (path, mods)
+
+
+def test_the_environment_variable_alone_never_enables_hosted_answers(monkeypatch):
+    monkeypatch.setenv("RAG_ALLOW_HOSTED_CALLS", "1")
+    at = goto(start(), HOOMI)
+    ask(at, "What is a managed service?")
+    assert at.session_state.hoomi_chat[-1]["meta"]["model_calls"] == 0 and "hoomi_client" not in at.session_state
+
+
+# ---- Fireworks option: needs configuration AND the user's explicit approval; mocked, so nothing is ever sent
+class FakeFireworksModel:
+    """A fake chat model: inspects the prompt like a real one would and answers with valid JSON about the managed-service passage."""
+
+    def __init__(self, fail=False):
+        self.fail, self.prompts = fail, []
+
+    def invoke(self, prompt):
+        import json
+        import re
+        self.prompts.append(prompt)
+        if self.fail:
+            raise RuntimeError("network down")
+        sentence = "A managed service is a recurring program where Kai's Company owns delivery against quality and throughput targets."
+        if "evidence checker" in prompt:
+            cid = re.search(r"Passage id: (\S+) \| source: 02_delivery_modalities.md › Managed service", prompt).group(1)
+            body = {"facts": [{"fact": "what a managed service is", "status": "supported", "claim": sentence, "supporting_chunk_ids": [cid],
+                               "evidence_quote": "recurring program where Kai's Company owns delivery"}], "unaddressed_parts": []}
+        else:
+            body = {"requested_facts": ["what a managed service is"], "answer": sentence}
+        return type("Msg", (), {"content": json.dumps(body), "usage_metadata": {"input_tokens": 700, "output_tokens": 90, "total_tokens": 790}})()
+
+
+@pytest.fixture()
+def configured_fireworks(monkeypatch):
+    from rag import providers
+    model = FakeFireworksModel()
+    monkeypatch.setattr(providers, "load_config", lambda *a, **k: providers.ProviderConfig(model="accounts/fireworks/models/test", api_key="fake-key-for-tests"))
+    monkeypatch.setattr(providers, "build_chat_model", lambda cfg: model)
+    return model
+
+
+def test_choosing_fireworks_without_configuration_explains_what_is_missing(monkeypatch):
+    from rag import providers
+    monkeypatch.setattr(providers, "load_config", lambda *a, **k: providers.ProviderConfig())
+    at = goto(start(), HOOMI)
+    at.radio(key="hoomi_engine").set_value(at.radio(key="hoomi_engine").options[1]).run()
+    clean(at)
+    assert "not set up yet" in texts(at.info) and "LLM_MODEL" in texts(at.info) and "FIREWORKS_API_KEY" in texts(at.info) and ".env" in texts(at.info)
+    assert not any(c.key == "hoomi_hosted_ok" for c in at.checkbox)
+    ask(at, "What is a managed service?")
+    assert at.session_state.hoomi_chat[-1]["meta"]["model_calls"] == 0
+
+
+def test_fireworks_is_not_used_until_the_user_approves(configured_fireworks):
+    at = goto(start(), HOOMI)
+    at.radio(key="hoomi_engine").set_value(at.radio(key="hoomi_engine").options[1]).run()
+    clean(at)
+    box = at.checkbox(key="hoomi_hosted_ok")
+    assert box.value is False and "Waiting for your approval" in texts(at.info) and "sending my question and the retrieved passages" in box.label
+    ask(at, "What is a managed service?")
+    assert configured_fireworks.prompts == [] and at.session_state.hoomi_chat[-1]["meta"]["model_calls"] == 0     # unapproved: offline, nothing sent
+
+
+def test_approved_fireworks_gives_a_verified_answer_with_real_citations(configured_fireworks):
+    at = goto(start(), HOOMI)
+    at.radio(key="hoomi_engine").set_value(at.radio(key="hoomi_engine").options[1]).run()
+    at.checkbox(key="hoomi_hosted_ok").check().run()
+    clean(at)
+    assert "Approved for this session" in texts(at.success)
+    ask(at, "What is a managed service?")
+    msg = at.session_state.hoomi_chat[-1]
+    assert msg["kind"] == "answered" and msg["meta"]["engine"] == "fireworks-verified" and msg["meta"]["hosted_calls"] == 2
+    assert len(configured_fireworks.prompts) == 2 and msg["meta"]["usage"]["input_tokens"] == 1400
+    assert [s["citation"] for s in msg["sources"]] == ["[02_delivery_modalities.md › Managed service]"]
+    reply = last_reply(at)
+    assert "Fireworks, verified against sources" in reply
+    assert "2 hosted call(s) to Fireworks, approved by you (1400 in, 180 out)" in " ".join(c.value for c in at.caption)
+    assert "kyc_" not in reply and all(s["quote"].lower() in s["passage"].lower().replace("\n", " ") for s in msg["sources"])
+
+
+def test_a_hosted_failure_falls_back_to_the_offline_answer(configured_fireworks):
+    configured_fireworks.fail = True
+    at = goto(start(), HOOMI)
+    at.radio(key="hoomi_engine").set_value(at.radio(key="hoomi_engine").options[1]).run()
+    at.checkbox(key="hoomi_hosted_ok").check().run()
+    ask(at, "What is a managed service?")
+    reply = last_reply(at)
+    assert "offline answer instead" in reply and "RuntimeError" in reply and "network down" not in reply
+    assert at.session_state.hoomi_chat[-1]["meta"]["engine"] == "offline-extractive"
+
+
+# ---------------------------------------------------------------- one mascot everywhere: a floating Hoomi that opens the chat
+def fab_present(at):
+    return any(b.key == "hoomi_fab_btn" for b in at.button)
+
+
+@pytest.mark.parametrize("page", [PULSE, WORKSPACE, "🏠  Command Center", "💰  Revenue & GP", "ℹ️  About"])
+def test_the_floating_mascot_is_on_every_page_except_the_chat_and_opens_it(page):
+    at = goto(start(), page)
+    clean(at)
+    assert fab_present(at)
+    at.button(key="hoomi_fab_btn").click().run()
+    clean(at)
+    assert at.session_state.nav == HOOMI and len(at.chat_input) == 1 and at.session_state.nav_classic is None
+    assert not fab_present(at)                                                              # no second mascot on the chat page itself
+
+
+def test_the_welcome_screen_has_no_floating_mascot():
+    at = AppTest.from_file(APP, default_timeout=180)
+    at.run()
+    assert not fab_present(at)
+
+
+def test_the_floating_mascot_uses_the_same_artwork_and_respects_reduced_motion():
+    from views import mascot
+    import theme
+    if not mascot.asset_path():
+        pytest.skip("no mascot artwork installed")
+    at = start()
+    css = " ".join(m.value for m in at.markdown if "st-key-hoomi_fab" in m.value)
+    assert "background-image:url(data:image/png;base64" in css                              # the round icon cut from the supplied artwork
+    assert ".st-key-hoomi_fab" in theme.V2_CSS and "prefers-reduced-motion" in theme.V2_CSS and "hoomi-bob" in theme.V2_CSS
+
+
+def test_the_old_robot_mascot_and_floating_panel_are_gone_from_every_page():
+    at = start()
+    for page in [PULSE, HOOMI, WORKSPACE, "🏠  Command Center", "ℹ️  About"]:
+        goto(at, page)
+        text = texts(at.markdown)
+        assert 'class="hm-wrap"' not in text and 'aria-label="Hoomi, the friendly AI companion"' not in text, page
+
+
+# ---------------------------------------------------------------- navigation
+@pytest.mark.parametrize("page", [PULSE, HOOMI, WORKSPACE, "📞  SDR Activity", "ℹ️  About"])
+def test_back_to_welcome_works_from_every_page(page):
+    at = goto(start(), page)
+    button = at.sidebar.button(key="switch_role")
+    assert button.label == "← Back to Welcome"
+    button.click().run()
+    clean(at)
+    assert at.session_state.role is None and "Meet Hoomi" in texts(at.markdown)
+    at.button(key="role_Leadership Hub").click().run()                                      # and a role can be chosen again straight away
+    clean(at)
+    assert at.session_state.nav == PULSE
+
+
+def test_all_existing_sections_are_listed_in_the_sidebar():
+    at = start()
+    assert list(at.sidebar.radio(key="nav_classic").options) == CLASSIC and len(CLASSIC) == 8
+    assert list(at.sidebar.radio(key="nav_primary").options) == [PULSE, HOOMI, WORKSPACE]
+    side = texts(at.sidebar.markdown)
+    assert "Hoomi V2" in side and "Classic sections" in side
+
+
+def test_welcome_voice_controls_are_local_only_with_play_and_mute():
+    from views import welcome
+    html = welcome.VOICE_HTML.replace("{{", "{").replace("}}", "}")
+    assert "Play greeting" in html and "Mute" in html and "localService" in html and "FEMININE" in html
+    assert "http://" not in html and "https://" not in html and "fetch(" not in html and "XMLHttpRequest" not in html      # no network, no paid voice API
+    assert "No suitable on-device voice" in html and "localStorage" in html
+    assert welcome.GREETING == "Hey, I'm Hoomi! Your GTM copilot. Ready to make some moves?"
+    assert "</script>" not in html.split("<script>")[1].replace("</script>", "", 1)
 
 
 def test_documents_question_gets_a_quoted_answer_with_sources_and_checks():
@@ -493,3 +660,32 @@ def test_the_ui_does_not_label_its_data_as_synthetic_or_demo():
         for phrase in FORBIDDEN_UI_WORDING:
             assert phrase not in page_text, (name, phrase)
     assert "offline demo" in dict(seen)[HOOMI]                                            # the explicit, requested mode label stays
+
+
+# ---------------------------------------------------------------- mascot: display crop of the hero only, original untouched
+def test_mascot_crops_show_only_the_cat_and_never_edit_the_original():
+    import base64
+    import hashlib
+    import re
+    from io import BytesIO
+
+    from PIL import Image
+    from views import mascot
+    path = mascot.asset_path()
+    if not path:
+        pytest.skip("no mascot artwork installed")
+    before = hashlib.md5(path.read_bytes()).hexdigest()
+    original = Image.open(path)
+
+    def decoded(kind):
+        return Image.open(BytesIO(base64.b64decode(re.search(r"base64,([A-Za-z0-9+/=]+)", mascot.data_uri(kind)).group(1))))
+    hero, icon = decoded("hero"), decoded("icon")
+    assert hashlib.md5(path.read_bytes()).hexdigest() == before                              # the artwork file is unchanged
+    assert mascot.CAPTION == "Pixel — Your Creative GTM Strategist" and mascot.CAPTION in mascot.html(230)
+    if original.size == mascot.SHEET_SIZE:
+        x0, y0, x1, y1 = mascot.CAT_CROP
+        assert x1 <= 680 and y1 < original.height / 1.8 and x0 > 300                         # excludes the title text, the speech bubble and the "Muse-Inspired" panel
+        assert abs(hero.width / hero.height - (x1 - x0) / (y1 - y0)) < 0.02 and hero.width <= mascot.WIDTHS["hero"]
+        ix0, iy0, ix1, iy1 = mascot.ICON_CROP
+        assert iy0 > original.height * 0.75 and ix1 < original.width * 0.2                   # the round app-icon tile, bottom-left of the sheet
+        assert icon.mode == "RGBA" and icon.getpixel((0, 0))[3] == 0 and icon.getpixel((icon.width // 2, icon.height // 2))[3] == 255   # circular, transparent corners

@@ -4,6 +4,7 @@ import streamlit as st
 import db
 import hoomi
 import theme
+from views import mascot
 from theme import page_header, section
 
 
@@ -19,14 +20,14 @@ def v2_notes():
 - *Documents* (services, ICPs, positioning, case studies, KYC profiles) go through local retrieval (FastEmbed vectors in a Chroma index) and an
   **answerability gate**. The offline engine then **quotes the closest sentences** with citations. It is extractive: it cannot reason or paraphrase.
 - If the evidence is not close enough, Hoomi says **insufficient evidence** instead of guessing.
-- A hosted model pipeline (Fireworks AI, with generate-then-verify) exists in `rag/` and is covered by mocked tests, but it is **disabled in the app**.
-  Nothing leaves this computer.
+- Fireworks AI (generate-then-verify) is an opt-in answer style in Ask Hoomi. It needs your own `.env` and a per-session approval; until then
+  nothing leaves this computer.
 
 **Data.** Two separate local SQLite stores: the V2 workspace (`data/gtm_v2.db`) and the V1 store (`data/kai_gtm.db`). They start from the same
 records and are edited independently. There is no CRM integration; the CSV import is a local file feature.
 
 **Known limits.** Retrieval distance alone cannot separate every unanswerable question from an answerable one (see `eval/`), the offline engine
-shows verbatim sentences rather than composed answers, the Hoomi mascot is a placeholder until the real artwork is supplied, and there is no authentication.
+shows verbatim sentences rather than composed answers, the Fireworks path has only been tested with mocks, and there is no authentication.
 """)
     st.divider()
 
@@ -36,7 +37,7 @@ def render():
     v2_notes()
     c1, c2 = st.columns([1, 3], vertical_alignment="center")
     with c1:
-        st.markdown(hoomi.hoomi_svg(150, "greet"), unsafe_allow_html=True)
+        mascot.render(150, caption=False)
     with c2:
         st.markdown("""**Kai's Company Sales & GTM Command Center** is an internal GTM management product built for a Maven Week 1
         "Data Analysis with Vibe Coding" project and extended in Week 2 with Hoomi. No paid APIs or external services are connected.""")
@@ -48,7 +49,7 @@ def render():
 - Every number Hoomi says is computed **locally in Python** from the same filtered data you see on screen (`metrics.py`, `analytics.py`).
 - Questions are matched by **keywords** to a fixed set of answer templates (`hoomi.py → answer_with_mood`). Unknown questions get a polite "I only know these topics" reply.
 - Priorities are scored by a transparent formula: *weighted deal value × urgency* (overdue follow-up +50%, stalled +50%, closing within 30 days +50%).
-- The floating panel (`hoomi_widget.py`) shows pre-computed answers, so it works offline.
+- The old floating panel (`hoomi_widget.py`) is retired in V2: the floating mascot now opens the Ask Hoomi chat.
 - **Upgrade path:** replace `answer_with_mood()` with a call to Claude, LangChain or an n8n webhook, passing the numbers from the helper functions as context. The mascot, panel and pages stay unchanged.
 """)
 

@@ -167,7 +167,8 @@ def _ground(fact, entry, hits_by_id, draft):
     shown = strip_citations(claim)
     if not shown:
         return FactResult(fact, False, reason="claim_empty_after_cleanup")
-    return FactResult(fact, True, claim=shown, chunk_ids=verified, quote=_ws(entry["evidence_quote"]))
+    return FactResult(fact, True, claim=shown, chunk_ids=verified, quote=_ws(entry["evidence_quote"]),
+                      quotes=[(cid, _ws(entry["evidence_quote"])) for cid in verified])
 
 
 def parse_verification(raw, facts, hits, draft):
@@ -232,9 +233,9 @@ def assemble(facts, hits):
     return "answered", text, sources, ids, ""
 
 
-def answer_verified(store, question, llm, max_distance=None, context=None, max_facts=MAX_FACTS):
+def answer_verified(store, question, llm, max_distance=None, context=None, max_facts=MAX_FACTS, where=None):
     """Gate, generate, verify, assemble. `llm(prompt) -> str` is any provider (a mock in tests)."""
-    evidence = gather_evidence(store, question, max_distance=max_distance, context=context)
+    evidence = gather_evidence(store, question, max_distance=max_distance, context=context, where=where)
 
     def refuse(reason, detail="", calls=0):
         return VerifiedAnswer("refused", REFUSAL, reason=reason, detail=detail, evidence=evidence, model_calls=calls)

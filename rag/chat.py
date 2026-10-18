@@ -14,6 +14,7 @@ import hoomi
 from gtm import numbers_qa, pulse
 from rag import app_index, offline
 from rag.answer import resolve_max_distance
+from rag.verify import _fold, answer_verified
 
 MAX_QUESTION_CHARS = 500
 ROUTES = ("Auto", "Documents", "Numbers", "Rule-based")
@@ -53,18 +54,22 @@ def from_verified(result, route, scope_account=None):
         # each chunk is shown with the sentence that actually came from IT, never another chunk's quote
         pairs = f.quotes if f.quotes else [(cid, f.quote) for cid in f.chunk_ids[:1]]
         for cid, quote in (pairs if f.supported else []):
-            if cid not in seen and cid in by_id and quote in by_id[cid].text:
+            if cid not in seen and cid in by_id and _fold(quote) in _fold(by_id[cid].text):
                 seen.add(cid)
                 h = by_id[cid]
                 sources.append({"citation": h.citation, "chunk_id": cid, "quote": quote, "passage": h.text, "distance": h.distance, "doc_type": h.doc_type})
     msg = _message("answered" if result.status == "answered" else "partial", result.text, sources=sources)
-    msg["facts"] = [{"fact": f.fact, "supported": f.supported, "detail": f.reason or "quoted verbatim from the cited passage", "score": f.score} for f in result.facts]
+    ok_detail = "quoted verbatim from the cited passage" if result.engine else "verified: the quote was found in the cited passage"
+    msg["facts"] = [{"fact": f.fact, "supported": f.supported, "detail": f.reason or ok_detail, "score": f.score} for f in result.facts]
     msg["meta"] = meta
     return msg
 
 
-def ask(question, route="Auto", gtm_store=None, knowledge=None, knowledge_error="", ws=None):
-    """Answer one question. Returns an assistant message dict. Never raises for ordinary input and never contacts a hosted service."""
+def ask(question, route="Auto", gtm_store=None, knowledge=None, knowledge_error="", ws=None, hosted=None):
+    """Answer one question. Returns an assistant message dict. Never raises for ordinary input.
+
+    hosted: None (default) keeps everything offline. Pass an approved LLM client (rag.providers.LLMClient) to answer document questions
+    in natural language with the verified generate-then-verify pipeline; the caller is responsible for the user's explicit approval."""
     q = clean_question(question)
     if not q:
         return _message("insufficient", "Type a question and I'll look it up.")
@@ -95,9 +100,35 @@ def ask(question, route="Auto", gtm_store=None, knowledge=None, knowledge_error=
         return _rulebased(q, ws, f"Document search is unavailable ({knowledge_error or 'no knowledge base loaded'}).")
 
     where, account = app_index.scope_filter(q, gtm_store)
+    if hosted is not None:
+        return _hosted_answer(q, knowledge, where, account, hosted)
     # An insufficient-evidence answer is final: it is never "rescued" by the loose V1 keyword rules (which could, for example,
     # read "who won the football world cup" as a won-revenue question).
     return from_verified(offline.answer_offline(knowledge, q, where=where), "documents", account)
+
+
+FALLBACK_REASONS = {"llm_error": "the hosted call failed", "generation_invalid": "the hosted reply was not usable",
+                    "verification_invalid": "the hosted answer could not be verified"}
+
+
+def _hosted_answer(q, knowledge, where, account, client):
+    """Natural-language answer through the verified pipeline. If the hosted step fails or cannot be verified, show the offline answer instead
+    (clearly labelled). A refusal for lack of evidence is final, exactly as offline."""
+    from rag.providers import ConfigurationError
+    try:
+        result = answer_verified(knowledge, q, client, where=where)
+    except ConfigurationError as exc:
+        msg = _message("insufficient", f"**Fireworks is not available.** {exc}", meta={"route": "documents", "engine": "fireworks"})
+        return msg
+    if result.status == "refused" and result.reason in FALLBACK_REASONS:
+        offline_msg = from_verified(offline.answer_offline(knowledge, q, where=where), "documents", account)
+        offline_msg["content"] = (f"_{FALLBACK_REASONS[result.reason].capitalize()} ({result.detail or result.reason}), so this is the offline answer instead._\n\n"
+                                  + offline_msg["content"])
+        offline_msg["meta"].update(hosted_fallback=result.reason, hosted_calls=result.model_calls)
+        return offline_msg
+    msg = from_verified(result, "documents", account)
+    msg["meta"].update(engine="fireworks-verified", hosted_calls=result.model_calls)
+    return msg
 
 
 def _rulebased(question, ws, notice):

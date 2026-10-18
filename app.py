@@ -5,7 +5,7 @@ Run with:  streamlit run app.py
 Flow of this file:
   1. page setup + theme (light by default, dark toggle)
   2. Welcome screen: pick Leadership Hub or GTM Team (navigation only, not a login)
-  3. sidebar: V2 pages (Executive Pulse, Ask Hoomi, GTM Workspace) and the classic V1 views with their original filters
+  3. sidebar: V2 pages (Executive Pulse, Ask Hoomi, GTM Workspace) and ALL classic sections, with their original filters
   4. route to the chosen page
 
 Two separate synthetic data stores, both local and git-ignored: the V2 workspace (data/gtm_v2.db: Pulse, Workspace, Ask Hoomi) and the V1
@@ -15,12 +15,11 @@ from datetime import date
 
 import streamlit as st
 
-import hoomi_widget
 import metrics as m
 import theme
 import workspace
 from gtm.store import GTMStore, default_path
-from views import about, accounts, content, executive, hoomi_page, leads_opps, pulse, research, revenue, sdr, welcome, workspace_gtm
+from views import about, accounts, content, executive, hoomi_page, leads_opps, mascot, pulse, research, revenue, sdr, welcome, workspace_gtm
 
 st.set_page_config(page_title="Kai's GTM V2.0 | Hoomi", page_icon="✨", layout="wide", initial_sidebar_state="auto")
 st.session_state.setdefault("dark", False)
@@ -84,15 +83,22 @@ def switch_role():
     st.session_state.role = None
 
 
+def open_chat():
+    """The floating mascot: jump to the Ask Hoomi chat (navigation only)."""
+    st.session_state.nav = st.session_state.nav_primary = HOOMI
+    st.session_state.nav_classic = None
+
+
 # ------------------------------------------------------------------ sidebar
 with st.sidebar:
     sidebar_brand()
     st.markdown(f'<div class="sb-role">{welcome.ROLES[role]["icon"]} <b>{role}</b> · navigation only</div>', unsafe_allow_html=True)
-    st.button("↩ Switch view", key="switch_role", on_click=switch_role, width="stretch")
+    st.button("← Back to Welcome", key="switch_role", on_click=switch_role, width="stretch")
     st.toggle("🌙 Dark mode", key="dark")
+    st.markdown('<div class="sb-label">Hoomi V2</div>', unsafe_allow_html=True)
     st.radio("Navigate", primary, index=None, key="nav_primary", label_visibility="collapsed", on_change=go_primary)
-    with st.expander("Classic views (V1)", expanded=st.session_state.nav in CLASSIC):
-        st.radio("Classic views", CLASSIC, index=None, key="nav_classic", label_visibility="collapsed", on_change=go_classic)
+    st.markdown('<div class="sb-label">Classic sections</div>', unsafe_allow_html=True)     # all the original sections, always visible
+    st.radio("Classic sections", CLASSIC, index=None, key="nav_classic", label_visibility="collapsed", on_change=go_classic)
     page = st.session_state.nav
 
     name = welcome.clean_name(st.text_input("Hoomi calls you…", key="user_name", placeholder="Your first name"))
@@ -154,5 +160,5 @@ elif page == CLASSIC[6]:
 else:
     about.render()
 
-if page in CLASSIC and ws is not None:                      # the classic floating Hoomi quick panel stays on the classic views only
-    hoomi_widget.render(ws, name)
+if page != HOOMI:                                           # one mascot everywhere: a small floating Hoomi that opens the chat
+    mascot.fab(open_chat)

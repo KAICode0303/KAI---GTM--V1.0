@@ -1,9 +1,12 @@
-"""Hoomi: grounded Q&A (offline demo) over approved documents, KYC profiles and the workspace numbers, plus the classic V1 briefing.
+"""Hoomi: a RAG chatbot over approved documents, KYC profiles and the workspace numbers, plus the classic V1 briefing.
 
-The Fireworks (hosted) mode is EXPLICITLY DISABLED in this build: this page never imports the provider layer and never calls a hosted
-service. Answers come from (a) calculations over the workspace, (b) the offline extractive engine over approved synthetic documents,
-or (c) the classic rule-based Hoomi when document search is unavailable or when you choose it.
+Answers come from (a) calculations over the workspace, (b) document search (local FastEmbed vectors in Chroma) answered either by the OFFLINE
+extractive engine (default, zero hosted calls) or, only if you choose it AND explicitly approve it, in natural language by Fireworks AI through
+the verified generate-then-verify pipeline, or (c) the classic rule-based Hoomi when document search is unavailable or when you choose it.
+Hosted calls are off by default: they need the provider configured in your own .env AND a per-session approval checkbox on this page.
 """
+import dataclasses
+
 import streamlit as st
 
 import hoomi
@@ -13,11 +16,11 @@ from rag import app_index, chat
 from theme import section
 from views import mascot
 
-HOSTED_MODE_AVAILABLE = False            # Fireworks mode stays off; see README for the separate, explicitly confirmed smoke test
 MAX_HISTORY = 60
 KIND_BADGE = {"answered": ("ok", "Answered · quoted from documents"), "partial": ("warn", "Partial answer"),
               "insufficient": ("warn", "Insufficient evidence"), "numbers": ("ok", "Workspace figures"),
               "rulebased": ("off", "Classic rule-based fallback")}
+ENGINES = ("Offline demo (quoted sentences)", "Fireworks (natural language, needs your approval)")
 
 
 @st.cache_resource(show_spinner=False)
@@ -43,6 +46,8 @@ def render_message(msg):
         return
     cls, label = KIND_BADGE.get(msg["kind"], ("off", msg["kind"]))
     meta = msg.get("meta", {})
+    if meta.get("engine") == "fireworks-verified" and msg["kind"] in ("answered", "partial"):
+        label = "Answered · Fireworks, verified against sources" if msg["kind"] == "answered" else "Partial answer · Fireworks, verified"
     st.markdown(f'<span class="badge {cls}">{label}</span>', unsafe_allow_html=True)
     st.markdown(theme.safe(msg["content"]))
     if msg.get("sources"):
@@ -62,27 +67,61 @@ def render_message(msg):
                 bits.append(f"closest passage distance {meta['best_distance']:.2f} against a gate of {meta['gate']:g}")
             if meta.get("scope_account"):
                 bits.append(f"search scoped to the KYC profile of {meta['scope_account']}")
-            bits.append("zero hosted calls")
-            st.caption("; ".join(bits).capitalize() + ".")
+            if meta.get("hosted_calls"):
+                u = meta.get("usage") or {}
+                tokens = f" ({u['input_tokens']} in, {u['output_tokens']} out)" if u.get("input_tokens") is not None and u.get("output_tokens") is not None else ""
+                bits.append(f"{meta['hosted_calls']} hosted call(s) to Fireworks, approved by you{tokens}")
+            else:
+                bits.append("zero hosted calls")
+            line = "; ".join(bits)
+            st.caption(line[:1].upper() + line[1:] + ".")
 
 
 def _suggest(question):
     st.session_state.hoomi_pending = question
 
 
+def hosted_setup():
+    """What the Fireworks option needs. Returns (client or None, status text). A client exists ONLY when the provider is configured in the
+    user's own .env and the user has ticked the approval checkbox on this page. Nothing here sends anything."""
+    from rag import providers                                           # imported only when the user opens this option
+    try:
+        cfg = providers.load_config()
+    except (ValueError, NotImplementedError) as exc:
+        return None, f"Fireworks is not set up: {exc}"
+    missing = [name for name, ok in (("LLM_MODEL", cfg.model), (providers.API_KEY_ENV["fireworks"], cfg.api_key)) if not ok]
+    if missing:
+        return None, f"Fireworks is not set up yet: add {' and '.join(missing)} to your .env (see .env.example). Until then answers stay offline."
+    approved = st.checkbox("I approve sending my question and the retrieved passages to Fireworks AI during this session. Nothing else is sent, "
+                           "and no keys are shown.", key="hoomi_hosted_ok")
+    if not approved:
+        return None, "Waiting for your approval. Until you tick the box, nothing is sent and answers stay offline."
+    sig = (cfg.provider, cfg.model, cfg.max_tokens, cfg.temperature)
+    held = st.session_state.get("hoomi_client")
+    if held is None or held[0] != sig:                                  # the approval is the decision; the RAG_ALLOW_HOSTED_CALLS variable is ignored
+        held = (sig, providers.LLMClient(dataclasses.replace(cfg, allow_hosted_calls=True)))
+        st.session_state.hoomi_client = held
+    return held[1], f"Approved for this session: {cfg.provider} / {cfg.model}."
+
+
 def _chat(ws, name, gtm_store):
+    """Controls, suggestions, the conversation, and the pinned chat input (this must run at the page's top level so the input stays visible)."""
     st.session_state.setdefault("hoomi_chat", [])
     knowledge, error, info = load_knowledge(gtm_store)
-    left, right = st.columns([3, 2], vertical_alignment="center")
-    with left:
+    c1, c2 = st.columns([3, 3], vertical_alignment="center")
+    with c1:
         st.radio("Answer from", chat.ROUTES, key="hoomi_route", horizontal=True, label_visibility="collapsed",
                  help="Auto sends metric questions to the calculations and everything else to the documents. 'Rule-based' is the classic V1 Hoomi.")
-    with right:
-        st.toggle("Fireworks AI (hosted)", value=False, disabled=True, key="hoomi_hosted_toggle",
-                  help="Disabled in this build. Hosted AI would send your question and retrieved passages to a provider.")
+    with c2:
+        engine = st.radio("Answer style", ENGINES, key="hoomi_engine", horizontal=True, label_visibility="collapsed",
+                          help="Offline answers quote the documents. Fireworks writes a natural-language answer, then every claim is checked against the sources.")
+    client, status = (None, "")
+    if engine == ENGINES[1]:
+        client, status = hosted_setup()
+        (st.success if client else st.info)(status)
     if knowledge is not None:
         st.caption(f"Knowledge base: {info['chunks']} passages from {info['documents'] - info['kyc_documents']} documents and {info['kyc_documents']} KYC profiles · "
-                   f"gate distance {chat.gate_text()} (provisional) · all local.")
+                   f"gate distance {chat.gate_text()} (provisional) · searched locally.")
     else:
         st.markdown(theme.safe(f'<div class="warn"><b>Document search is unavailable.</b> {error}. Metric questions and the classic rule-based Hoomi still work. '
                                f'To enable document search, run <code>python -m rag.app_index</code> once (see README).</div>'), unsafe_allow_html=True)
@@ -92,25 +131,33 @@ def _chat(ws, name, gtm_store):
     for i, q in enumerate(chat.DOC_SUGGESTIONS[:3] + numbers_qa.SUGGESTIONS[:3]):
         cols[i % 3].button(q, key=f"hsug_{i}", width="stretch", on_click=_suggest, args=(q,))
 
-    prompt = st.chat_input("Ask about services, segments, positioning, a KYC profile, or the numbers…")
+    conversation = st.container()                                       # filled below, after the input has been read
+    with st.expander("📋 Classic briefing (V1 data)"):
+        _briefing(ws, name)
+
+    prompt = st.chat_input("Ask Hoomi about services, segments, positioning, a KYC profile, or the numbers…")
     question = st.session_state.pop("hoomi_pending", None) or prompt
     if question:
         history = st.session_state.hoomi_chat
         shown = chat.clean_question(question)
         with st.spinner("Hoomi is looking…"):
-            reply = chat.ask(question, st.session_state.get("hoomi_route", "Auto"), gtm_store, knowledge, error, ws)
+            before = len(client.sent) if client is not None else 0
+            reply = chat.ask(question, st.session_state.get("hoomi_route", "Auto"), gtm_store, knowledge, error, ws, hosted=client)
+            if client is not None and len(client.sent) > before:
+                reply["meta"]["usage"] = client.total_usage()
         history += [{"role": "user", "content": shown}, reply]
         del history[:-MAX_HISTORY]
     history = st.session_state.hoomi_chat
-    if not history:
-        theme.empty_state("Ask me anything about Kai's Company", "I quote approved documents with citations, calculate the numbers from the workspace, "
-                          "and tell you plainly when I don't have enough evidence.", "💬")
-    for m in history:
-        with st.chat_message(m["role"]):
-            render_message(m)
-    if history and st.button("Clear conversation", key="hoomi_clear"):
-        st.session_state.hoomi_chat = []
-        st.rerun()
+    with conversation:
+        if not history:
+            theme.empty_state("Ask me anything about Kai's Company", "I quote approved documents with citations, work out the numbers from the workspace, "
+                              "and tell you plainly when I don't have enough evidence. Type below.", "💬")
+        for m in history:
+            with st.chat_message(m["role"]):
+                render_message(m)
+        if history and st.button("Clear conversation", key="hoomi_clear"):
+            st.session_state.hoomi_chat = []
+            st.rerun()
 
 
 def _briefing(ws, name):
@@ -120,7 +167,7 @@ def _briefing(ws, name):
     b = hoomi.briefing(ws, name)
     c1, c2 = st.columns([1, 3], vertical_alignment="center")
     with c1:
-        st.markdown(hoomi.hoomi_svg(190, mood), unsafe_allow_html=True)
+        mascot.render(190, caption=False)
     with c2:
         st.markdown(f'<div class="hero" style="margin:0">{theme.sparkles()}<div class="eyebrow">Classic Hoomi (V1)</div><h1>Your sales intelligence buddy</h1>'
                     f'<p>{b["greeting"]}</p></div>', unsafe_allow_html=True)
@@ -174,16 +221,12 @@ def _briefing(ws, name):
 def render(ws, name="", gtm_store=None):
     left, right = st.columns([1, 3], vertical_alignment="center")
     with left:
-        mascot.render(170)
+        mascot.render(190)
     with right:
         st.markdown(f'<div class="hero" style="margin:0">{theme.sparkles()}<div class="eyebrow">Hoomi · your GTM assistant</div><h1>Ask Hoomi</h1>'
-                    f'<p>Answers come from approved documents with citations, calculations over the workspace, or a plain '
+                    f'<p>Ask in plain language. Answers come from approved documents with citations, from calculations over the workspace, or a plain '
                     f'"I don\'t have enough evidence".</p></div>', unsafe_allow_html=True)
-    st.markdown('<div class="mode-bar"><span class="badge ok">Offline demo</span> '
-                '<span style="color:var(--muted);font-size:.84rem">Extractive (no AI model) · zero hosted calls · nothing leaves this computer · '
-                'Fireworks mode is disabled in this build</span></div>', unsafe_allow_html=True)
-    tab_chat, tab_brief = st.tabs(["💬 Ask Hoomi", "📋 Classic briefing (V1 data)"])
-    with tab_chat:
-        _chat(ws, name, gtm_store)
-    with tab_brief:
-        _briefing(ws, name)
+    st.markdown('<div class="mode-bar"><span class="badge ok">Offline demo by default</span> '
+                '<span style="color:var(--muted);font-size:.84rem">Nothing leaves this computer unless you choose Fireworks and approve it</span></div>',
+                unsafe_allow_html=True)
+    _chat(ws, name, gtm_store)

@@ -4,6 +4,7 @@ import pytest
 from gtm import pulse
 from gtm.store import GTMStore
 from rag import app_index, chat
+from rag.retriever import retrieve
 from test_rag import HashingEmbeddings
 
 
@@ -96,12 +97,14 @@ def test_messages_carry_sources_with_verbatim_quotes_and_per_fact_checks(env):
     assert msg["meta"]["model_calls"] == 0 and "offline" in msg["meta"]["engine"]
 
 
-def test_the_chat_module_has_no_hosted_provider_dependency():
+def test_the_chat_module_loads_no_provider_code_at_import_time():
+    """Provider code is imported lazily, inside the hosted path only; nothing at module level can reach a network library."""
     import ast
     from pathlib import Path
     tree = ast.parse((Path(chat.__file__)).read_text())
-    mods = {n.module for n in ast.walk(tree) if isinstance(n, ast.ImportFrom)} | {a.name for n in ast.walk(tree) if isinstance(n, ast.Import) for a in n.names}
-    assert not any(m and ("providers" in m or "fireworks" in m or m == "rag.verify") for m in mods), mods
+    top = [n for n in tree.body if isinstance(n, (ast.Import, ast.ImportFrom))]
+    mods = {n.module for n in top if isinstance(n, ast.ImportFrom)} | {a.name for n in top if isinstance(n, ast.Import) for a in n.names}
+    assert not any(m and ("providers" in m or "fireworks" in m or m in ("requests", "httpx", "openai")) for m in mods), mods
 
 
 def test_every_source_shows_the_sentence_that_came_from_its_own_chunk(env):
@@ -113,3 +116,95 @@ def test_every_source_shows_the_sentence_that_came_from_its_own_chunk(env):
         for s in msg["sources"]:
             assert s["quote"] in s["passage"], (q, s["chunk_id"])
         assert len({s["chunk_id"] for s in msg["sources"]}) == len(msg["sources"])
+
+
+
+# ---------------------------------------------------------------- hosted (Fireworks) path: only with an approved client; mocked here
+import json
+
+
+class ScriptedClient:
+    """Stands in for an approved LLMClient: returns scripted replies in order. It never touches a network."""
+
+    def __init__(self, *replies):
+        self.replies, self.prompts, self.sent = list(replies), [], []
+
+    def __call__(self, prompt):
+        self.prompts.append(prompt)
+        r = self.replies[len(self.prompts) - 1]
+        if isinstance(r, Exception):
+            raise r
+        return r
+
+
+def managed_service_replies(env):
+    g, store = env
+    hits = retrieve(store, "managed service", k=15, where={"doc_type": {"$ne": "kyc"}})
+    chunk = next(h for h in hits if h.section == "Managed service")
+    sentence = "A managed service is a recurring program where Kai's Company owns delivery against quality and throughput targets."
+    gen = json.dumps({"requested_facts": ["what a managed service is"], "answer": sentence + " [fake.md › Invented]"})
+    ver = json.dumps({"facts": [{"fact": "what a managed service is", "status": "supported", "claim": sentence + " [fake.md › Invented]",
+                                 "supporting_chunk_ids": [chunk.chunk_id], "evidence_quote": "recurring program where Kai's Company owns delivery"}],
+                      "unaddressed_parts": []})
+    return gen, ver, chunk
+
+
+def test_an_approved_client_gives_a_verified_natural_language_answer(env):
+    g, store = env
+    gen, ver, chunk = managed_service_replies(env)
+    client = ScriptedClient(gen, ver)
+    msg = chat.ask("What is a managed service?", "Documents", g, store, hosted=client)
+    assert msg["kind"] == "answered" and msg["meta"]["engine"] == "fireworks-verified" and msg["meta"]["hosted_calls"] == 2
+    assert len(client.prompts) == 2 and "Passage id:" in client.prompts[0]
+    assert "fake.md" not in msg["content"] and "Invented" not in msg["content"]               # model-written citations never reach the user
+    assert [s["chunk_id"] for s in msg["sources"]] == [chunk.chunk_id] and msg["sources"][0]["citation"] == chunk.citation
+    assert msg["facts"][0]["supported"] and "verified" in msg["facts"][0]["detail"]
+
+
+def test_the_default_is_offline_so_nothing_is_ever_sent(env):
+    g, store = env
+    msg = chat.ask("What is a managed service?", "Documents", g, store)                       # hosted=None
+    assert msg["meta"]["model_calls"] == 0 and msg["meta"]["engine"] == "offline-extractive"
+
+
+@pytest.mark.parametrize("replies, reason", [
+    ((RuntimeError("boom"),), "the hosted call failed"),
+    (("this is not json",), "the hosted reply was not usable"),
+])
+def test_a_failed_hosted_answer_falls_back_to_the_labelled_offline_answer(env, replies, reason):
+    g, store = env
+    msg = chat.ask("What is a managed service?", "Documents", g, store, hosted=ScriptedClient(*replies))
+    assert reason in msg["content"].lower() and "offline answer instead" in msg["content"]
+    assert msg["kind"] in ("answered", "partial") and msg["meta"]["engine"] == "offline-extractive" and msg["meta"]["hosted_fallback"]
+    assert all(s["quote"] in s["passage"] for s in msg["sources"])
+
+
+def test_an_unverifiable_hosted_answer_is_not_shown_as_verified(env):
+    g, store = env
+    gen, _ver, chunk = managed_service_replies(env)
+    bad_ver = json.dumps({"facts": [{"fact": "what a managed service is", "status": "supported", "claim": "A managed service is a recurring program.",
+                                     "supporting_chunk_ids": [chunk.chunk_id], "evidence_quote": "guaranteed ten-fold return on investment"}],
+                          "unaddressed_parts": []})
+    msg = chat.ask("What is a managed service?", "Documents", g, store, hosted=ScriptedClient(gen, bad_ver))
+    assert msg["kind"] == "insufficient" and "Insufficient evidence" in msg["content"] and msg["sources"] == []   # fails closed, no invented support
+
+
+def test_a_gate_refusal_stays_a_refusal_even_with_an_approved_client(env, monkeypatch):
+    g, store = env
+    monkeypatch.setenv("RAG_MAX_DISTANCE", "0")
+    client = ScriptedClient()
+    msg = chat.ask("Who won the football world cup?", "Documents", g, store, hosted=client)
+    assert msg["kind"] == "insufficient" and client.prompts == [] and msg["sources"] == []   # no evidence means nothing is even sent
+
+
+def test_a_configuration_error_from_the_client_becomes_a_message_not_a_crash(env):
+    from rag.providers import HostedCallNotApproved
+    g, store = env
+    msg = chat.ask("What is a managed service?", "Documents", g, store, hosted=ScriptedClient(HostedCallNotApproved("not approved")))
+    assert msg["kind"] == "insufficient" and "Fireworks is not available" in msg["content"] and "not approved" in msg["content"]
+
+
+def test_metric_questions_never_use_the_hosted_client(env):
+    g, store = env
+    client = ScriptedClient()
+    assert chat.ask("What is our open pipeline?", "Auto", g, store, hosted=client)["kind"] == "numbers" and client.prompts == []

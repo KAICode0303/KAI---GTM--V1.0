@@ -125,6 +125,17 @@ V2_CSS = """
     color:var(--on_accent); background:linear-gradient(135deg,var(--teal),var(--green)); box-shadow:0 8px 24px color-mix(in srgb,var(--teal) 35%,transparent);}
 .mascot-ph b {color:var(--text); font-family:'Sora',sans-serif;} .mascot-ph small {color:var(--muted); line-height:1.35; max-width:230px;}
 .mascot-img {border-radius:28px; overflow:hidden;}
+.mascot-img.float {animation:hoomi-bob 5.5s ease-in-out infinite;}
+@keyframes hoomi-bob {0%,100% {transform:translateY(0)} 50% {transform:translateY(-7px)}}
+.st-key-hoomi_fab {position:fixed; right:22px; bottom:22px; z-index:1000; width:auto !important; animation:hoomi-bob 4s ease-in-out infinite;}
+.st-key-hoomi_fab button {width:68px; height:68px; min-height:68px; padding:0; border-radius:50% !important; border:3px solid var(--surface) !important;
+    box-shadow:0 10px 26px color-mix(in srgb,var(--teal) 45%,transparent); font-size:0 !important; color:transparent !important; overflow:hidden; transition:box-shadow .2s ease, filter .2s ease;}
+.st-key-hoomi_fab button p {display:none;}
+.st-key-hoomi_fab button:hover {box-shadow:0 14px 34px color-mix(in srgb,var(--pink) 70%,transparent); filter:brightness(1.06);}
+.st-key-hoomi_fab::after {content:"Ask Hoomi"; position:absolute; right:78px; top:20px; padding:3px 10px; border-radius:99px; font:700 .72rem 'Plus Jakarta Sans',sans-serif;
+    background:var(--surface); color:var(--text); border:1px solid var(--border); box-shadow:var(--shadow); opacity:0; transform:translateX(6px); transition:all .2s ease; pointer-events:none; white-space:nowrap;}
+.st-key-hoomi_fab:hover::after {opacity:1; transform:none;}
+@media (prefers-reduced-motion: reduce) {.mascot-img.float, .st-key-hoomi_fab {animation:none;}}
 .role-card {background:var(--surface); border:1px solid var(--border); border-radius:22px; padding:1.1rem 1.2rem .9rem; box-shadow:var(--shadow); height:100%;}
 .role-card h3 {margin:.1rem 0 .35rem;} .role-card p {color:var(--muted); font-size:.9rem; margin:0 0 .5rem;}
 .role-card ul {margin:.2rem 0 .6rem 1.1rem; padding:0; color:var(--text); font-size:.88rem;}

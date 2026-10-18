@@ -7,6 +7,7 @@ import analytics as a
 import hoomi
 import metrics as m
 import theme
+from views import mascot
 from metrics import money
 from theme import CHART_COLORS, kpi_card, section, style
 from views.common import date_col, money_col, note, pick_clicked, show_table
@@ -21,7 +22,7 @@ def render(ws, name=""):
     # ---- hero with Hoomi
     c1, c2 = st.columns([1, 4], vertical_alignment="center")
     with c1:
-        st.markdown(hoomi.hoomi_svg(150, "greet"), unsafe_allow_html=True)
+        mascot.render(150, caption=False)
     with c2:
         b = hoomi.briefing(ws, name)
         st.markdown(f'<div class="hero" style="margin:0">{theme.sparkles()}<div class="eyebrow">Kai\'s Company</div>'
