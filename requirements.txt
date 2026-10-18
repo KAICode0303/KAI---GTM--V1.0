@@ -1,3 +1,20 @@
-streamlit>=1.50
-pandas>=2.0
-plotly>=5.20
+# Python 3.12 (tested with 3.12.10). Direct dependencies pinned to the versions verified together.
+
+# --- App (V1) ---
+streamlit==1.66.0
+pandas==3.0.6
+plotly==7.1.0
+
+# --- RAG (V2) ---
+langchain==1.4.6
+langchain-core==1.6.12
+langchain-community==0.4.2
+langchain-chroma==1.1.0
+langchain-fireworks==1.7.1
+chromadb==1.5.9
+fastembed==0.9.0
+pypdf==6.21.1
+python-dotenv==1.2.4
+
+# --- Tests ---
+pytest==9.1.1

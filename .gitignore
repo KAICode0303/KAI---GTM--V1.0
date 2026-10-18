@@ -23,6 +23,10 @@ __pycache__/
 *.key
 .streamlit/secrets.toml
 
+# --- RAG: local vector index and any private source documents (never publish) ---
+.rag_index/
+rag_private/
+
 # --- Local app data: the SQLite database is created from the CSV files on first run ---
 *.db
 *.sqlite
