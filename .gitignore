@@ -16,9 +16,11 @@ __pycache__/
 .vscode/
 .idea/
 
-# --- Secrets: this project uses none, but keep it that way ---
+# --- Secrets: API keys live only in .env, which is never committed ---
 .env
 .env.*
+# the placeholder template (no real values) IS committed
+!.env.example
 *.pem
 *.key
 .streamlit/secrets.toml

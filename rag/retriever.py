@@ -35,6 +35,7 @@ class Hit:
     doc_type: str
     distance: float          # Chroma's distance for this embedding model: smaller = closer match (not a 0-1 score)
     citation: str            # e.g. "[02_icp.md › Best-fit customers]"
+    chunk_id: str = ""       # stable id, e.g. "02_icp.md#1": what the evidence verifier cites
 
 
 def get_store(embeddings, persist_dir=INDEX_DIR, collection=COLLECTION):
@@ -78,5 +79,6 @@ def retrieve(store, query, k=3, max_distance=None):
             continue
         md = doc.metadata
         hits.append(Hit(text=doc.page_content, source=md["source"], section=md.get("section", ""), page=md.get("page"),
-                        title=md["title"], doc_type=md["doc_type"], distance=float(dist), citation=format_citation(md)))
+                        title=md["title"], doc_type=md["doc_type"], distance=float(dist), citation=format_citation(md),
+                        chunk_id=md.get("chunk_id", "")))
     return hits
