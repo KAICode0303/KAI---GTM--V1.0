@@ -86,7 +86,7 @@ def test_welcome_screen_shows_greeting_placeholder_and_both_views():
     page = texts(at.markdown)
     assert "Meet Hoomi" in page and "Where's your GTM headed? Let's find out." in page
     assert "Mascot placeholder" in page and "Pixel Creative Strategist" in page          # a labelled placeholder, no invented artwork
-    assert "not a login" in page.lower() and "synthetic demo data" in page.lower() and "no authentication" in page.lower()
+    assert "not a login" in page.lower() and "no authentication" in page.lower()
     assert {b.label for b in at.button} == {"Enter the Leadership Hub", "Enter the GTM Team"}
     assert "Leadership Hub" in page and "GTM Team" in page and "Executive Pulse" in page and "GTM Workspace" in page
 
@@ -170,7 +170,7 @@ def test_pulse_shows_every_required_kpi_chart_and_the_footer(tmp_path):
         assert label in page, label
     for heading in ["Revenue by service", "Requested capabilities", "SDR performance", "Pipeline health"]:
         assert heading in page, heading
-    assert "Where's your GTM headed? Let's find out." in page and "Synthetic demo data" in page
+    assert "Where's your GTM headed? Let's find out." in page
     assert len(at.get("plotly_chart")) == 6
     snap = pulse.snapshot(store_of(tmp_path))
     c, k = snap["commercial"], snap["leads"]
@@ -247,7 +247,7 @@ def test_numbers_question_is_calculated_not_retrieved(tmp_path):
     ask(at, "What is our open pipeline?")
     reply = last_reply(at)
     snap = pulse.snapshot(store_of(tmp_path))
-    assert "Calculated from the workspace" in reply and metrics.money(snap["commercial"]["open_pipeline"]) in reply
+    assert "Workspace figures" in reply and metrics.money(snap["commercial"]["open_pipeline"]) in reply
     assert not any(e.label.startswith("Sources (") for e in at.expander)               # no documents were involved
 
 
@@ -296,7 +296,7 @@ def test_document_search_failure_degrades_gracefully(monkeypatch):
     clean(at)
     assert "Document search is unavailable" in texts(at.markdown)
     ask(at, "What is our open pipeline?")                                                # numbers still work
-    assert "Calculated from the workspace" in last_reply(at)
+    assert "Workspace figures" in last_reply(at)
     ask(at, "What is a managed service?")                                               # documents degrade to the labelled classic Hoomi
     assert "Document search is unavailable" in last_reply(at)
 
@@ -324,11 +324,11 @@ def click(at, label, index=0):
 def test_workspace_has_all_four_levels_and_the_sdr_team():
     at = open_workspace()
     labels = [t.label for t in at.tabs]
-    for tab in ("Accounts", "Prospects", "Outreach", "Opportunities", "KYC profiles", "Import & export", "Demo data & audit"):
+    for tab in ("Accounts", "Prospects", "Outreach", "Opportunities", "KYC profiles", "Import & export", "Data & audit"):
         assert any(tab in label for label in labels), tab
     sdr_options = list(widget(at.multiselect, "SDR").options)
     assert sdr_options == ["Mini", "Sue", "Harry", "Dips", "Emma"]
-    assert "Synthetic demo data" in texts(at.markdown) and "no CRM connected" in texts(at.markdown)
+    assert "SDR team: Mini, Sue, Harry, Dips, Emma" in texts(at.markdown)
 
 
 def test_add_account_through_the_form_and_reject_a_duplicate(tmp_path):
@@ -464,3 +464,32 @@ def test_the_app_never_creates_files_outside_its_stores(tmp_path):
     start()
     assert (tmp_path / "gtm.db").exists()
     assert not list(ROOT.glob("data/gtm_v2.db-*"))                                       # no stray journal files next to the real store
+
+
+# ---------------------------------------------------------------- the UI does not announce its data as synthetic or demo
+FORBIDDEN_UI_WORDING = ("synthetic", "demo data", "demo clock", "fictional", "calculated from the gtm workspace", "no crm connected")
+
+
+def visible_text(at):
+    parts = [at.markdown, at.caption, at.info, at.warning, at.success, at.error, at.text, at.header, at.subheader, at.title]
+    return texts([e for group in parts for e in group] + [x for x in at.expander] + [b for b in at.button] + [t for t in at.tabs]).lower() \
+        if False else "\n".join(texts(group).lower() for group in parts) + "\n" + "\n".join(str(getattr(e, "label", "")).lower() for e in list(at.expander) + list(at.button) + list(at.tabs))
+
+
+def test_the_ui_does_not_label_its_data_as_synthetic_or_demo():
+    """Explanations like that belong in the code and the README, not on screen. (The 'Offline demo' Hoomi mode label is intentional.)"""
+    at = AppTest.from_file(APP, default_timeout=180)
+    at.run()
+    seen = [("welcome", visible_text(at))]
+    at.button(key="role_GTM Team").click().run()
+    seen.append(("workspace", visible_text(at)))
+    for page in (PULSE, HOOMI):
+        goto(at, page)
+        clean(at)
+        seen.append((page, visible_text(at)))
+    goto(at, "ℹ️  About")
+    seen.append(("about", visible_text(at)))
+    for name, page_text in seen:
+        for phrase in FORBIDDEN_UI_WORDING:
+            assert phrase not in page_text, (name, phrase)
+    assert "offline demo" in dict(seen)[HOOMI]                                            # the explicit, requested mode label stays

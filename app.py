@@ -59,7 +59,7 @@ if st.session_state.role is None:
     with st.sidebar:
         sidebar_brand()
         st.toggle("🌙 Dark mode", key="dark")
-        st.caption("Synthetic demo data · no login · no hosted AI")
+        st.caption("No login needed")
     welcome.render()
     st.stop()
 
@@ -125,7 +125,7 @@ with st.sidebar:
             stages = pick("Stage", m.STAGES, "f_stage")
     elif needs_v1:                                          # Ask Hoomi: the classic briefing tab uses the unfiltered V1 data
         owners, regions = sorted(raw["opps"]["sales_owner"].unique()), ["US", "Europe", "LATAM", "APAC"]
-    st.caption("Synthetic demo data · classic views as of " + f"{m.AS_OF:%b %d, %Y}")
+    st.caption("Classic views as of " + f"{m.AS_OF:%b %d, %Y}")
 
 # ------------------------------------------------------------------ route
 gtm_store = get_store(str(default_path()))

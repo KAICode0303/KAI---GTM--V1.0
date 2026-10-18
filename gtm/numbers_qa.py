@@ -74,7 +74,7 @@ def answer(question, snap):
         "demand": ("The most requested capability is **" + snap["demand"].iloc[0].capability + f"**, requested by {snap['demand'].iloc[0].accounts} accounts."),
         "target": _target_answer(m, snap),
     }[t]
-    return f"{text}\n\n_Source: Executive Pulse, demo data as of {when}. Calculated from the workspace, not retrieved from documents._"
+    return f"{text}\n\n_Source: Executive Pulse, as of {when}._"
 
 
 def pulse_stall():

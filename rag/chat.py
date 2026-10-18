@@ -107,7 +107,7 @@ def _rulebased(question, ws, notice):
     if text.startswith("I only know some topics"):
         return _message("insufficient", f"{notice} **Insufficient evidence.** {INSUFFICIENT_HELP}".strip(), meta={"route": "rulebased"})
     note = f"_{notice}_\n\n" if notice else ""
-    return _message("rulebased", f"{note}{text}\n\n_Classic rule-based Hoomi: keyword matching over the V1 demo data store. It can misread questions, "
+    return _message("rulebased", f"{note}{text}\n\n_Classic rule-based Hoomi: keyword matching over the classic data store. It can misread questions, "
                                  f"so check important figures against the Executive Pulse._",
                     meta={"route": "rulebased", "engine": "rule-based"})
 

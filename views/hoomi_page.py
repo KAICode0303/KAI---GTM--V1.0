@@ -16,7 +16,7 @@ from views import mascot
 HOSTED_MODE_AVAILABLE = False            # Fireworks mode stays off; see README for the separate, explicitly confirmed smoke test
 MAX_HISTORY = 60
 KIND_BADGE = {"answered": ("ok", "Answered · quoted from documents"), "partial": ("warn", "Partial answer"),
-              "insufficient": ("warn", "Insufficient evidence"), "numbers": ("ok", "Calculated from the workspace"),
+              "insufficient": ("warn", "Insufficient evidence"), "numbers": ("ok", "Workspace figures"),
               "rulebased": ("off", "Classic rule-based fallback")}
 
 

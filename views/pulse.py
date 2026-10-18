@@ -73,10 +73,9 @@ def _panel(title, lines):
 def render(store, name=""):
     snap = pulse.snapshot(store)
     c, k = snap["commercial"], snap["leads"]
-    theme.page_header("The Executive Pulse", f"{'Hi ' + name + '. ' if name.strip() else ''}Here is where the GTM stands right now, derived from the demo workspace.",
+    theme.page_header("The Executive Pulse", f"{'Hi ' + name + '. ' if name.strip() else ''}Here is where the GTM stands right now.",
                       eyebrow="Kai's GTM V2.0 · Leadership")
-    st.markdown(f'<span class="badge demo">Synthetic demo data</span> &nbsp;<span style="color:var(--muted);font-size:.82rem">'
-                f'{clock.label()} · every figure is calculated from the GTM Workspace</span>', unsafe_allow_html=True)
+    st.markdown(f'<span style="color:var(--muted);font-size:.82rem">As of {clock.today():%b %d, %Y}</span>', unsafe_allow_html=True)
 
     section("Commercial", "what the pipeline is worth")
     cards = [("Accounts Closed", f"{c['accounts_closed']}", "accounts with a won deal", "ACTUAL", "🏁", "Distinct accounts with at least one Won opportunity"),
@@ -100,7 +99,7 @@ def render(store, name=""):
         with col:
             kpi_card(*card[:5], tip=card[5])
 
-    section("Executive summary", "calculated from the numbers on this page, no model involved")
+    section("Executive summary")
     s = snap["summary"]
     cols = st.columns(4)
     for col, (title, key) in zip(cols, [("💼 Revenue by service", "revenue_by_service"), ("🧩 Requested capabilities", "requested_capabilities"),
@@ -108,7 +107,7 @@ def render(store, name=""):
         with col:
             _panel(title, s[key])
 
-    section("Charts", "all derived from the workspace")
+    section("Charts")
     r1 = st.columns(2)
     r1[0].plotly_chart(stage_chart(snap), width="stretch", key="pulse_stage")
     r1[1].plotly_chart(monthly_chart(snap), width="stretch", key="pulse_monthly")

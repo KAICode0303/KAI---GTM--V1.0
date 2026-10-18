@@ -117,7 +117,7 @@ def test_every_suggested_numbers_question_gets_an_answer_with_the_dashboard_figu
     c = snap["commercial"]
     for q in numbers_qa.SUGGESTIONS:
         text = numbers_qa.answer(q, snap)
-        assert text and "Executive Pulse" in text and "not retrieved from documents" in text, q
+        assert text and "Executive Pulse" in text and "as of" in text, q
     assert numbers_qa.money(c["open_pipeline"]) in numbers_qa.answer("What is our open pipeline?", snap)
     assert f"{c['win_rate']:.0%}" in numbers_qa.answer("What is our win rate?", snap)
     assert snap["sdr"].iloc[0].sdr in numbers_qa.answer("Who is the top SDR?", snap)

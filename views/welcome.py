@@ -84,5 +84,4 @@ def render():
                         unsafe_allow_html=True)
             st.button(f"Enter the {role}", key=f"role_{role}", type="primary", width="stretch", on_click=choose, args=(role,))
     st.markdown('<div class="note"><b>Good to know.</b> Picking a role only changes which pages come first. There is no authentication, '
-                'and every page is open to both views. All records are <span class="badge demo">synthetic demo data</span> kept locally; '
-                'no CRM is connected and no hosted AI is called.</div>', unsafe_allow_html=True)
+                'and every page is open to both views.</div>', unsafe_allow_html=True)

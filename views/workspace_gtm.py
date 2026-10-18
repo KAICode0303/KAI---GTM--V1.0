@@ -426,7 +426,7 @@ def opportunities_tab(store):
 
 # ---------------------------------------------------------------- KYC
 def kyc_tab(store):
-    st.markdown("A KYC profile is structured research on one account. It is synthetic here; never paste real confidential client information into the demo store.")
+    st.markdown("A KYC profile is structured research on one account. Only store information you are comfortable keeping in this local workspace.")
     c = st.columns(2)
     c[0].download_button("⬇️ Download blank KYC template (CSV)", kyc.template_csv(), "kyc_template.csv", "text/csv", key="kyc_tpl", width="stretch")
     up = c[1].file_uploader("Upload a filled template (CSV)", type=["csv"], key="kyc_up", label_visibility="collapsed")
@@ -511,28 +511,27 @@ def import_tab(store):
 
 
 def demo_tab(store):
-    section("Demo data store", "synthetic records kept in a local, git-ignored SQLite file")
+    section("Data store", "kept locally in this workspace")
     counts = store.counts()
     st.markdown(" ".join(badge(f"{n} {t.replace('_', ' ')}", "demo") for t, n in counts.items()), unsafe_allow_html=True)
-    st.caption(f"Demo clock: {clock.label()} · file: {store.path.name} · every change below is recorded in the audit log.")
+    st.caption(f"As of {clock.today():%b %d, %Y} · file: {store.path.name} · every change is recorded in the audit log.")
     section("Audit log", "the latest 100 changes (actor is always 'demo': there is no login)")
     table(store.audit(100)[["ts", "table_name", "row_id", "action", "changes_json", "actor"]], 320)
-    with st.expander("⚠️ Reset the demo data"):
-        st.warning("This rebuilds the demo store from the synthetic seed and discards every edit you made. It touches only this demo file.")
-        ok = st.checkbox("Yes, discard my edits and reset the demo data", key="reset_ok")
-        if st.button("Reset demo data", key="reset_go", disabled=not ok):
+    with st.expander("⚠️ Reset to the starting data"):
+        st.warning("This rebuilds the workspace from its starting data and discards every edit you made. It touches only this workspace file.")
+        ok = st.checkbox("Yes, discard my edits and reset the data", key="reset_ok")
+        if st.button("Reset data", key="reset_go", disabled=not ok):
             store.reset_demo(confirm=True)
-            flash("success", "Demo data reset to the synthetic seed.")
+            flash("success", "Data reset to the starting set.")
             st.rerun()
 
 
 def render(store):
     theme.page_header("GTM Workspace", "Accounts, prospects, outreach and opportunities, linked end to end. Every change is validated and saved row by row.",
                       eyebrow="Kai's GTM V2.0 · GTM Team")
-    st.markdown(f'<span class="badge demo">Synthetic demo data</span> &nbsp;<span style="color:var(--muted);font-size:.82rem">{clock.label()} · '
-                f'SDR team: {", ".join(schema.SDRS)} · no CRM connected</span>', unsafe_allow_html=True)
+    st.markdown(f'<span style="color:var(--muted);font-size:.82rem">As of {clock.today():%b %d, %Y} · SDR team: {", ".join(schema.SDRS)}</span>', unsafe_allow_html=True)
     show_flash()
-    tabs = st.tabs(["🏢 Accounts", "🧲 Prospects", "📨 Outreach", "💼 Opportunities", "🪪 KYC profiles", "📥 Import & export", "🗃️ Demo data & audit"])
+    tabs = st.tabs(["🏢 Accounts", "🧲 Prospects", "📨 Outreach", "💼 Opportunities", "🪪 KYC profiles", "📥 Import & export", "🗃️ Data & audit"])
     for tab, fn in zip(tabs, (accounts_tab, prospects_tab, outreach_tab, opportunities_tab, kyc_tab, import_tab, demo_tab)):
         with tab:
             fn(store)

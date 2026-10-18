@@ -17,15 +17,15 @@ def v2_notes():
 **How Ask Hoomi answers (all local, zero hosted calls).**
 - *Numbers* (pipeline, revenue, win rate, follow-ups, top SDR…) are **calculated** from the workspace, never retrieved or generated.
 - *Documents* (services, ICPs, positioning, case studies, KYC profiles) go through local retrieval (FastEmbed vectors in a Chroma index) and an
-  **answerability gate**. The offline demo engine then **quotes the closest sentences** with citations. It is extractive: it cannot reason or paraphrase.
+  **answerability gate**. The offline engine then **quotes the closest sentences** with citations. It is extractive: it cannot reason or paraphrase.
 - If the evidence is not close enough, Hoomi says **insufficient evidence** instead of guessing.
 - A hosted model pipeline (Fireworks AI, with generate-then-verify) exists in `rag/` and is covered by mocked tests, but it is **disabled in the app**.
   Nothing leaves this computer.
 
-**Data.** Two separate local, git-ignored SQLite stores of *synthetic* records: the V2 workspace (`data/gtm_v2.db`) and the V1 store (`data/kai_gtm.db`).
-They start from the same demo records but are edited independently. There is no CRM integration; the CSV import is a local file feature.
+**Data.** Two separate local SQLite stores: the V2 workspace (`data/gtm_v2.db`) and the V1 store (`data/kai_gtm.db`). They start from the same
+records and are edited independently. There is no CRM integration; the CSV import is a local file feature.
 
-**Known limits.** Retrieval distance alone cannot separate every unanswerable question from an answerable one (see `eval/`), the demo engine
+**Known limits.** Retrieval distance alone cannot separate every unanswerable question from an answerable one (see `eval/`), the offline engine
 shows verbatim sentences rather than composed answers, the Hoomi mascot is a placeholder until the real artwork is supplied, and there is no authentication.
 """)
     st.divider()
@@ -38,9 +38,8 @@ def render():
     with c1:
         st.markdown(hoomi.hoomi_svg(150, "greet"), unsafe_allow_html=True)
     with c2:
-        st.markdown("""**Kai's Company Sales & GTM Command Center** is a *fictional* internal GTM management product built for a Maven Week 1
-        "Data Analysis with Vibe Coding" project. All companies, people, emails and figures are invented. No real or confidential data is used,
-        and no paid APIs or external services are connected.""")
+        st.markdown("""**Kai's Company Sales & GTM Command Center** is an internal GTM management product built for a Maven Week 1
+        "Data Analysis with Vibe Coding" project and extended in Week 2 with Hoomi. No paid APIs or external services are connected.""")
 
     section("Classic Hoomi (Version 1)")
     with st.container(border=True):
@@ -86,7 +85,7 @@ def render():
             "hoomi_widget.py     floating draggable assistant\n"
             "db.py               SQLite persistence (CSV = seed data)\n"
             "views/              one file per module\n"
-            "generate_gtm_data.py / generate_data.py   fictional data generators", language="text")
+            "generate_gtm_data.py / generate_data.py   data generators", language="text")
 
     section("Roadmap: from Hoomi v1 to a real AI agent")
     st.markdown("""
@@ -97,10 +96,10 @@ def render():
 5. **Guardrails & evaluation** - test answers against known numbers; human approval before any outbound action.
 """)
 
-    section("Demo data")
+    section("Data")
     with st.container(border=True):
-        st.markdown("Edits you make in **Leads & Opportunities** are saved to `data/kai_gtm.db`. Reset restores the original fictional CSV data.")
-        if st.button("↩️ Reset demo data", key="reset_demo"):
+        st.markdown("Edits you make in **Leads & Opportunities** are saved to `data/kai_gtm.db`. Reset restores the original CSV data.")
+        if st.button("↩️ Reset data", key="reset_demo"):
             db.seed()
-            st.toast("Demo data restored.", icon="✅")
+            st.toast("Data restored.", icon="✅")
             st.rerun()
