@@ -181,9 +181,10 @@ def variant_row(label, results, t, policy):
     summ, s = retrieval_summary(results)["all answerable"], score(results, t, policy)
     n_ans = summ["n"]
     n_un = sum(not r["answerable"] for r in results)
+    n_cx = sum(r["category"] == "complex" for r in results)
     avg_ctx = s["context_chunks"] / s["correct_accept"] if s["correct_accept"] else 0
     return (f"| {label} | {rate(summ['top1'], n_ans)} | {rate(summ['top3'], n_ans)} | {rate(summ['all_top3'], n_ans)} | "
-            f"{rate(s['evidence_complete'], n_ans)} | {s['evidence_complete_complex']}/5 | {s['false_rejection']} | "
+            f"{rate(s['evidence_complete'], n_ans)} | {s['evidence_complete_complex']}/{n_cx} | {s['false_rejection']} | "
             f"{s['correct_refusal']}/{n_un} | {s['false_acceptance']} | {avg_ctx:.1f} |")
 
 
@@ -246,6 +247,7 @@ def render_comparison(results, baseline, policy):
 
 def render_policy_grid(results, gate=PROVISIONAL):
     n_ans = sum(r["answerable"] for r in results)
+    n_cx = sum(r["category"] == "complex" for r in results)
     L = []
     w = L.append
     w("### Context-selection policies (gate fixed at 0.70)\n")
@@ -254,9 +256,65 @@ def render_policy_grid(results, gate=PROVISIONAL):
     for label, pol in [("Old rule (top-4, each within gate)", None)] + [(p.describe(), p) for p in POLICY_GRID]:
         s = score(results, gate, pol)
         avg = s["context_chunks"] / s["correct_accept"] if s["correct_accept"] else 0
-        w(f"| {label} | {rate(s['evidence_complete'], n_ans)} | {s['evidence_complete_complex']}/5 | {s['accepted_with_missing_section']} | {avg:.1f} |")
+        w(f"| {label} | {rate(s['evidence_complete'], n_ans)} | {s['evidence_complete_complex']}/{n_cx} | {s['accepted_with_missing_section']} | {avg:.1f} |")
     w("\nThese are descriptive. The gate does not change with the policy (refusals are identical in every row); only what the model sees does. "
       "The default is not tuned to this table: a larger k trades completeness for more irrelevant text.\n")
+    return "\n".join(L) + "\n"
+
+
+def render_failures(results, policy, t=PROVISIONAL, near=0.03):
+    """Every question that fails at the current settings, with the reason; plus near-misses against the gate."""
+    fails, close = [], []
+    for r in results:
+        top, ctx = r["ranking"][0], context_at(r, t, policy)
+        in_ctx = {key(h) for h in ctx}
+        ctx_text = norm(" ".join(h["text"] for h in ctx))
+        issues = []
+        if r["answerable"]:
+            if not accepted(r, t):
+                issues.append(f"FALSE REJECTION: closest chunk `{top['section']}` is {top['distance']:.3f}, over the {t:.2f} gate")
+            else:
+                if not r["top1_hit"]:
+                    issues.append(f"top-1 is `{top['source']} › {top['section']}` ({top['distance']:.3f}), not an expected section")
+                for e in r["expected"]:
+                    if (e["source"], e["section"]) not in in_ctx:
+                        issues.append(f"expected `{e['source']} › {e['section']}` not in context (rank {e['rank']}, distance {e['distance']})")
+                absent = [p for p in r["required_evidence"] if norm(p) not in ctx_text]
+                if absent:
+                    issues.append("required evidence missing from context: " + "; ".join(f"“{p}”" for p in absent))
+        elif accepted(r, t):
+            issues.append(f"FALSE ACCEPTANCE: closest `{top['source']} › {top['section']}` {top['distance']:.3f} is within the gate; "
+                          f"{len(ctx)} chunk(s) of unrelated text would go to the model")
+        if issues:
+            fails.append((r, issues))
+        if abs(top["distance"] - t) <= near:
+            close.append(f"{r['id']} (closest {top['distance']:.3f}, {'accepted' if accepted(r, t) else 'refused'})")
+    L = []
+    w = L.append
+    w("## Failures at the current settings\n")
+    if not fails:
+        w("None: every question was handled as intended.\n")
+    for r, issues in fails:
+        w(f"- **{r['id']}** ({r['category']}): {r['question']}")
+        for i in issues:
+            w(f"  - {i}")
+    if fails:
+        w("")
+    w(f"Near the {t:.2f} gate (within {near:.2f}): {', '.join(close) if close else 'none'}.\n")
+    return "\n".join(L) + "\n"
+
+
+def render_generalization(reference, results, policy, ref_label, label):
+    t = PROVISIONAL
+    L = []
+    w = L.append
+    w("## Does it generalise? Same settings, two question sets\n")
+    w("| Question set | Top-1 hit | Top-3 hit | All expected in top-3 | Required evidence complete in context | ...of which complex | False rejections | Correct refusals | False acceptances | Avg chunks given |")
+    w("|---|---|---|---|---|---|---|---|---|---|")
+    w(variant_row(ref_label, reference, t, policy))
+    w(variant_row(label, results, t, policy))
+    w("\n*The first set was used to build and tune the retrieval changes, so it is optimistic; the second was written afterwards and "
+      "was not used to change any setting. With so few questions, one question moves a percentage by 9-25 points.*\n")
     return "\n".join(L) + "\n"
 
 
@@ -267,7 +325,9 @@ def _status(e, t, policy):
     return "in context" if e["rank"] <= policy.k else f"ranked #{e['rank']}, outside top-{policy.k}"
 
 
-def render_report(results, notes="", baseline=None, policy=None):
+def render_report(results, notes="", baseline=None, policy=None, title="Hoomi retrieval evaluation",
+                  files=("eval/questions.json (unchanged)", "eval/results.json"), settings_note="", reference=None,
+                  ref_label="Original 15 questions", label="This set"):
     policy = policy or resolve_context_policy()
     t0 = PROVISIONAL
     summ, sw = retrieval_summary(results), [score(results, t, policy) for t in SWEEP]
@@ -277,13 +337,18 @@ def render_report(results, notes="", baseline=None, policy=None):
     zr, loo = zero_error_range(results), leave_one_out(results)
     L = []
     w = L.append
-    w("# Hoomi retrieval evaluation\n")
+    w(f"# {title}\n")
     w("Scope: **retrieval only** (local FastEmbed `BAAI/bge-small-en-v1.5` + Chroma, 15 chunks from 3 synthetic documents). "
       "No LLM was used, so this says **nothing about generated-answer accuracy**. Distances are Chroma's L2 distance for this "
-      "model (smaller = closer), not a 0-1 score. Questions: `eval/questions.json` (unchanged). Raw data: `eval/results.json`. "
-      f"Context policy used below: **{policy.describe()}**.\n")
+      f"model (smaller = closer), not a 0-1 score. Questions: `{files[0]}`. Raw data: `{files[1]}`. "
+      f"Gate distance {PROVISIONAL:.2f}; context policy: **{policy.describe()}**.\n")
+    if settings_note:
+        w(settings_note.strip() + "\n")
     if baseline:
         w(render_comparison(results, baseline, policy))
+    w(render_failures(results, policy))
+    if reference:
+        w(render_generalization(reference, results, policy, ref_label, label))
 
     w("## 1. Retrieval quality (independent of any threshold)\n")
     w("| Group | Questions | Top-1 hit | Top-3 hit | ALL expected sections in top-3 | ALL expected in top-4 | Required evidence in top-3 |")
@@ -319,10 +384,10 @@ def render_report(results, notes="", baseline=None, policy=None):
     w(f"- Gate distances with zero errors on this set: {f'{zr[0]:.2f} to {zr[1]:.2f}' if zr else 'none'}"
       f"{f' (width {zr[1] - zr[0]:.2f})' if zr else ''}.")
     bad = [h for h in loo if h["error"]]
-    w(f"- Leave-one-out (choose a gate distance on 14 questions, test on the held-out one): {len(loo)-len(bad)}/{len(loo)} correct"
+    w(f"- Leave-one-out (choose a gate distance on {len(results) - 1} questions, test on the held-out one): {len(loo)-len(bad)}/{len(loo)} correct"
       f"{'; errors on ' + ', '.join(h['id'] for h in bad) if bad else ''}. Chosen distances ranged "
       f"{min(h['chosen_threshold'] for h in loo):.2f} to {max(h['chosen_threshold'] for h in loo):.2f}.")
-    w("- With only 15 questions (4 unanswerable) and a 15-chunk corpus, any distance read off this table is a hypothesis, "
+    w(f"- With only {len(results)} questions ({len(un)} unanswerable) and a 15-chunk corpus, any distance read off this table is a hypothesis, "
       "not a calibrated setting. A larger corpus will raise the distances of unrelated questions and reduce the margin.\n")
 
     w("## 3. Question-level results\n")
@@ -375,37 +440,57 @@ def render_report(results, notes="", baseline=None, policy=None):
         w("## 5. Analysis\n")
         w(notes.strip() + "\n")
     w("## Limitations\n")
-    w("- 15 questions written by the same author as the corpus: wording overlaps the documents more than real users' will.")
+    w(f"- {len(results)} questions written by the same author as the corpus: wording overlaps the documents more than real users' will.")
     w("- A 15-chunk synthetic corpus is far easier than a real library; expect lower hit rates and tighter margins at scale.")
     w("- Hit rates use section-level expectations; a near-duplicate section elsewhere can be a legitimate answer yet count as a miss.")
     w("- Retrieval only. Whether a model writes a correct, faithful, well-cited answer from this context is **not measured here**.")
     return "\n".join(L) + "\n"
 
 
-def main():
+def main(argv=None):
+    import argparse
+    ap = argparse.ArgumentParser(description="Retrieval evaluation (retrieval only; no model calls, no downloads).")
+    ap.add_argument("--questions", default=str(QUESTIONS), help="question file (default: the original 15-question set)")
+    ap.add_argument("--prefix", default="", help="output prefix: 'validation' writes eval/validation_results.json and eval/validation_report.md")
+    args = ap.parse_args(argv)
+    validation = bool(args.prefix)
+    stem = f"{args.prefix}_" if validation else ""
+    results_path, report_path = EVAL_DIR / f"{stem}results.json", EVAL_DIR / f"{stem}report.md"
+    notes_path = EVAL_DIR / f"{stem}notes.md" if validation else NOTES
+
     from rag.embeddings import FastEmbedEmbeddings
     from rag.retriever import get_store
     store = get_store(FastEmbedEmbeddings())          # cached model, downloads blocked; opens the existing index only
-    questions = load_questions()
+    questions = load_questions(args.questions)
     results = run(store, questions)
     for r, q in zip(results, questions):
         r["notes"] = q.get("notes", "")
-    baseline = json.loads(BASELINE.read_text(encoding="utf-8")) if BASELINE.exists() else None
     policy = resolve_context_policy()
+    modes = sorted({m["embedded_with"] for m in store._collection.get(include=["metadatas"])["metadatas"]})
+    settings = (f"**Settings in force (not changed for this run):** gate distance {PROVISIONAL:.2f}; context policy {policy.describe()}; "
+                f"chunks embedded with `{'`, `'.join(modes)}`; {store._collection.count()} chunks in the index.")
     EVAL_DIR.mkdir(exist_ok=True)
-    RESULTS.write_text(json.dumps(results, indent=1, ensure_ascii=False), encoding="utf-8")
-    notes = NOTES.read_text(encoding="utf-8") if NOTES.exists() else ""
-    REPORT.write_text(render_report(results, notes, baseline, policy), encoding="utf-8")
+    results_path.write_text(json.dumps(results, indent=1, ensure_ascii=False), encoding="utf-8")
+    notes = notes_path.read_text(encoding="utf-8") if notes_path.exists() else ""
+    rel = lambda p: str(Path(p).relative_to(ROOT)) if Path(p).is_absolute() else str(p)
+    if validation:
+        reference = json.loads(RESULTS.read_text(encoding="utf-8"))
+        report = render_report(results, notes, None, policy, title="Hoomi retrieval validation (held-out questions)",
+                               files=(rel(args.questions), rel(results_path)), settings_note=settings, reference=reference,
+                               ref_label="Original 15 questions (used to build the changes)", label="**Validation set (10, held out)**")
+    else:
+        baseline = json.loads(BASELINE.read_text(encoding="utf-8")) if BASELINE.exists() else None
+        report = render_report(results, notes, baseline, policy, files=("eval/questions.json (unchanged)", "eval/results.json"),
+                               settings_note=settings)
+    report_path.write_text(report, encoding="utf-8")
     summ = retrieval_summary(results)
-    print("chunks in index:", store._collection.count(), "| context policy:", policy.describe())
+    print("chunks in index:", store._collection.count(), "| gate:", PROVISIONAL, "| context policy:", policy.describe(), "| embedded_with:", modes)
     for name, g in summ.items():
         print(f"{name:15} n={g['n']:2} top1={g['top1']} top3={g['top3']} all_top3={g['all_top3']} evid_top3={g['evidence_top3']}")
-    for label, res, pol in ([("A baseline", baseline, None), ("B old-emb/new-pol", baseline, policy)] if baseline else []) + \
-                           [("D new-emb/old-rule", results, None), ("C new-emb/new-pol", results, policy)]:
-        s = score(res, PROVISIONAL, pol)
-        print(f"{label:18} FR={s['false_rejection']} refuse={s['correct_refusal']} FA={s['false_acceptance']} "
-              f"evid_complete={s['evidence_complete']}/11 (complex {s['evidence_complete_complex']}/5)")
-    print("report:", REPORT)
+    s = score(results, PROVISIONAL, policy)
+    print(f"current settings: FR={s['false_rejection']} refuse={s['correct_refusal']} FA={s['false_acceptance']} "
+          f"evid_complete={s['evidence_complete']}/{summ['all answerable']['n']} (complex {s['evidence_complete_complex']}/{summ['complex']['n']})")
+    print("report:", report_path)
 
 
 if __name__ == "__main__":

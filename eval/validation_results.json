@@ -1,0 +1,1290 @@
+[
+ {
+  "id": "V1",
+  "category": "direct",
+  "question": "How long does a typical data engineering project take, and how many people work on it?",
+  "answerable": true,
+  "expected": [
+   {
+    "source": "01_capabilities.md",
+    "section": "Data Engineering",
+    "rank": 1,
+    "distance": 0.3994
+   }
+  ],
+  "required_evidence": [
+   "two engineers and one lead",
+   "eight to twelve weeks"
+  ],
+  "ranking": [
+   {
+    "rank": 1,
+    "source": "01_capabilities.md",
+    "section": "Data Engineering",
+    "distance": 0.3994,
+    "text": "## Data Engineering\nWe build cloud data pipelines, warehouses and lakehouses. Typical work includes migrating legacy reporting databases to a modern cloud warehouse, building automated ingestion, and setting up data quality checks. Delivery is usually done by a small squad of two engineers and one lead over eight to twelve weeks."
+   },
+   {
+    "rank": 2,
+    "source": "03_case_study.md",
+    "section": "Results after six months",
+    "distance": 0.7089,
+    "text": "## Results after six months\nReporting time fell from four days to under one hour. Report disputes dropped by roughly 70 percent. The project ran as a fixed-scope engagement of ten weeks, followed by a monthly managed service."
+   },
+   {
+    "rank": 3,
+    "source": "03_case_study.md",
+    "section": "The challenge",
+    "distance": 0.7671,
+    "text": "## The challenge\nClinic managers built weekly reports by hand from five separate systems. Reports arrived four days late and the numbers rarely matched."
+   },
+   {
+    "rank": 4,
+    "source": "02_icp.md",
+    "section": "Best-fit customers",
+    "distance": 0.7988,
+    "text": "## Best-fit customers\nMid-market and enterprise companies in healthcare, financial services and retail, with 500 to 5,000 employees. They already collect data but report from scattered spreadsheets and ageing databases. The buyer is usually a Chief Data Officer, VP of Analytics or Head of Operations, with a named budget for data modernisation."
+   },
+   {
+    "rank": 5,
+    "source": "02_icp.md",
+    "section": "Buying signals",
+    "distance": 0.8141,
+    "text": "## Buying signals\nRecent cloud migration announcements, new data leadership hires, regulatory reporting pressure, and public job postings for data engineers."
+   },
+   {
+    "rank": 6,
+    "source": "01_capabilities.md",
+    "section": "Applied AI and Machine Learning",
+    "distance": 0.874,
+    "text": "## Applied AI and Machine Learning\nWe design forecasting, classification and recommendation models, and retrieval-augmented assistants that answer questions from a client's own documents with citations. Every model ships with monitoring and a handover guide so the client team can run it."
+   },
+   {
+    "rank": 7,
+    "source": "03_case_study.md",
+    "section": "Lessons",
+    "distance": 0.906,
+    "text": "## Lessons\nAgreeing KPI definitions in week one avoided most late rework. The client's own analysts were trained to maintain the pipelines."
+   },
+   {
+    "rank": 8,
+    "source": "02_icp.md",
+    "section": "Poor-fit customers",
+    "distance": 0.906,
+    "text": "## Poor-fit customers\nVery small companies with no data team, and organisations that only want staff augmentation with no outcome ownership."
+   },
+   {
+    "rank": 9,
+    "source": "03_case_study.md",
+    "section": "What Kai's Company did",
+    "distance": 0.9104,
+    "text": "## What Kai's Company did\nWe delivered a cloud data warehouse with automated nightly ingestion, defined twelve shared KPIs, and launched an executive dashboard. A pilot assistant let managers ask questions about the reporting policy handbook and receive answers with page citations."
+   },
+   {
+    "rank": 10,
+    "source": "01_capabilities.md",
+    "section": "Analytics and Dashboards",
+    "distance": 0.9172,
+    "text": "## Analytics and Dashboards\nWe create executive dashboards, KPI frameworks and self-service reporting. We define each metric once so that every team sees the same numbers."
+   },
+   {
+    "rank": 11,
+    "source": "01_capabilities.md",
+    "section": "Delivery modalities",
+    "distance": 0.9513,
+    "text": "## Delivery modalities\nEngagements run as a fixed-scope project, a monthly managed service, or a time-and-materials team extension."
+   },
+   {
+    "rank": 12,
+    "source": "02_icp.md",
+    "section": "Competitive positioning",
+    "distance": 0.9779,
+    "text": "## Competitive positioning\nLarge consultancies offer breadth but are slower and costlier. Offshore body shops are cheap but rarely own outcomes. Kai's Company competes on small senior squads, fixed-scope pricing and a clear handover. We do not claim to match the scale of the largest firms."
+   },
+   {
+    "rank": 13,
+    "source": "02_icp.md",
+    "section": "Ideal customer profile",
+    "distance": 1.0145,
+    "text": "# Ideal customer profile  \nThis profile is fictional and written for demonstration."
+   },
+   {
+    "rank": 14,
+    "source": "03_case_study.md",
+    "section": "Case study: Northwind Health",
+    "distance": 1.0372,
+    "text": "# Case study: Northwind Health  \nNorthwind Health is a fictional regional healthcare network. Figures are invented for demonstration."
+   },
+   {
+    "rank": 15,
+    "source": "01_capabilities.md",
+    "section": "Capabilities overview",
+    "distance": 1.0377,
+    "text": "# Capabilities overview  \nKai's Company is a fictional AI and data consulting firm used for demonstration only."
+   }
+  ],
+  "top1_hit": true,
+  "top3_hit": true,
+  "all_expected_in_top3": true,
+  "all_expected_in_context": true,
+  "evidence_in_top3": true,
+  "notes": "Paraphrase: 'project take' / 'people' instead of the document's 'delivery' / 'squad'."
+ },
+ {
+  "id": "V2",
+  "category": "direct",
+  "question": "How many shared KPIs did we define for the healthcare client, and what did we launch alongside them?",
+  "answerable": true,
+  "expected": [
+   {
+    "source": "03_case_study.md",
+    "section": "What Kai's Company did",
+    "rank": 2,
+    "distance": 0.669
+   }
+  ],
+  "required_evidence": [
+   "twelve shared KPIs",
+   "executive dashboard"
+  ],
+  "ranking": [
+   {
+    "rank": 1,
+    "source": "03_case_study.md",
+    "section": "Lessons",
+    "distance": 0.6585,
+    "text": "## Lessons\nAgreeing KPI definitions in week one avoided most late rework. The client's own analysts were trained to maintain the pipelines."
+   },
+   {
+    "rank": 2,
+    "source": "03_case_study.md",
+    "section": "What Kai's Company did",
+    "distance": 0.669,
+    "text": "## What Kai's Company did\nWe delivered a cloud data warehouse with automated nightly ingestion, defined twelve shared KPIs, and launched an executive dashboard. A pilot assistant let managers ask questions about the reporting policy handbook and receive answers with page citations."
+   },
+   {
+    "rank": 3,
+    "source": "01_capabilities.md",
+    "section": "Analytics and Dashboards",
+    "distance": 0.6988,
+    "text": "## Analytics and Dashboards\nWe create executive dashboards, KPI frameworks and self-service reporting. We define each metric once so that every team sees the same numbers."
+   },
+   {
+    "rank": 4,
+    "source": "03_case_study.md",
+    "section": "The challenge",
+    "distance": 0.7565,
+    "text": "## The challenge\nClinic managers built weekly reports by hand from five separate systems. Reports arrived four days late and the numbers rarely matched."
+   },
+   {
+    "rank": 5,
+    "source": "02_icp.md",
+    "section": "Best-fit customers",
+    "distance": 0.7583,
+    "text": "## Best-fit customers\nMid-market and enterprise companies in healthcare, financial services and retail, with 500 to 5,000 employees. They already collect data but report from scattered spreadsheets and ageing databases. The buyer is usually a Chief Data Officer, VP of Analytics or Head of Operations, with a named budget for data modernisation."
+   },
+   {
+    "rank": 6,
+    "source": "02_icp.md",
+    "section": "Poor-fit customers",
+    "distance": 0.8189,
+    "text": "## Poor-fit customers\nVery small companies with no data team, and organisations that only want staff augmentation with no outcome ownership."
+   },
+   {
+    "rank": 7,
+    "source": "03_case_study.md",
+    "section": "Results after six months",
+    "distance": 0.8224,
+    "text": "## Results after six months\nReporting time fell from four days to under one hour. Report disputes dropped by roughly 70 percent. The project ran as a fixed-scope engagement of ten weeks, followed by a monthly managed service."
+   },
+   {
+    "rank": 8,
+    "source": "01_capabilities.md",
+    "section": "Delivery modalities",
+    "distance": 0.8311,
+    "text": "## Delivery modalities\nEngagements run as a fixed-scope project, a monthly managed service, or a time-and-materials team extension."
+   },
+   {
+    "rank": 9,
+    "source": "01_capabilities.md",
+    "section": "Applied AI and Machine Learning",
+    "distance": 0.8391,
+    "text": "## Applied AI and Machine Learning\nWe design forecasting, classification and recommendation models, and retrieval-augmented assistants that answer questions from a client's own documents with citations. Every model ships with monitoring and a handover guide so the client team can run it."
+   },
+   {
+    "rank": 10,
+    "source": "03_case_study.md",
+    "section": "Case study: Northwind Health",
+    "distance": 0.8656,
+    "text": "# Case study: Northwind Health  \nNorthwind Health is a fictional regional healthcare network. Figures are invented for demonstration."
+   },
+   {
+    "rank": 11,
+    "source": "02_icp.md",
+    "section": "Buying signals",
+    "distance": 0.8868,
+    "text": "## Buying signals\nRecent cloud migration announcements, new data leadership hires, regulatory reporting pressure, and public job postings for data engineers."
+   },
+   {
+    "rank": 12,
+    "source": "02_icp.md",
+    "section": "Ideal customer profile",
+    "distance": 0.918,
+    "text": "# Ideal customer profile  \nThis profile is fictional and written for demonstration."
+   },
+   {
+    "rank": 13,
+    "source": "02_icp.md",
+    "section": "Competitive positioning",
+    "distance": 0.9203,
+    "text": "## Competitive positioning\nLarge consultancies offer breadth but are slower and costlier. Offshore body shops are cheap but rarely own outcomes. Kai's Company competes on small senior squads, fixed-scope pricing and a clear handover. We do not claim to match the scale of the largest firms."
+   },
+   {
+    "rank": 14,
+    "source": "01_capabilities.md",
+    "section": "Data Engineering",
+    "distance": 0.946,
+    "text": "## Data Engineering\nWe build cloud data pipelines, warehouses and lakehouses. Typical work includes migrating legacy reporting databases to a modern cloud warehouse, building automated ingestion, and setting up data quality checks. Delivery is usually done by a small squad of two engineers and one lead over eight to twelve weeks."
+   },
+   {
+    "rank": 15,
+    "source": "01_capabilities.md",
+    "section": "Capabilities overview",
+    "distance": 1.0102,
+    "text": "# Capabilities overview  \nKai's Company is a fictional AI and data consulting firm used for demonstration only."
+   }
+  ],
+  "top1_hit": false,
+  "top3_hit": true,
+  "all_expected_in_top3": true,
+  "all_expected_in_context": true,
+  "evidence_in_top3": true,
+  "notes": "Client not named. 'KPI' also appears in Analytics and Dashboards and in Lessons."
+ },
+ {
+  "id": "V3",
+  "category": "direct",
+  "question": "What kind of company would we avoid selling to?",
+  "answerable": true,
+  "expected": [
+   {
+    "source": "02_icp.md",
+    "section": "Poor-fit customers",
+    "rank": 1,
+    "distance": 0.852
+   }
+  ],
+  "required_evidence": [
+   "no data team",
+   "staff augmentation"
+  ],
+  "ranking": [
+   {
+    "rank": 1,
+    "source": "02_icp.md",
+    "section": "Poor-fit customers",
+    "distance": 0.852,
+    "text": "## Poor-fit customers\nVery small companies with no data team, and organisations that only want staff augmentation with no outcome ownership."
+   },
+   {
+    "rank": 2,
+    "source": "02_icp.md",
+    "section": "Best-fit customers",
+    "distance": 0.9048,
+    "text": "## Best-fit customers\nMid-market and enterprise companies in healthcare, financial services and retail, with 500 to 5,000 employees. They already collect data but report from scattered spreadsheets and ageing databases. The buyer is usually a Chief Data Officer, VP of Analytics or Head of Operations, with a named budget for data modernisation."
+   },
+   {
+    "rank": 3,
+    "source": "02_icp.md",
+    "section": "Competitive positioning",
+    "distance": 0.9238,
+    "text": "## Competitive positioning\nLarge consultancies offer breadth but are slower and costlier. Offshore body shops are cheap but rarely own outcomes. Kai's Company competes on small senior squads, fixed-scope pricing and a clear handover. We do not claim to match the scale of the largest firms."
+   },
+   {
+    "rank": 4,
+    "source": "02_icp.md",
+    "section": "Buying signals",
+    "distance": 0.9659,
+    "text": "## Buying signals\nRecent cloud migration announcements, new data leadership hires, regulatory reporting pressure, and public job postings for data engineers."
+   },
+   {
+    "rank": 5,
+    "source": "02_icp.md",
+    "section": "Ideal customer profile",
+    "distance": 1.0388,
+    "text": "# Ideal customer profile  \nThis profile is fictional and written for demonstration."
+   },
+   {
+    "rank": 6,
+    "source": "03_case_study.md",
+    "section": "What Kai's Company did",
+    "distance": 1.0766,
+    "text": "## What Kai's Company did\nWe delivered a cloud data warehouse with automated nightly ingestion, defined twelve shared KPIs, and launched an executive dashboard. A pilot assistant let managers ask questions about the reporting policy handbook and receive answers with page citations."
+   },
+   {
+    "rank": 7,
+    "source": "01_capabilities.md",
+    "section": "Capabilities overview",
+    "distance": 1.0904,
+    "text": "# Capabilities overview  \nKai's Company is a fictional AI and data consulting firm used for demonstration only."
+   },
+   {
+    "rank": 8,
+    "source": "01_capabilities.md",
+    "section": "Applied AI and Machine Learning",
+    "distance": 1.1393,
+    "text": "## Applied AI and Machine Learning\nWe design forecasting, classification and recommendation models, and retrieval-augmented assistants that answer questions from a client's own documents with citations. Every model ships with monitoring and a handover guide so the client team can run it."
+   },
+   {
+    "rank": 9,
+    "source": "03_case_study.md",
+    "section": "Lessons",
+    "distance": 1.1506,
+    "text": "## Lessons\nAgreeing KPI definitions in week one avoided most late rework. The client's own analysts were trained to maintain the pipelines."
+   },
+   {
+    "rank": 10,
+    "source": "01_capabilities.md",
+    "section": "Delivery modalities",
+    "distance": 1.1514,
+    "text": "## Delivery modalities\nEngagements run as a fixed-scope project, a monthly managed service, or a time-and-materials team extension."
+   },
+   {
+    "rank": 11,
+    "source": "01_capabilities.md",
+    "section": "Analytics and Dashboards",
+    "distance": 1.1742,
+    "text": "## Analytics and Dashboards\nWe create executive dashboards, KPI frameworks and self-service reporting. We define each metric once so that every team sees the same numbers."
+   },
+   {
+    "rank": 12,
+    "source": "03_case_study.md",
+    "section": "Results after six months",
+    "distance": 1.1818,
+    "text": "## Results after six months\nReporting time fell from four days to under one hour. Report disputes dropped by roughly 70 percent. The project ran as a fixed-scope engagement of ten weeks, followed by a monthly managed service."
+   },
+   {
+    "rank": 13,
+    "source": "03_case_study.md",
+    "section": "Case study: Northwind Health",
+    "distance": 1.1852,
+    "text": "# Case study: Northwind Health  \nNorthwind Health is a fictional regional healthcare network. Figures are invented for demonstration."
+   },
+   {
+    "rank": 14,
+    "source": "01_capabilities.md",
+    "section": "Data Engineering",
+    "distance": 1.2044,
+    "text": "## Data Engineering\nWe build cloud data pipelines, warehouses and lakehouses. Typical work includes migrating legacy reporting databases to a modern cloud warehouse, building automated ingestion, and setting up data quality checks. Delivery is usually done by a small squad of two engineers and one lead over eight to twelve weeks."
+   },
+   {
+    "rank": 15,
+    "source": "03_case_study.md",
+    "section": "The challenge",
+    "distance": 1.2258,
+    "text": "## The challenge\nClinic managers built weekly reports by hand from five separate systems. Reports arrived four days late and the numbers rarely matched."
+   }
+  ],
+  "top1_hit": true,
+  "top3_hit": true,
+  "all_expected_in_top3": true,
+  "all_expected_in_context": true,
+  "evidence_in_top3": true,
+  "notes": "Paraphrase: 'avoid selling to' for 'poor-fit'."
+ },
+ {
+  "id": "V4",
+  "category": "complex",
+  "question": "Is a ten-week fixed-scope engagement typical for us, or was Northwind Health unusual?",
+  "answerable": true,
+  "expected": [
+   {
+    "source": "01_capabilities.md",
+    "section": "Data Engineering",
+    "rank": 10,
+    "distance": 0.9401
+   },
+   {
+    "source": "03_case_study.md",
+    "section": "Results after six months",
+    "rank": 1,
+    "distance": 0.4254
+   }
+  ],
+  "required_evidence": [
+   "eight to twelve weeks",
+   "fixed-scope engagement of ten weeks"
+  ],
+  "ranking": [
+   {
+    "rank": 1,
+    "source": "03_case_study.md",
+    "section": "Results after six months",
+    "distance": 0.4254,
+    "text": "## Results after six months\nReporting time fell from four days to under one hour. Report disputes dropped by roughly 70 percent. The project ran as a fixed-scope engagement of ten weeks, followed by a monthly managed service."
+   },
+   {
+    "rank": 2,
+    "source": "03_case_study.md",
+    "section": "The challenge",
+    "distance": 0.5194,
+    "text": "## The challenge\nClinic managers built weekly reports by hand from five separate systems. Reports arrived four days late and the numbers rarely matched."
+   },
+   {
+    "rank": 3,
+    "source": "03_case_study.md",
+    "section": "Lessons",
+    "distance": 0.5796,
+    "text": "## Lessons\nAgreeing KPI definitions in week one avoided most late rework. The client's own analysts were trained to maintain the pipelines."
+   },
+   {
+    "rank": 4,
+    "source": "03_case_study.md",
+    "section": "Case study: Northwind Health",
+    "distance": 0.6715,
+    "text": "# Case study: Northwind Health  \nNorthwind Health is a fictional regional healthcare network. Figures are invented for demonstration."
+   },
+   {
+    "rank": 5,
+    "source": "01_capabilities.md",
+    "section": "Delivery modalities",
+    "distance": 0.6762,
+    "text": "## Delivery modalities\nEngagements run as a fixed-scope project, a monthly managed service, or a time-and-materials team extension."
+   },
+   {
+    "rank": 6,
+    "source": "03_case_study.md",
+    "section": "What Kai's Company did",
+    "distance": 0.718,
+    "text": "## What Kai's Company did\nWe delivered a cloud data warehouse with automated nightly ingestion, defined twelve shared KPIs, and launched an executive dashboard. A pilot assistant let managers ask questions about the reporting policy handbook and receive answers with page citations."
+   },
+   {
+    "rank": 7,
+    "source": "02_icp.md",
+    "section": "Competitive positioning",
+    "distance": 0.797,
+    "text": "## Competitive positioning\nLarge consultancies offer breadth but are slower and costlier. Offshore body shops are cheap but rarely own outcomes. Kai's Company competes on small senior squads, fixed-scope pricing and a clear handover. We do not claim to match the scale of the largest firms."
+   },
+   {
+    "rank": 8,
+    "source": "02_icp.md",
+    "section": "Buying signals",
+    "distance": 0.9139,
+    "text": "## Buying signals\nRecent cloud migration announcements, new data leadership hires, regulatory reporting pressure, and public job postings for data engineers."
+   },
+   {
+    "rank": 9,
+    "source": "02_icp.md",
+    "section": "Poor-fit customers",
+    "distance": 0.9359,
+    "text": "## Poor-fit customers\nVery small companies with no data team, and organisations that only want staff augmentation with no outcome ownership."
+   },
+   {
+    "rank": 10,
+    "source": "01_capabilities.md",
+    "section": "Data Engineering",
+    "distance": 0.9401,
+    "text": "## Data Engineering\nWe build cloud data pipelines, warehouses and lakehouses. Typical work includes migrating legacy reporting databases to a modern cloud warehouse, building automated ingestion, and setting up data quality checks. Delivery is usually done by a small squad of two engineers and one lead over eight to twelve weeks."
+   },
+   {
+    "rank": 11,
+    "source": "02_icp.md",
+    "section": "Best-fit customers",
+    "distance": 0.9463,
+    "text": "## Best-fit customers\nMid-market and enterprise companies in healthcare, financial services and retail, with 500 to 5,000 employees. They already collect data but report from scattered spreadsheets and ageing databases. The buyer is usually a Chief Data Officer, VP of Analytics or Head of Operations, with a named budget for data modernisation."
+   },
+   {
+    "rank": 12,
+    "source": "01_capabilities.md",
+    "section": "Analytics and Dashboards",
+    "distance": 0.9693,
+    "text": "## Analytics and Dashboards\nWe create executive dashboards, KPI frameworks and self-service reporting. We define each metric once so that every team sees the same numbers."
+   },
+   {
+    "rank": 13,
+    "source": "01_capabilities.md",
+    "section": "Applied AI and Machine Learning",
+    "distance": 0.9837,
+    "text": "## Applied AI and Machine Learning\nWe design forecasting, classification and recommendation models, and retrieval-augmented assistants that answer questions from a client's own documents with citations. Every model ships with monitoring and a handover guide so the client team can run it."
+   },
+   {
+    "rank": 14,
+    "source": "02_icp.md",
+    "section": "Ideal customer profile",
+    "distance": 1.0103,
+    "text": "# Ideal customer profile  \nThis profile is fictional and written for demonstration."
+   },
+   {
+    "rank": 15,
+    "source": "01_capabilities.md",
+    "section": "Capabilities overview",
+    "distance": 1.1026,
+    "text": "# Capabilities overview  \nKai's Company is a fictional AI and data consulting firm used for demonstration only."
+   }
+  ],
+  "top1_hit": true,
+  "top3_hit": true,
+  "all_expected_in_top3": false,
+  "all_expected_in_context": false,
+  "evidence_in_top3": false,
+  "notes": "Typical duration (capabilities) compared with the case-study duration."
+ },
+ {
+  "id": "V5",
+  "category": "complex",
+  "question": "What KPI and dashboard work do we offer, and what did that look like for Northwind Health?",
+  "answerable": true,
+  "expected": [
+   {
+    "source": "01_capabilities.md",
+    "section": "Analytics and Dashboards",
+    "rank": 3,
+    "distance": 0.6286
+   },
+   {
+    "source": "03_case_study.md",
+    "section": "What Kai's Company did",
+    "rank": 2,
+    "distance": 0.5446
+   }
+  ],
+  "required_evidence": [
+   "KPI frameworks",
+   "twelve shared KPIs"
+  ],
+  "ranking": [
+   {
+    "rank": 1,
+    "source": "03_case_study.md",
+    "section": "Lessons",
+    "distance": 0.4997,
+    "text": "## Lessons\nAgreeing KPI definitions in week one avoided most late rework. The client's own analysts were trained to maintain the pipelines."
+   },
+   {
+    "rank": 2,
+    "source": "03_case_study.md",
+    "section": "What Kai's Company did",
+    "distance": 0.5446,
+    "text": "## What Kai's Company did\nWe delivered a cloud data warehouse with automated nightly ingestion, defined twelve shared KPIs, and launched an executive dashboard. A pilot assistant let managers ask questions about the reporting policy handbook and receive answers with page citations."
+   },
+   {
+    "rank": 3,
+    "source": "01_capabilities.md",
+    "section": "Analytics and Dashboards",
+    "distance": 0.6286,
+    "text": "## Analytics and Dashboards\nWe create executive dashboards, KPI frameworks and self-service reporting. We define each metric once so that every team sees the same numbers."
+   },
+   {
+    "rank": 4,
+    "source": "03_case_study.md",
+    "section": "Case study: Northwind Health",
+    "distance": 0.6419,
+    "text": "# Case study: Northwind Health  \nNorthwind Health is a fictional regional healthcare network. Figures are invented for demonstration."
+   },
+   {
+    "rank": 5,
+    "source": "03_case_study.md",
+    "section": "The challenge",
+    "distance": 0.6459,
+    "text": "## The challenge\nClinic managers built weekly reports by hand from five separate systems. Reports arrived four days late and the numbers rarely matched."
+   },
+   {
+    "rank": 6,
+    "source": "03_case_study.md",
+    "section": "Results after six months",
+    "distance": 0.6858,
+    "text": "## Results after six months\nReporting time fell from four days to under one hour. Report disputes dropped by roughly 70 percent. The project ran as a fixed-scope engagement of ten weeks, followed by a monthly managed service."
+   },
+   {
+    "rank": 7,
+    "source": "02_icp.md",
+    "section": "Buying signals",
+    "distance": 0.7988,
+    "text": "## Buying signals\nRecent cloud migration announcements, new data leadership hires, regulatory reporting pressure, and public job postings for data engineers."
+   },
+   {
+    "rank": 8,
+    "source": "01_capabilities.md",
+    "section": "Delivery modalities",
+    "distance": 0.8517,
+    "text": "## Delivery modalities\nEngagements run as a fixed-scope project, a monthly managed service, or a time-and-materials team extension."
+   },
+   {
+    "rank": 9,
+    "source": "02_icp.md",
+    "section": "Poor-fit customers",
+    "distance": 0.8876,
+    "text": "## Poor-fit customers\nVery small companies with no data team, and organisations that only want staff augmentation with no outcome ownership."
+   },
+   {
+    "rank": 10,
+    "source": "02_icp.md",
+    "section": "Best-fit customers",
+    "distance": 0.8927,
+    "text": "## Best-fit customers\nMid-market and enterprise companies in healthcare, financial services and retail, with 500 to 5,000 employees. They already collect data but report from scattered spreadsheets and ageing databases. The buyer is usually a Chief Data Officer, VP of Analytics or Head of Operations, with a named budget for data modernisation."
+   },
+   {
+    "rank": 11,
+    "source": "02_icp.md",
+    "section": "Competitive positioning",
+    "distance": 0.8955,
+    "text": "## Competitive positioning\nLarge consultancies offer breadth but are slower and costlier. Offshore body shops are cheap but rarely own outcomes. Kai's Company competes on small senior squads, fixed-scope pricing and a clear handover. We do not claim to match the scale of the largest firms."
+   },
+   {
+    "rank": 12,
+    "source": "01_capabilities.md",
+    "section": "Applied AI and Machine Learning",
+    "distance": 0.8964,
+    "text": "## Applied AI and Machine Learning\nWe design forecasting, classification and recommendation models, and retrieval-augmented assistants that answer questions from a client's own documents with citations. Every model ships with monitoring and a handover guide so the client team can run it."
+   },
+   {
+    "rank": 13,
+    "source": "01_capabilities.md",
+    "section": "Data Engineering",
+    "distance": 0.9358,
+    "text": "## Data Engineering\nWe build cloud data pipelines, warehouses and lakehouses. Typical work includes migrating legacy reporting databases to a modern cloud warehouse, building automated ingestion, and setting up data quality checks. Delivery is usually done by a small squad of two engineers and one lead over eight to twelve weeks."
+   },
+   {
+    "rank": 14,
+    "source": "02_icp.md",
+    "section": "Ideal customer profile",
+    "distance": 0.9454,
+    "text": "# Ideal customer profile  \nThis profile is fictional and written for demonstration."
+   },
+   {
+    "rank": 15,
+    "source": "01_capabilities.md",
+    "section": "Capabilities overview",
+    "distance": 0.9889,
+    "text": "# Capabilities overview  \nKai's Company is a fictional AI and data consulting firm used for demonstration only."
+   }
+  ],
+  "top1_hit": false,
+  "top3_hit": true,
+  "all_expected_in_top3": true,
+  "all_expected_in_context": true,
+  "evidence_in_top3": true,
+  "notes": "Capability description plus its case-study instance."
+ },
+ {
+  "id": "V6",
+  "category": "complex",
+  "question": "What evidence do we have that clients can run our deliverables without us?",
+  "answerable": true,
+  "expected": [
+   {
+    "source": "01_capabilities.md",
+    "section": "Applied AI and Machine Learning",
+    "rank": 9,
+    "distance": 0.9302
+   },
+   {
+    "source": "03_case_study.md",
+    "section": "Lessons",
+    "rank": 4,
+    "distance": 0.9072
+   }
+  ],
+  "required_evidence": [
+   "client team can run it",
+   "trained to maintain the pipelines"
+  ],
+  "ranking": [
+   {
+    "rank": 1,
+    "source": "02_icp.md",
+    "section": "Poor-fit customers",
+    "distance": 0.8099,
+    "text": "## Poor-fit customers\nVery small companies with no data team, and organisations that only want staff augmentation with no outcome ownership."
+   },
+   {
+    "rank": 2,
+    "source": "01_capabilities.md",
+    "section": "Delivery modalities",
+    "distance": 0.8452,
+    "text": "## Delivery modalities\nEngagements run as a fixed-scope project, a monthly managed service, or a time-and-materials team extension."
+   },
+   {
+    "rank": 3,
+    "source": "02_icp.md",
+    "section": "Buying signals",
+    "distance": 0.8789,
+    "text": "## Buying signals\nRecent cloud migration announcements, new data leadership hires, regulatory reporting pressure, and public job postings for data engineers."
+   },
+   {
+    "rank": 4,
+    "source": "03_case_study.md",
+    "section": "Lessons",
+    "distance": 0.9072,
+    "text": "## Lessons\nAgreeing KPI definitions in week one avoided most late rework. The client's own analysts were trained to maintain the pipelines."
+   },
+   {
+    "rank": 5,
+    "source": "03_case_study.md",
+    "section": "What Kai's Company did",
+    "distance": 0.9088,
+    "text": "## What Kai's Company did\nWe delivered a cloud data warehouse with automated nightly ingestion, defined twelve shared KPIs, and launched an executive dashboard. A pilot assistant let managers ask questions about the reporting policy handbook and receive answers with page citations."
+   },
+   {
+    "rank": 6,
+    "source": "01_capabilities.md",
+    "section": "Analytics and Dashboards",
+    "distance": 0.9093,
+    "text": "## Analytics and Dashboards\nWe create executive dashboards, KPI frameworks and self-service reporting. We define each metric once so that every team sees the same numbers."
+   },
+   {
+    "rank": 7,
+    "source": "02_icp.md",
+    "section": "Best-fit customers",
+    "distance": 0.9111,
+    "text": "## Best-fit customers\nMid-market and enterprise companies in healthcare, financial services and retail, with 500 to 5,000 employees. They already collect data but report from scattered spreadsheets and ageing databases. The buyer is usually a Chief Data Officer, VP of Analytics or Head of Operations, with a named budget for data modernisation."
+   },
+   {
+    "rank": 8,
+    "source": "03_case_study.md",
+    "section": "Results after six months",
+    "distance": 0.92,
+    "text": "## Results after six months\nReporting time fell from four days to under one hour. Report disputes dropped by roughly 70 percent. The project ran as a fixed-scope engagement of ten weeks, followed by a monthly managed service."
+   },
+   {
+    "rank": 9,
+    "source": "01_capabilities.md",
+    "section": "Applied AI and Machine Learning",
+    "distance": 0.9302,
+    "text": "## Applied AI and Machine Learning\nWe design forecasting, classification and recommendation models, and retrieval-augmented assistants that answer questions from a client's own documents with citations. Every model ships with monitoring and a handover guide so the client team can run it."
+   },
+   {
+    "rank": 10,
+    "source": "03_case_study.md",
+    "section": "The challenge",
+    "distance": 0.931,
+    "text": "## The challenge\nClinic managers built weekly reports by hand from five separate systems. Reports arrived four days late and the numbers rarely matched."
+   },
+   {
+    "rank": 11,
+    "source": "01_capabilities.md",
+    "section": "Data Engineering",
+    "distance": 0.9374,
+    "text": "## Data Engineering\nWe build cloud data pipelines, warehouses and lakehouses. Typical work includes migrating legacy reporting databases to a modern cloud warehouse, building automated ingestion, and setting up data quality checks. Delivery is usually done by a small squad of two engineers and one lead over eight to twelve weeks."
+   },
+   {
+    "rank": 12,
+    "source": "02_icp.md",
+    "section": "Competitive positioning",
+    "distance": 0.9479,
+    "text": "## Competitive positioning\nLarge consultancies offer breadth but are slower and costlier. Offshore body shops are cheap but rarely own outcomes. Kai's Company competes on small senior squads, fixed-scope pricing and a clear handover. We do not claim to match the scale of the largest firms."
+   },
+   {
+    "rank": 13,
+    "source": "02_icp.md",
+    "section": "Ideal customer profile",
+    "distance": 0.9614,
+    "text": "# Ideal customer profile  \nThis profile is fictional and written for demonstration."
+   },
+   {
+    "rank": 14,
+    "source": "01_capabilities.md",
+    "section": "Capabilities overview",
+    "distance": 0.9662,
+    "text": "# Capabilities overview  \nKai's Company is a fictional AI and data consulting firm used for demonstration only."
+   },
+   {
+    "rank": 15,
+    "source": "03_case_study.md",
+    "section": "Case study: Northwind Health",
+    "distance": 1.0178,
+    "text": "# Case study: Northwind Health  \nNorthwind Health is a fictional regional healthcare network. Figures are invented for demonstration."
+   }
+  ],
+  "top1_hit": false,
+  "top3_hit": false,
+  "all_expected_in_top3": false,
+  "all_expected_in_context": false,
+  "evidence_in_top3": false,
+  "notes": "Handover promise (capabilities) plus the proof point (case study). No section names the question's words."
+ },
+ {
+  "id": "V7",
+  "category": "unanswerable",
+  "question": "How much did Northwind Health pay for the project?",
+  "answerable": false,
+  "expected": [],
+  "required_evidence": [],
+  "ranking": [
+   {
+    "rank": 1,
+    "source": "03_case_study.md",
+    "section": "Results after six months",
+    "distance": 0.5664,
+    "text": "## Results after six months\nReporting time fell from four days to under one hour. Report disputes dropped by roughly 70 percent. The project ran as a fixed-scope engagement of ten weeks, followed by a monthly managed service."
+   },
+   {
+    "rank": 2,
+    "source": "03_case_study.md",
+    "section": "The challenge",
+    "distance": 0.5858,
+    "text": "## The challenge\nClinic managers built weekly reports by hand from five separate systems. Reports arrived four days late and the numbers rarely matched."
+   },
+   {
+    "rank": 3,
+    "source": "03_case_study.md",
+    "section": "Case study: Northwind Health",
+    "distance": 0.5964,
+    "text": "# Case study: Northwind Health  \nNorthwind Health is a fictional regional healthcare network. Figures are invented for demonstration."
+   },
+   {
+    "rank": 4,
+    "source": "03_case_study.md",
+    "section": "What Kai's Company did",
+    "distance": 0.7494,
+    "text": "## What Kai's Company did\nWe delivered a cloud data warehouse with automated nightly ingestion, defined twelve shared KPIs, and launched an executive dashboard. A pilot assistant let managers ask questions about the reporting policy handbook and receive answers with page citations."
+   },
+   {
+    "rank": 5,
+    "source": "03_case_study.md",
+    "section": "Lessons",
+    "distance": 0.7639,
+    "text": "## Lessons\nAgreeing KPI definitions in week one avoided most late rework. The client's own analysts were trained to maintain the pipelines."
+   },
+   {
+    "rank": 6,
+    "source": "01_capabilities.md",
+    "section": "Delivery modalities",
+    "distance": 1.018,
+    "text": "## Delivery modalities\nEngagements run as a fixed-scope project, a monthly managed service, or a time-and-materials team extension."
+   },
+   {
+    "rank": 7,
+    "source": "01_capabilities.md",
+    "section": "Data Engineering",
+    "distance": 1.0367,
+    "text": "## Data Engineering\nWe build cloud data pipelines, warehouses and lakehouses. Typical work includes migrating legacy reporting databases to a modern cloud warehouse, building automated ingestion, and setting up data quality checks. Delivery is usually done by a small squad of two engineers and one lead over eight to twelve weeks."
+   },
+   {
+    "rank": 8,
+    "source": "02_icp.md",
+    "section": "Competitive positioning",
+    "distance": 1.0622,
+    "text": "## Competitive positioning\nLarge consultancies offer breadth but are slower and costlier. Offshore body shops are cheap but rarely own outcomes. Kai's Company competes on small senior squads, fixed-scope pricing and a clear handover. We do not claim to match the scale of the largest firms."
+   },
+   {
+    "rank": 9,
+    "source": "02_icp.md",
+    "section": "Best-fit customers",
+    "distance": 1.0802,
+    "text": "## Best-fit customers\nMid-market and enterprise companies in healthcare, financial services and retail, with 500 to 5,000 employees. They already collect data but report from scattered spreadsheets and ageing databases. The buyer is usually a Chief Data Officer, VP of Analytics or Head of Operations, with a named budget for data modernisation."
+   },
+   {
+    "rank": 10,
+    "source": "02_icp.md",
+    "section": "Poor-fit customers",
+    "distance": 1.0995,
+    "text": "## Poor-fit customers\nVery small companies with no data team, and organisations that only want staff augmentation with no outcome ownership."
+   },
+   {
+    "rank": 11,
+    "source": "02_icp.md",
+    "section": "Buying signals",
+    "distance": 1.13,
+    "text": "## Buying signals\nRecent cloud migration announcements, new data leadership hires, regulatory reporting pressure, and public job postings for data engineers."
+   },
+   {
+    "rank": 12,
+    "source": "01_capabilities.md",
+    "section": "Analytics and Dashboards",
+    "distance": 1.1609,
+    "text": "## Analytics and Dashboards\nWe create executive dashboards, KPI frameworks and self-service reporting. We define each metric once so that every team sees the same numbers."
+   },
+   {
+    "rank": 13,
+    "source": "01_capabilities.md",
+    "section": "Capabilities overview",
+    "distance": 1.1829,
+    "text": "# Capabilities overview  \nKai's Company is a fictional AI and data consulting firm used for demonstration only."
+   },
+   {
+    "rank": 14,
+    "source": "01_capabilities.md",
+    "section": "Applied AI and Machine Learning",
+    "distance": 1.1886,
+    "text": "## Applied AI and Machine Learning\nWe design forecasting, classification and recommendation models, and retrieval-augmented assistants that answer questions from a client's own documents with citations. Every model ships with monitoring and a handover guide so the client team can run it."
+   },
+   {
+    "rank": 15,
+    "source": "02_icp.md",
+    "section": "Ideal customer profile",
+    "distance": 1.2683,
+    "text": "# Ideal customer profile  \nThis profile is fictional and written for demonstration."
+   }
+  ],
+  "top1_hit": false,
+  "top3_hit": false,
+  "all_expected_in_top3": false,
+  "all_expected_in_context": false,
+  "evidence_in_top3": false,
+  "notes": "Hard negative: the case study covers the project in detail but gives no price; it says figures are invented."
+ },
+ {
+  "id": "V8",
+  "category": "unanswerable",
+  "question": "Do we build our data warehouses on Snowflake, BigQuery or Redshift?",
+  "answerable": false,
+  "expected": [],
+  "required_evidence": [],
+  "ranking": [
+   {
+    "rank": 1,
+    "source": "01_capabilities.md",
+    "section": "Data Engineering",
+    "distance": 0.5841,
+    "text": "## Data Engineering\nWe build cloud data pipelines, warehouses and lakehouses. Typical work includes migrating legacy reporting databases to a modern cloud warehouse, building automated ingestion, and setting up data quality checks. Delivery is usually done by a small squad of two engineers and one lead over eight to twelve weeks."
+   },
+   {
+    "rank": 2,
+    "source": "02_icp.md",
+    "section": "Buying signals",
+    "distance": 0.7214,
+    "text": "## Buying signals\nRecent cloud migration announcements, new data leadership hires, regulatory reporting pressure, and public job postings for data engineers."
+   },
+   {
+    "rank": 3,
+    "source": "01_capabilities.md",
+    "section": "Applied AI and Machine Learning",
+    "distance": 0.8033,
+    "text": "## Applied AI and Machine Learning\nWe design forecasting, classification and recommendation models, and retrieval-augmented assistants that answer questions from a client's own documents with citations. Every model ships with monitoring and a handover guide so the client team can run it."
+   },
+   {
+    "rank": 4,
+    "source": "03_case_study.md",
+    "section": "What Kai's Company did",
+    "distance": 0.8061,
+    "text": "## What Kai's Company did\nWe delivered a cloud data warehouse with automated nightly ingestion, defined twelve shared KPIs, and launched an executive dashboard. A pilot assistant let managers ask questions about the reporting policy handbook and receive answers with page citations."
+   },
+   {
+    "rank": 5,
+    "source": "01_capabilities.md",
+    "section": "Analytics and Dashboards",
+    "distance": 0.8136,
+    "text": "## Analytics and Dashboards\nWe create executive dashboards, KPI frameworks and self-service reporting. We define each metric once so that every team sees the same numbers."
+   },
+   {
+    "rank": 6,
+    "source": "02_icp.md",
+    "section": "Competitive positioning",
+    "distance": 0.8424,
+    "text": "## Competitive positioning\nLarge consultancies offer breadth but are slower and costlier. Offshore body shops are cheap but rarely own outcomes. Kai's Company competes on small senior squads, fixed-scope pricing and a clear handover. We do not claim to match the scale of the largest firms."
+   },
+   {
+    "rank": 7,
+    "source": "02_icp.md",
+    "section": "Best-fit customers",
+    "distance": 0.8537,
+    "text": "## Best-fit customers\nMid-market and enterprise companies in healthcare, financial services and retail, with 500 to 5,000 employees. They already collect data but report from scattered spreadsheets and ageing databases. The buyer is usually a Chief Data Officer, VP of Analytics or Head of Operations, with a named budget for data modernisation."
+   },
+   {
+    "rank": 8,
+    "source": "03_case_study.md",
+    "section": "The challenge",
+    "distance": 0.8948,
+    "text": "## The challenge\nClinic managers built weekly reports by hand from five separate systems. Reports arrived four days late and the numbers rarely matched."
+   },
+   {
+    "rank": 9,
+    "source": "02_icp.md",
+    "section": "Poor-fit customers",
+    "distance": 0.9086,
+    "text": "## Poor-fit customers\nVery small companies with no data team, and organisations that only want staff augmentation with no outcome ownership."
+   },
+   {
+    "rank": 10,
+    "source": "03_case_study.md",
+    "section": "Lessons",
+    "distance": 0.9503,
+    "text": "## Lessons\nAgreeing KPI definitions in week one avoided most late rework. The client's own analysts were trained to maintain the pipelines."
+   },
+   {
+    "rank": 11,
+    "source": "01_capabilities.md",
+    "section": "Delivery modalities",
+    "distance": 0.9557,
+    "text": "## Delivery modalities\nEngagements run as a fixed-scope project, a monthly managed service, or a time-and-materials team extension."
+   },
+   {
+    "rank": 12,
+    "source": "03_case_study.md",
+    "section": "Results after six months",
+    "distance": 0.9593,
+    "text": "## Results after six months\nReporting time fell from four days to under one hour. Report disputes dropped by roughly 70 percent. The project ran as a fixed-scope engagement of ten weeks, followed by a monthly managed service."
+   },
+   {
+    "rank": 13,
+    "source": "01_capabilities.md",
+    "section": "Capabilities overview",
+    "distance": 0.9707,
+    "text": "# Capabilities overview  \nKai's Company is a fictional AI and data consulting firm used for demonstration only."
+   },
+   {
+    "rank": 14,
+    "source": "03_case_study.md",
+    "section": "Case study: Northwind Health",
+    "distance": 0.9846,
+    "text": "# Case study: Northwind Health  \nNorthwind Health is a fictional regional healthcare network. Figures are invented for demonstration."
+   },
+   {
+    "rank": 15,
+    "source": "02_icp.md",
+    "section": "Ideal customer profile",
+    "distance": 0.997,
+    "text": "# Ideal customer profile  \nThis profile is fictional and written for demonstration."
+   }
+  ],
+  "top1_hit": false,
+  "top3_hit": false,
+  "all_expected_in_top3": false,
+  "all_expected_in_context": false,
+  "evidence_in_top3": false,
+  "notes": "Hard negative: documents say 'cloud warehouse' and 'lakehouses' but name no platform."
+ },
+ {
+  "id": "V9",
+  "category": "unanswerable",
+  "question": "Does Kai's Company hold HIPAA or SOC 2 certification?",
+  "answerable": false,
+  "expected": [],
+  "required_evidence": [],
+  "ranking": [
+   {
+    "rank": 1,
+    "source": "03_case_study.md",
+    "section": "What Kai's Company did",
+    "distance": 0.5901,
+    "text": "## What Kai's Company did\nWe delivered a cloud data warehouse with automated nightly ingestion, defined twelve shared KPIs, and launched an executive dashboard. A pilot assistant let managers ask questions about the reporting policy handbook and receive answers with page citations."
+   },
+   {
+    "rank": 2,
+    "source": "01_capabilities.md",
+    "section": "Capabilities overview",
+    "distance": 0.6389,
+    "text": "# Capabilities overview  \nKai's Company is a fictional AI and data consulting firm used for demonstration only."
+   },
+   {
+    "rank": 3,
+    "source": "02_icp.md",
+    "section": "Competitive positioning",
+    "distance": 0.7577,
+    "text": "## Competitive positioning\nLarge consultancies offer breadth but are slower and costlier. Offshore body shops are cheap but rarely own outcomes. Kai's Company competes on small senior squads, fixed-scope pricing and a clear handover. We do not claim to match the scale of the largest firms."
+   },
+   {
+    "rank": 4,
+    "source": "01_capabilities.md",
+    "section": "Delivery modalities",
+    "distance": 0.7655,
+    "text": "## Delivery modalities\nEngagements run as a fixed-scope project, a monthly managed service, or a time-and-materials team extension."
+   },
+   {
+    "rank": 5,
+    "source": "01_capabilities.md",
+    "section": "Analytics and Dashboards",
+    "distance": 0.83,
+    "text": "## Analytics and Dashboards\nWe create executive dashboards, KPI frameworks and self-service reporting. We define each metric once so that every team sees the same numbers."
+   },
+   {
+    "rank": 6,
+    "source": "01_capabilities.md",
+    "section": "Applied AI and Machine Learning",
+    "distance": 0.8363,
+    "text": "## Applied AI and Machine Learning\nWe design forecasting, classification and recommendation models, and retrieval-augmented assistants that answer questions from a client's own documents with citations. Every model ships with monitoring and a handover guide so the client team can run it."
+   },
+   {
+    "rank": 7,
+    "source": "03_case_study.md",
+    "section": "Lessons",
+    "distance": 0.8867,
+    "text": "## Lessons\nAgreeing KPI definitions in week one avoided most late rework. The client's own analysts were trained to maintain the pipelines."
+   },
+   {
+    "rank": 8,
+    "source": "02_icp.md",
+    "section": "Buying signals",
+    "distance": 0.8882,
+    "text": "## Buying signals\nRecent cloud migration announcements, new data leadership hires, regulatory reporting pressure, and public job postings for data engineers."
+   },
+   {
+    "rank": 9,
+    "source": "01_capabilities.md",
+    "section": "Data Engineering",
+    "distance": 0.8939,
+    "text": "## Data Engineering\nWe build cloud data pipelines, warehouses and lakehouses. Typical work includes migrating legacy reporting databases to a modern cloud warehouse, building automated ingestion, and setting up data quality checks. Delivery is usually done by a small squad of two engineers and one lead over eight to twelve weeks."
+   },
+   {
+    "rank": 10,
+    "source": "03_case_study.md",
+    "section": "The challenge",
+    "distance": 0.913,
+    "text": "## The challenge\nClinic managers built weekly reports by hand from five separate systems. Reports arrived four days late and the numbers rarely matched."
+   },
+   {
+    "rank": 11,
+    "source": "02_icp.md",
+    "section": "Poor-fit customers",
+    "distance": 0.9306,
+    "text": "## Poor-fit customers\nVery small companies with no data team, and organisations that only want staff augmentation with no outcome ownership."
+   },
+   {
+    "rank": 12,
+    "source": "02_icp.md",
+    "section": "Best-fit customers",
+    "distance": 0.9318,
+    "text": "## Best-fit customers\nMid-market and enterprise companies in healthcare, financial services and retail, with 500 to 5,000 employees. They already collect data but report from scattered spreadsheets and ageing databases. The buyer is usually a Chief Data Officer, VP of Analytics or Head of Operations, with a named budget for data modernisation."
+   },
+   {
+    "rank": 13,
+    "source": "03_case_study.md",
+    "section": "Results after six months",
+    "distance": 0.9407,
+    "text": "## Results after six months\nReporting time fell from four days to under one hour. Report disputes dropped by roughly 70 percent. The project ran as a fixed-scope engagement of ten weeks, followed by a monthly managed service."
+   },
+   {
+    "rank": 14,
+    "source": "03_case_study.md",
+    "section": "Case study: Northwind Health",
+    "distance": 0.9488,
+    "text": "# Case study: Northwind Health  \nNorthwind Health is a fictional regional healthcare network. Figures are invented for demonstration."
+   },
+   {
+    "rank": 15,
+    "source": "02_icp.md",
+    "section": "Ideal customer profile",
+    "distance": 0.9718,
+    "text": "# Ideal customer profile  \nThis profile is fictional and written for demonstration."
+   }
+  ],
+  "top1_hit": false,
+  "top3_hit": false,
+  "all_expected_in_top3": false,
+  "all_expected_in_context": false,
+  "evidence_in_top3": false,
+  "notes": "Hard negative: healthcare is a target industry and a case study, but no certifications are mentioned."
+ },
+ {
+  "id": "V10",
+  "category": "unanswerable",
+  "question": "Which named consulting firms do we compete against most often?",
+  "answerable": false,
+  "expected": [],
+  "required_evidence": [],
+  "ranking": [
+   {
+    "rank": 1,
+    "source": "02_icp.md",
+    "section": "Competitive positioning",
+    "distance": 0.7302,
+    "text": "## Competitive positioning\nLarge consultancies offer breadth but are slower and costlier. Offshore body shops are cheap but rarely own outcomes. Kai's Company competes on small senior squads, fixed-scope pricing and a clear handover. We do not claim to match the scale of the largest firms."
+   },
+   {
+    "rank": 2,
+    "source": "01_capabilities.md",
+    "section": "Capabilities overview",
+    "distance": 0.9024,
+    "text": "# Capabilities overview  \nKai's Company is a fictional AI and data consulting firm used for demonstration only."
+   },
+   {
+    "rank": 3,
+    "source": "02_icp.md",
+    "section": "Best-fit customers",
+    "distance": 0.9092,
+    "text": "## Best-fit customers\nMid-market and enterprise companies in healthcare, financial services and retail, with 500 to 5,000 employees. They already collect data but report from scattered spreadsheets and ageing databases. The buyer is usually a Chief Data Officer, VP of Analytics or Head of Operations, with a named budget for data modernisation."
+   },
+   {
+    "rank": 4,
+    "source": "02_icp.md",
+    "section": "Buying signals",
+    "distance": 0.9603,
+    "text": "## Buying signals\nRecent cloud migration announcements, new data leadership hires, regulatory reporting pressure, and public job postings for data engineers."
+   },
+   {
+    "rank": 5,
+    "source": "03_case_study.md",
+    "section": "The challenge",
+    "distance": 0.9656,
+    "text": "## The challenge\nClinic managers built weekly reports by hand from five separate systems. Reports arrived four days late and the numbers rarely matched."
+   },
+   {
+    "rank": 6,
+    "source": "01_capabilities.md",
+    "section": "Delivery modalities",
+    "distance": 0.9687,
+    "text": "## Delivery modalities\nEngagements run as a fixed-scope project, a monthly managed service, or a time-and-materials team extension."
+   },
+   {
+    "rank": 7,
+    "source": "03_case_study.md",
+    "section": "Lessons",
+    "distance": 0.985,
+    "text": "## Lessons\nAgreeing KPI definitions in week one avoided most late rework. The client's own analysts were trained to maintain the pipelines."
+   },
+   {
+    "rank": 8,
+    "source": "01_capabilities.md",
+    "section": "Analytics and Dashboards",
+    "distance": 1.0003,
+    "text": "## Analytics and Dashboards\nWe create executive dashboards, KPI frameworks and self-service reporting. We define each metric once so that every team sees the same numbers."
+   },
+   {
+    "rank": 9,
+    "source": "03_case_study.md",
+    "section": "What Kai's Company did",
+    "distance": 1.0074,
+    "text": "## What Kai's Company did\nWe delivered a cloud data warehouse with automated nightly ingestion, defined twelve shared KPIs, and launched an executive dashboard. A pilot assistant let managers ask questions about the reporting policy handbook and receive answers with page citations."
+   },
+   {
+    "rank": 10,
+    "source": "02_icp.md",
+    "section": "Poor-fit customers",
+    "distance": 1.0098,
+    "text": "## Poor-fit customers\nVery small companies with no data team, and organisations that only want staff augmentation with no outcome ownership."
+   },
+   {
+    "rank": 11,
+    "source": "01_capabilities.md",
+    "section": "Applied AI and Machine Learning",
+    "distance": 1.0115,
+    "text": "## Applied AI and Machine Learning\nWe design forecasting, classification and recommendation models, and retrieval-augmented assistants that answer questions from a client's own documents with citations. Every model ships with monitoring and a handover guide so the client team can run it."
+   },
+   {
+    "rank": 12,
+    "source": "03_case_study.md",
+    "section": "Case study: Northwind Health",
+    "distance": 1.0386,
+    "text": "# Case study: Northwind Health  \nNorthwind Health is a fictional regional healthcare network. Figures are invented for demonstration."
+   },
+   {
+    "rank": 13,
+    "source": "03_case_study.md",
+    "section": "Results after six months",
+    "distance": 1.0611,
+    "text": "## Results after six months\nReporting time fell from four days to under one hour. Report disputes dropped by roughly 70 percent. The project ran as a fixed-scope engagement of ten weeks, followed by a monthly managed service."
+   },
+   {
+    "rank": 14,
+    "source": "01_capabilities.md",
+    "section": "Data Engineering",
+    "distance": 1.0862,
+    "text": "## Data Engineering\nWe build cloud data pipelines, warehouses and lakehouses. Typical work includes migrating legacy reporting databases to a modern cloud warehouse, building automated ingestion, and setting up data quality checks. Delivery is usually done by a small squad of two engineers and one lead over eight to twelve weeks."
+   },
+   {
+    "rank": 15,
+    "source": "02_icp.md",
+    "section": "Ideal customer profile",
+    "distance": 1.124,
+    "text": "# Ideal customer profile  \nThis profile is fictional and written for demonstration."
+   }
+  ],
+  "top1_hit": false,
+  "top3_hit": false,
+  "all_expected_in_top3": false,
+  "all_expected_in_context": false,
+  "evidence_in_top3": false,
+  "notes": "Hard negative: Competitive positioning discusses 'large consultancies' generically and names none."
+ }
+]

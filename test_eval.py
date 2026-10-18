@@ -193,3 +193,79 @@ def test_questions_file_is_unchanged_by_this_work(questions):
     # fingerprint of eval/questions.json as committed in the evaluation checkpoint: the questions must not be edited
     # to improve scores. If you intentionally add questions, update this fingerprint and re-baseline.
     assert hashlib.md5(ev.QUESTIONS.read_bytes()).hexdigest() == "c2eb015f3b3d6c0b190ce73da3010d1f"
+
+
+# ---------------------------------------------------------------- the held-out validation set
+VALIDATION = ev.EVAL_DIR / "validation_questions.json"
+
+
+@pytest.fixture(scope="module")
+def validation():
+    return ev.load_questions(VALIDATION)
+
+
+def test_validation_mix_and_independence_from_the_original_set(validation, questions):
+    assert len(validation) == 10
+    assert Counter(q["category"] for q in validation) == {"direct": 3, "complex": 3, "unanswerable": 4}
+    assert not {q["id"] for q in validation} & {q["id"] for q in questions}
+    assert not {q["question"] for q in validation} & {q["question"] for q in questions}
+    for q in validation:
+        assert q["answerable"] == (q["category"] != "unanswerable") and q["question"].strip().endswith("?")
+    for q in (q for q in validation if q["category"] == "complex"):
+        assert len({e["source"] for e in q["expected"]}) >= 2, q["id"]
+
+
+def test_validation_expected_sections_and_evidence_exist_in_the_corpus(validation, chunks):
+    text_of = {}
+    for c in chunks:
+        text_of.setdefault((c.metadata["source"], c.metadata["section"]), []).append(c.page_content)
+    for q in validation:
+        if not q["answerable"]:
+            assert q["expected"] == [] and q["required_evidence"] == []
+            continue
+        for e in q["expected"]:
+            assert (e["source"], e["section"]) in text_of, f"{q['id']}: unknown section {e}"
+        expected_text = ev.norm(" ".join(t for e in q["expected"] for t in text_of[(e["source"], e["section"])]))
+        for phrase in q["required_evidence"]:
+            assert ev.norm(phrase) in expected_text, f"{q['id']}: evidence {phrase!r} not in its expected sections"
+
+
+def test_validation_file_is_not_edited_to_improve_scores():
+    import hashlib
+    # fingerprint of eval/validation_questions.json when it was written, before it was ever run. Changing questions or
+    # expectations after seeing results would defeat the point of a held-out set; adding a NEW set is the right move.
+    assert hashlib.md5(VALIDATION.read_bytes()).hexdigest() == "87b9f3b89c97905422ae0331543014e8"
+
+
+# ---------------------------------------------------------------- failure and generalisation sections
+def test_failures_section_names_each_failure_kind_and_near_gate():
+    gold = fake("OK", True, [0.5, 0.8], ["gold", "x"], expected=[1])
+    rej = fake("REJ", True, [0.9, 1.0], expected=[1])
+    miss = fake("MISS", True, [0.5, 0.6], ["nothing", "x"], expected=[2])
+    fa = fake("FA", False, [0.55, 0.9])
+    near = fake("NEAR", True, [0.69, 0.9], ["gold", "x"], expected=[1])
+    for r in (gold, rej, miss, fa, near):
+        r["question"] = f"question {r['id']}?"
+        r["top1_hit"] = bool(r["expected"]) and r["expected"][0]["rank"] == 1 and r["id"] != "MISS"
+    text = ev.render_failures([gold, rej, miss, fa, near], ContextPolicy(k=2))
+    assert "FALSE REJECTION" in text and "REJ" in text
+    assert "FALSE ACCEPTANCE" in text and "unrelated text" in text
+    assert "not an expected section" in text and "required evidence missing from context" in text
+    assert "Near the 0.70 gate" in text and "NEAR (closest 0.690, accepted)" in text
+    assert "- **OK**" not in text
+    assert "None: every question" in ev.render_failures([gold], ContextPolicy(k=2))
+
+
+def test_generalisation_table_has_both_sets(results):
+    text = ev.render_generalization(results, results, ContextPolicy(k=6), "Set one", "Set two")
+    assert "| Set one |" in text and "| Set two |" in text and "was not used to change any setting" in text
+
+
+def test_report_dynamic_counts_for_a_smaller_complex_set(results):
+    few = [r for r in results if r["category"] != "complex"] + [r for r in results if r["category"] == "complex"][:3]
+    report = ev.render_report(few, policy=ContextPolicy(k=6), title="Custom title", files=("a.json", "b.json"),
+                              settings_note="SETTINGS-LINE", reference=results)
+    assert report.startswith("# Custom title") and "a.json" in report and "SETTINGS-LINE" in report
+    own_row = next(ln for ln in report.splitlines() if ln.startswith("| This set |"))
+    assert "/3 |" in own_row and "/5 |" not in own_row                     # complex count follows the set, not a constant
+    assert "## Failures at the current settings" in report and "Does it generalise" in report
