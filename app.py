@@ -22,7 +22,7 @@ import workspace
 from gtm.store import GTMStore, default_path
 from views import about, accounts, content, executive, hoomi_page, leads_opps, pulse, research, revenue, sdr, welcome, workspace_gtm
 
-st.set_page_config(page_title="Kai's GTM V2.0 | Hoomi", page_icon="✨", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Kai's GTM V2.0 | Hoomi", page_icon="✨", layout="wide", initial_sidebar_state="auto")
 st.session_state.setdefault("dark", False)
 st.session_state.setdefault("role", None)
 theme.apply_theme()
@@ -42,6 +42,17 @@ def sidebar_brand():
                 'justify-content:center;font:800 1.2rem Sora,sans-serif;color:var(--on_accent);background:linear-gradient(135deg,var(--teal),var(--green))">H</div>'
                 '<div><div class="sb-brand">Kai\'s GTM V2.0</div><div class="sb-sub">with Hoomi</div></div></div>', unsafe_allow_html=True)
 
+
+# ------------------------------------------------------------------ deep links: ?view=leadership|team&page=pulse|hoomi|workspace
+# Same effect as clicking the buttons (navigation only, not a login); handy for demos. The parameters are consumed once.
+if st.session_state.role is None and "view" in st.query_params:
+    chosen = {"leadership": "Leadership Hub", "team": "GTM Team"}.get(str(st.query_params.get("view", "")).strip().lower())
+    if chosen:
+        welcome.choose(chosen)
+        landing = {"pulse": PULSE, "hoomi": HOOMI, "workspace": WORKSPACE}.get(str(st.query_params.get("page", "")).strip().lower())
+        if landing in welcome.ROLES[chosen]["order"]:
+            st.session_state.nav = st.session_state.nav_primary = landing
+    st.query_params.clear()
 
 # ------------------------------------------------------------------ welcome gate
 if st.session_state.role is None:

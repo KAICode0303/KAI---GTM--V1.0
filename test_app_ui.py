@@ -102,6 +102,29 @@ def test_role_choice_sets_the_landing_page_and_order_but_not_access(role, landin
         clean(at)
 
 
+@pytest.mark.parametrize("query, role, page", [({"view": "leadership"}, "Leadership Hub", PULSE), ({"view": "team"}, "GTM Team", WORKSPACE),
+                                               ({"view": "leadership", "page": "hoomi"}, "Leadership Hub", HOOMI),
+                                               ({"view": "team", "page": "pulse"}, "GTM Team", PULSE)])
+def test_deep_links_choose_the_view_and_page_like_the_buttons(query, role, page):
+    at = AppTest.from_file(APP, default_timeout=180)
+    for k, v in query.items():
+        at.query_params[k] = v
+    at.run()
+    clean(at)
+    assert at.session_state.role == role and at.session_state.nav == page
+    assert "view" not in at.query_params                                                  # consumed, so "Switch view" works afterwards
+    at.sidebar.button(key="switch_role").click().run()
+    assert at.session_state.role is None
+
+
+def test_unknown_deep_links_are_ignored():
+    at = AppTest.from_file(APP, default_timeout=180)
+    at.query_params["view"] = "admin"
+    at.run()
+    clean(at)
+    assert at.session_state.role is None and "Meet Hoomi" in texts(at.markdown)
+
+
 def test_switching_view_returns_to_the_welcome_screen():
     at = start()
     at.sidebar.button(key="switch_role").click().run()

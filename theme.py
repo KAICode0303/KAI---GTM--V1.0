@@ -146,7 +146,19 @@ V2_CSS = """
 .mode-bar {display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; margin:.2rem 0 .6rem;}
 .sb-role {font-size:.8rem; padding:.45rem .7rem; border-radius:12px; background:var(--chip); border:1px solid var(--border);}
 [data-testid="stChatMessage"] {background:var(--surface); border:1px solid var(--border); border-radius:18px; box-shadow:var(--shadow);}
-@media (max-width: 760px) {.block-container {padding-left:.8rem; padding-right:.8rem;} .hero h1 {font-size:1.5rem;} .kpi .value {font-size:1.4rem;}}
+/* explicit text and control colours so every widget is readable in BOTH themes (Streamlit's own theme only covers some of them) */
+[data-testid="stSidebar"] p, [data-testid="stSidebar"] label, [data-testid="stSidebar"] span, [data-testid="stSidebar"] [data-testid="stWidgetLabel"] {color:var(--text);}
+[data-testid="stSidebar"] .sb-sub {color:var(--teal_d);} [data-testid="stSidebar"] .sb-label {color:var(--muted);} .sb-role {color:var(--text);}
+[data-testid="stSidebar"] [data-testid="stCaptionContainer"], [data-testid="stSidebar"] [data-testid="stCaptionContainer"] p {color:var(--muted);}
+.stApp [data-testid="stWidgetLabel"] p, .stApp [data-testid="stWidgetLabel"] label, .stApp [data-testid="stCaptionContainer"] p {color:var(--text);}
+.stApp [data-testid="stCaptionContainer"] p {color:var(--muted);}
+.stButton > button:not([kind="primary"]), .stDownloadButton > button {background:var(--surface); color:var(--text);}
+.stApp input, .stApp textarea, .stApp [data-baseweb="select"] > div, .stApp [data-baseweb="input"] {background-color:var(--surface2) !important; color:var(--text) !important;}
+.stApp [data-baseweb="select"] span, .stApp [data-baseweb="tag"] span {color:var(--text) !important;}
+[data-testid="stExpander"] summary p, [data-testid="stExpander"] summary span {color:var(--text);}
+[data-testid="stChatInput"] textarea {color:var(--text) !important;}
+.kpi {min-height:128px;} .kpi .value {font-size:1.45rem; white-space:nowrap;} .kpi .label {min-height:2.3em;} .panel {min-height:215px;}
+@media (max-width: 760px) {.panel, .kpi {min-height:0;} .block-container {padding-left:.8rem; padding-right:.8rem;} .hero h1 {font-size:1.5rem;} .kpi .value {font-size:1.4rem;}}
 """
 
 
@@ -221,7 +233,7 @@ def style(fig, height=360, legend_bottom=True):
                       font=dict(family="Plus Jakarta Sans, system-ui, sans-serif", color=p["text"], size=12),
                       title=dict(font=dict(family="Sora, sans-serif", size=15, color=p["text"]), x=0.01),
                       hoverlabel=dict(bgcolor=p["surface"], font_color=p["text"], bordercolor=p["teal"]),
-                      legend=dict(orientation="h", y=-0.18 if legend_bottom else 1.12, x=0, font=dict(size=11)))
+                      legend=dict(orientation="h", y=-0.18 if legend_bottom else 1.12, x=0, font=dict(size=11, color=p["text"])))
     grid = "rgba(0,214,214,.12)" if is_dark() else "rgba(0,120,130,.10)"
     fig.update_xaxes(gridcolor=grid, zeroline=False, linecolor=grid)
     fig.update_yaxes(gridcolor=grid, zeroline=False, linecolor=grid)

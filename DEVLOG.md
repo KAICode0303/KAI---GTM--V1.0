@@ -38,3 +38,18 @@ Use this for the "process" section of your Maven document. Add your own reflecti
 1. The full "Upgrade to Command Center" brief (eight modules, design direction, star animations).
 2. "Back up first and preserve what works" (shows safe working habits).
 3. Your own follow-ups, e.g. "make the stars subtler", "add a Fintech view".
+
+
+---
+
+# Version 2.0: Kai's GTM V2 with Hoomi (RAG)
+
+| # | Iteration | What happened | Lesson |
+|---|---|---|---|
+| 18 | Python 3.12 + deps | New `.venv312`, pinned requirements. Moving to pandas 3 broke one V1 test (`None` became `NaN`, which is truthy). | Pin versions; test after a major upgrade. |
+| 19 | RAG foundation | FastEmbed + Chroma, section-aware chunks, citations, a distance gate, an insufficient-evidence path. | Make "I don't know" a first-class answer. |
+| 20 | Evaluate before tuning | 15 questions, then 10 held-out ones. The gate separated well on the first set and failed on the second. | A set you tuned on is optimistic; keep a held-out set. |
+| 21 | Hosted pipeline, mocked | Fireworks provider layer, generate-then-verify with fail-closed parsing, an explicit `--confirm-hosted-call` smoke script. Never run live. | Build the safety rails before the first paid call. |
+| 22 | V2 data layer | Linked store with validation, dedupe, stop rules, audit log; seeded from the V1 CSVs through a mapping. Commercial KPIs match V1's independent code. | Cross-check new code against old code. |
+| 23 | UI tests found real bugs | Account questions were answered with workspace-wide numbers; a quote was shown under the wrong citation; warnings inside `st.form` never appeared. All fixed. | Drive the real app in tests; forms do not rerun on change. |
+| 24 | Screenshots found more | Dark-mode sidebar was unreadable and the phone layout was broken. Fixed, plus a contrast test. | Look at the real pixels in both themes and at phone width. |

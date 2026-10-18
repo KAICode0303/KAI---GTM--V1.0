@@ -110,7 +110,7 @@ def accounts_tab(store):
             kpi_card("Prospects", f"{int((pro.account_id == sel).sum())}", "linked prospects", icon="🧲")
         with c[1]:
             o = opp[opp.account_id == sel]
-            kpi_card("Open pipeline", money(o[o.stage.isin(schema.OPEN_STAGES)].deal_value.sum()), f"{len(o)} opportunities", icon="🌊")
+            kpi_card("Open pipeline", money(o[o.stage.isin(schema.OPEN_STAGES)].deal_value.sum()), f"{len(o)} {'opportunity' if len(o) == 1 else 'opportunities'}", icon="🌊")
         with c[2]:
             kpi_card("KYC completeness", f"{comp:.0%}", "of profile fields filled", icon="🪪")
         with c[3]:
