@@ -36,7 +36,7 @@ def _save_edits(original, edited):
         for c in ["expected_close_date", "next_follow_up_date"]:
             raw.loc[oid, c] = "" if pd.isna(new[c]) else pd.Timestamp(new[c]).strftime("%Y-%m-%d")
         raw.loc[oid, "next_action"] = new["next_action"] or ""
-        reason = new["outcome_reason"] or ""
+        reason = "" if pd.isna(new["outcome_reason"]) else new["outcome_reason"]     # missing is None (pandas 2) or NaN (pandas 3)
         if stage in ("Won", "Lost"):
             if pd.Timestamp(raw.loc[oid, "expected_close_date"] or m.AS_OF) > m.AS_OF:
                 raw.loc[oid, "expected_close_date"] = m.AS_OF.strftime("%Y-%m-%d")   # closed deals close today at the latest

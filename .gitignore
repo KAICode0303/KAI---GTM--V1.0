@@ -1,5 +1,6 @@
 # --- Python environments and caches (never publish; recreated by pip / Python) ---
 .venv/
+.venv312/
 venv/
 env/
 __pycache__/
