@@ -61,7 +61,7 @@ def build_documents(gtm_store=None, corpus_dir=None):
     return docs + (kyc_documents(gtm_store) if gtm_store is not None else [])
 
 
-PARAMS = f"{emb.DEFAULT_MODEL}|title+section|450|60"       # anything that changes how every chunk is made or embedded
+PARAMS = f"{emb.DEFAULT_MODEL}|title+section|450|60|merged-headings"       # anything that changes how every chunk is made or embedded
 
 
 def doc_hash(doc):
@@ -84,7 +84,7 @@ def ensure_index(embeddings, gtm_store=None, persist_dir=None, corpus_dir=None):
     """
     persist_dir, corpus_dir = Path(persist_dir or APP_INDEX_DIR), Path(corpus_dir or APP_CORPUS_DIR)     # resolved at call time
     docs = build_documents(gtm_store, corpus_dir)
-    params = f"{getattr(embeddings, 'model_name', 'custom')}|title+section|450|60"
+    params = f"{getattr(embeddings, 'model_name', 'custom')}|title+section|450|60|merged-headings"
     store = get_store(embeddings, persist_dir=persist_dir, collection=COLLECTION)
     marker = persist_dir / "documents.json"
     try:

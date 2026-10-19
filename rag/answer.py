@@ -68,7 +68,7 @@ class ContextPolicy:
     relative_margin: optional; keep only chunks within (best distance + margin) (None = no relative cut).
     min_chunks:      the top chunks that are always kept, so a passed gate never yields an empty context.
     """
-    k: int = 6
+    k: int = 8
     max_distance: Optional[float] = None
     relative_margin: Optional[float] = None
     min_chunks: int = 1

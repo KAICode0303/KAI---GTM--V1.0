@@ -198,3 +198,71 @@ def test_with_real_embeddings_the_services_passage_is_retrieved_for_the_two_part
     ids = [h.chunk_id for h in ev.hits]
     assert any(h.source == "01_capabilities.md" and h.section == "AI model evaluation and human feedback" for h in ev.hits), ids
     assert any(h.source == "02_icp_model_evaluation.md" for h in ev.hits)
+
+
+# ---------------------------------------------------------------- regression: "which types of companies should we target" (quote_not_in_cited_chunk)
+TYPES_Q = "Which types of companies should Kai's Company target for AI model evaluation services?"
+TIER = "Tier 1: generative AI/LLM developers, foundation model companies, AI agent companies, enterprise AI platforms"
+
+
+def _chunk_with(store, needle):
+    got = store._collection.get(include=["documents"])
+    return next(c for c, d in zip(got["ids"], got["documents"]) if needle in d)
+
+
+def _types_run(store, quote, ids):
+    gen = json.dumps({"requested_facts": ["types of companies to target"], "answer": TIER + "."})
+    ver = json.dumps({"facts": [{"fact": "types of companies to target", "status": "supported", "claim": TIER + ".", "supporting_chunk_ids": ids, "evidence_quote": quote}],
+                      "unaddressed_parts": []})
+    replies = iter([gen, ver])
+    return pack_eval.answer_verified(store, TYPES_Q, lambda prompt: next(replies), where={"doc_type": {"$ne": "kyc"}})
+
+
+def test_no_chunk_is_a_bare_heading():
+    """A heading split from its paragraph used to become its own chunk ('## Buying personas'), which matched section questions and outranked real evidence."""
+    chunks = chunk_documents(app_index.build_documents(None))
+    assert not [c.metadata["chunk_id"] for c in chunks if all(ln.strip().startswith("#") for ln in c.page_content.splitlines() if ln.strip())]
+    personas = [c.page_content for c in chunks if c.metadata["source"] == "02_icp_model_evaluation.md" and c.metadata["section"] == "Buying personas"]
+    assert personas[0].startswith("## Buying personas\n") and "Decision makers" in personas[0]
+
+
+def test_the_company_types_question_is_answered_with_the_priority_segments_chunk(store):
+    seg = _chunk_with(store, "Tier 1: generative AI/LLM developers")
+    out = _types_run(store, TIER, [seg])
+    assert out.status == "answered" and out.facts[0].supported and out.source_chunk_ids == [seg]
+    assert out.sources == ["[02_icp_model_evaluation.md › Priority segments]"]
+
+
+def test_the_company_types_question_still_fails_closed_on_a_wrong_id_or_invented_quote(store):
+    seg, other = _chunk_with(store, "Tier 1: generative AI/LLM developers"), _chunk_with(store, "Model evaluation and benchmarking; human evaluation")
+    assert _types_run(store, TIER, [other]).facts[0].reason == "quote_not_in_cited_chunk"                # real text, wrong passage
+    assert _types_run(store, "Tier 1: every Fortune 500 company with an AI budget", [seg]).facts[0].reason == "quote_not_in_cited_chunk"
+    assert _types_run(store, TIER + ", plus " + TIER, [seg]).status in ("answered", "refused", "partial")     # (no crash on odd input)
+
+
+def test_the_services_question_still_works_after_the_chunking_change(store):
+    out = _run(store, SVC, lambda c: [c])
+    assert out.status == "answered" and all(f.supported for f in out.facts)
+
+
+def test_the_verifier_prompt_demands_one_passage_and_its_exact_id(store):
+    from rag import verify as vf
+    from rag.answer import gather_evidence
+    ev = gather_evidence(store, TYPES_Q, where={"doc_type": {"$ne": "kyc"}})
+    prompt = vf.build_verification_prompt(ev, ["types of companies to target"], "draft")
+    assert "ONE passage" in prompt and "never joined from two" in prompt and 'after "Passage id:"' in prompt
+    from rag.answer import ContextPolicy
+    assert ContextPolicy().k == 8                                                                         # the default context is now 8 passages
+
+
+@needs_model
+def test_with_real_embeddings_the_priority_segments_passage_reaches_the_model(tmp_path, monkeypatch):
+    from rag import embeddings as emb
+    from rag.answer import gather_evidence
+    for n in ("RAG_MAX_DISTANCE", "RAG_CONTEXT_K"):
+        monkeypatch.delenv(n, raising=False)
+    s, _ = app_index.ensure_index(emb.FastEmbedEmbeddings(), None, persist_dir=tmp_path / "idx")
+    ev = gather_evidence(s, TYPES_Q, where={"doc_type": {"$ne": "kyc"}})
+    assert ev.sufficient and ev.best_distance < 0.5
+    assert any(h.source == "02_icp_model_evaluation.md" and h.section == "Priority segments" for h in ev.hits), [h.chunk_id for h in ev.hits]
+    assert not any(h.text.strip() == "## Buying personas" for h in ev.hits)

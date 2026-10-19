@@ -300,7 +300,7 @@
    "status": "answered",
    "reason": "",
    "cited": [
-    "02_icp_model_evaluation.md"
+    "04_icp_robotics.md"
    ],
    "pass": false,
    "answer": "## Buying personas Decision makers: CTO, Chief AI Officer, VP AI/ML, VP Robotics, VP Engineering, Head of Robotics, Head of AI/ML."

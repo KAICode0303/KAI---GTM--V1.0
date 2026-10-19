@@ -16,12 +16,13 @@ import re
 
 import numpy as np
 
-from rag.answer import REFUSAL, gather_evidence
+from rag.answer import REFUSAL, ContextPolicy, gather_evidence
 from rag.verify import FactResult, VerifiedAnswer, assemble
 
 ENGINE = "offline-extractive"
 MIN_SIM = 0.62                           # provisional; override with HOOMI_OFFLINE_MIN_SIM
 MAX_PARTS = 4
+OFFLINE_CONTEXT_K = 6
 RUNNER_UP_MARGIN = 0.05
 MIN_SENTENCE_CHARS = 25
 GAP_MIN_OVERLAP = 0.6                    # a 'not stated' sentence refuses only if it covers most of what the question asks about
@@ -157,6 +158,8 @@ def _documented_gap(evidence, parts, cand, score):
 def answer_offline(store, question, max_distance=None, context=None, where=None, floor=None):
     """Gate, then one best sentence per question part. Returns a VerifiedAnswer with engine='offline-extractive' and no model calls."""
     floor = min_sim(floor)
+    if context is None and not os.environ.get("RAG_CONTEXT_K", "").strip():
+        context = ContextPolicy(k=OFFLINE_CONTEXT_K)                       # the extractive demo was tuned on six passages; the hosted model gets the wider default
     evidence = gather_evidence(store, question, max_distance=max_distance, context=context, where=where)
     if not evidence.sufficient:
         return VerifiedAnswer("refused", REFUSAL, reason="gate", evidence=evidence, engine=ENGINE)

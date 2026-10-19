@@ -39,6 +39,28 @@ def load_documents(corpus_dir=CORPUS_DIR):
     return docs
 
 
+def _is_heading_only(text):
+    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+    return bool(lines) and all(ln.startswith("#") for ln in lines)
+
+
+def _merge_heading_only(chunks):
+    """A heading split away from its paragraph becomes a chunk with no content that still matches questions about that section, so it
+    outranks real evidence. Join it to the chunk that follows it (same section) instead."""
+    out, carry = [], None
+    for c in chunks:
+        if carry is not None and carry.metadata["source"] == c.metadata["source"]:
+            c = Document(page_content=carry.page_content.rstrip() + "\n" + c.page_content, metadata=c.metadata)
+            carry = None
+        if _is_heading_only(c.page_content):
+            carry = c
+            continue
+        out.append(c)
+    if carry is not None:
+        out.append(carry)
+    return out
+
+
 def chunk_documents(docs, chunk_size=450, chunk_overlap=60):
     """Split by Markdown heading first, then by size. Each chunk keeps its source metadata plus the `section`
     (nearest `##` heading, else `#`) and a stable `chunk_id` (used as the Chroma id). A `page` set on the
@@ -51,6 +73,7 @@ def chunk_documents(docs, chunk_size=450, chunk_overlap=60):
             section = part.metadata.get("h2") or part.metadata.get("h1") or doc.metadata["title"]
             piece = Document(page_content=part.page_content, metadata={**doc.metadata, "section": section})
             chunks.extend(by_size.split_documents([piece]))
+    chunks = _merge_heading_only(chunks)
     counts = {}
     for c in chunks:
         n = counts[c.metadata["source"]] = counts.get(c.metadata["source"], -1) + 1

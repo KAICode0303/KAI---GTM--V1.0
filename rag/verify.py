@@ -50,6 +50,7 @@ Reply with ONLY a JSON object:
    "supporting_chunk_ids": ["<passage ids>"], "evidence_quote": "<a short exact quote copied from a cited passage; empty if unsupported>"}}],
  "unaddressed_parts": ["<any part of the question that none of the requested facts covers; otherwise an empty list>"]}}
 Include exactly one entry per requested fact. Use "unsupported" whenever the passages do not clearly state the fact.
+The "evidence_quote" must be copied exactly from ONE passage (never joined from two, never reworded), and "supporting_chunk_ids" must name that same passage's id exactly as written after "Passage id:".
 
 Question: {question}
 

@@ -1,6 +1,6 @@
 # Knowledge pack evaluation (seven approved documents)
 
-Index: 53 chunks, 7 documents (fingerprint 6d7a23626eb5). Real local FastEmbed vectors and Chroma. No hosted or paid call was made: the Fireworks pipeline was exercised with MOCK models only.
+Index: 52 chunks, 7 documents (fingerprint c9294c6c508b). Real local FastEmbed vectors and Chroma. No hosted or paid call was made: the Fireworks pipeline was exercised with MOCK models only.
 
 | Category | Offline engine (real) | Hosted pipeline + faithful mock |
 |---|---|---|
@@ -54,7 +54,7 @@ Hallucinating mock (invents '150 dollars per hour' with a fake quote): invented 
 
 ### X1 (cross-document): Compare the buying personas for robotics companies and for speech AI companies.
 - Offline: **FAIL** · answered · cited: 02_icp_model_evaluation.md, 03_icp_multilingual_speech_audio.md, 04_icp_robotics.md
-- Hosted pipeline, faithful mock: **FAIL** · answered · cited: 02_icp_model_evaluation.md
+- Hosted pipeline, faithful mock: **FAIL** · answered · cited: 04_icp_robotics.md
 - Answer: Decision makers: CTO, Chief AI Officer, VP AI/ML, VP Robotics, VP Engineering, Head of Robotics, Head of AI/ML. Technical buyers: Director of Robotics, Director of AI/ML, Director of Data, Robotics Engineering Manager, ML Engineering Manager, Head of Data Operations, Head of AI Evaluation. Commercial stakeholders: procurement, sourcing, vendor management and
 
 ### X2 (cross-document): Which case study supports the multilingual speech ICP, and what does the ICP say about evidence?
