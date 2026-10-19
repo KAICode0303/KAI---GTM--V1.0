@@ -19,10 +19,10 @@ from rag.verify import _fold, answer_verified
 MAX_QUESTION_CHARS = 500
 ROUTES = ("Auto", "Documents", "Numbers", "Rule-based")
 ENGINE_LABEL = "Offline demo (extractive, no AI model, zero hosted calls)"
-DOC_SUGGESTIONS = ["What services does Kai's Company offer?", "What is a managed service and when should we recommend it?",
-                   "Who is the buyer at an AI lab and what signals should we look for?", "How do we position against crowd labeling platforms?",
-                   "Which case study shows RLHF results, and what was the improvement?", "What does Deepcurrent Labs request?"]
-INSUFFICIENT_HELP = ("Try rephrasing, ask about a service, segment, modality, positioning point, case study or a named account's KYC profile, "
+DOC_SUGGESTIONS = ["What are Kai's Company's core AI evaluation capabilities?", "Which buyer personas should we target at a speech AI company?",
+                   "What services are relevant to humanoid robotics companies?", "Describe the first-person activity data case study and its limitations.",
+                   "How was multilingual transcription work organized?", "What was the scope of the LLM evaluation case study?"]
+INSUFFICIENT_HELP = ("Try rephrasing, ask about a capability, an ideal customer profile, a buying persona, a case study or a named account's KYC profile, "
                      "or ask a metric question such as the open pipeline.")
 
 
@@ -41,6 +41,13 @@ def from_verified(result, route, scope_account=None):
     by_id = {h.chunk_id: h for h in ev.hits} if ev else {}
     meta = {"engine": result.engine or "model", "route": route, "gate": ev.max_distance if ev else None,
             "best_distance": ev.best_distance if ev else None, "scope_account": scope_account, "model_calls": result.model_calls}
+    if result.status == "refused" and result.reason == "documented_gap":      # the documents themselves say it is not stated: show that statement, cited
+        h = by_id[result.source_chunk_ids[0]]
+        msg = _message("insufficient", f"**Not available in the approved documents.** {result.text}",
+                       sources=[{"citation": h.citation, "chunk_id": h.chunk_id, "quote": result.facts[0].quote, "passage": h.text, "distance": h.distance, "doc_type": h.doc_type}])
+        msg["meta"] = {**meta, "reason": "documented_gap"}
+        msg["facts"] = [{"fact": f.fact, "supported": False, "detail": f.reason, "score": f.score} for f in result.facts]
+        return msg
     if result.status == "refused":
         why = {"gate": "The closest passage was too far from your question to count as evidence.",
                "nothing_supported": "No retrieved sentence matched closely enough."}.get(result.reason, "No supporting evidence was found.")

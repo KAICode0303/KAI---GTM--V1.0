@@ -8,7 +8,7 @@ import pytest
 from rag import ingest, retriever, verify as vf
 from rag.answer import REFUSAL, ContextPolicy
 from rag.providers import HostedCallNotApproved, LLMClient, ProviderConfig
-from test_rag import HashingEmbeddings
+from test_rag import LEGACY_CORPUS, HashingEmbeddings
 
 Q = "Who is the buyer at our best-fit customers, and how long does a typical project take?"
 ALL = ContextPolicy(k=15)
@@ -19,7 +19,7 @@ LESSON = "The client's own analysts were trained to maintain the pipelines"
 
 @pytest.fixture(scope="module")
 def chunks():
-    return ingest.chunk_documents(ingest.load_documents())
+    return ingest.chunk_documents(ingest.load_documents(LEGACY_CORPUS))
 
 
 @pytest.fixture()

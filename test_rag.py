@@ -6,6 +6,7 @@ which is enough to check chunking, metadata, persistence and citations.
 import hashlib
 import math
 import re
+from pathlib import Path
 
 import pytest
 from langchain_core.embeddings import Embeddings
@@ -13,6 +14,8 @@ from langchain_core.embeddings import Embeddings
 from rag import embeddings as emb
 from rag import answer, ingest, retriever
 from rag.answer import ContextPolicy
+
+LEGACY_CORPUS = Path(__file__).resolve().parent / "rag_corpus_legacy" / "eval_corpus"   # frozen synthetic fixture for the engine tests
 
 DIM = 256
 
@@ -35,7 +38,7 @@ class HashingEmbeddings(Embeddings):
 
 @pytest.fixture(scope="module")
 def chunks():
-    return ingest.chunk_documents(ingest.load_documents())
+    return ingest.chunk_documents(ingest.load_documents(LEGACY_CORPUS))
 
 
 @pytest.fixture()
@@ -47,7 +50,7 @@ def store(tmp_path, chunks):
 
 # ---------------------------------------------------------------- documents and chunks
 def test_corpus_has_three_sanitized_documents():
-    docs = ingest.load_documents()
+    docs = ingest.load_documents(LEGACY_CORPUS)
     assert len(docs) == 3
     assert {d.metadata["doc_type"] for d in docs} == {"capability", "icp", "case_study"}
     assert all(d.metadata["sanitized"] is True for d in docs)

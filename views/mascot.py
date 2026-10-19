@@ -1,91 +1,47 @@
-"""Hoomi's mascot: ONE artwork, shown consistently everywhere (Welcome, Ask Hoomi, classic pages, floating button).
+"""Hoomi's mascot: an interactive 3D robotic cat (Three.js), isolated in its own iframe component.
 
-The supplied file is a brand sheet (assets/hoomi/hoomi.png, 1536x1024). It is never modified. For display, two crops of that same artwork are
-made in memory: the HERO cat (Welcome and page headers; no text, no side panels) and the round APP ICON tile (the small floating button).
-If a different, already-single-pose image is dropped into assets/hoomi/ (hoomi.png, .svg, .webp, .jpg) it is shown as is. With no artwork at all,
-a clearly labelled placeholder is used.
+The component lives in static/hoomi3d/ and is served by Streamlit's static file serving (.streamlit/config.toml: enableStaticServing).
+It is a self-contained page: it loads only its own files (vendored Three.js, MIT), makes no network calls and sends nothing anywhere.
+Two instances: HERO on the Welcome page and in the Ask Hoomi header, and a small FLOATING one at the bottom-right of every page.
+Clicking either asks the page to open Ask Hoomi: the component presses a hidden Streamlit button (navigation only).
+The earlier 2D mascot is retired; its file is kept in assets/hoomi_pixel_backup/ and is not referenced by the app.
 """
-import base64
-import functools
-from io import BytesIO
-from pathlib import Path
-
 import streamlit as st
 
-ASSET_DIR = Path(__file__).resolve().parent.parent / "assets" / "hoomi"
-_TYPES = {".png": "image/png", ".svg": "image/svg+xml", ".webp": "image/webp", ".jpg": "image/jpeg", ".jpeg": "image/jpeg"}
-
-CAPTION = "Pixel — Your Creative GTM Strategist"
-SHEET_SIZE = (1536, 1024)                    # the supplied brand sheet
-CAT_CROP = (352, 8, 674, 540)                # the hero cat only: no title text, no speech bubble, nothing from the right-hand panel
-ICON_CROP = (52, 820, 196, 964)              # the sheet's round "App Icon" tile
-ICON_CIRCLE = (6, 8, 134, 136)               # the circle inside that tile (made transparent outside it)
-WIDTHS = {"hero": 480, "icon": 144}
+NAME = "Hoomi"
+CAPTION = "Hoomi, your robotic GTM cat"
+URL = "/app/static/hoomi3d/hoomi3d.html"
+HERO_ASPECT = 1.12                 # height / width of the hero stage
+FAB_SIZE = 116
 
 
-def asset_path():
-    for ext in _TYPES:
-        p = ASSET_DIR / f"hoomi{ext}"
-        if p.is_file():
-            return p
-    return None
+def hero_height(width):
+    return int(width * HERO_ASPECT)
 
 
-@functools.lru_cache(maxsize=8)
-def _prepared(path, mtime, kind):
-    """(base64, mime) of the mascot for `kind` ('hero' or 'icon'), cropped in memory. The file on disk is never written."""
-    p = Path(path)
-    if p.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp"):
-        try:
-            from PIL import Image, ImageDraw
-            img = Image.open(p).convert("RGBA")
-            if img.size == SHEET_SIZE:
-                img = img.crop(CAT_CROP if kind == "hero" else ICON_CROP)
-                if kind == "icon":
-                    mask = Image.new("L", img.size, 0)
-                    ImageDraw.Draw(mask).ellipse(ICON_CIRCLE, fill=255)
-                    img.putalpha(mask)
-            width = WIDTHS[kind]
-            if img.width > width:
-                img = img.resize((width, round(img.height * width / img.width)), Image.LANCZOS)
-            buf = BytesIO()
-            img.save(buf, format="PNG", optimize=True)
-            return base64.b64encode(buf.getvalue()).decode(), "image/png"
-        except Exception:
-            pass
-    return base64.b64encode(p.read_bytes()).decode(), _TYPES[p.suffix.lower()]
+def render(width=300, caption=False):
+    """The full 3D cat. The stage fills its column; `width` only sets how tall it is."""
+    st.iframe(f"{URL}?mode=hero", height=hero_height(width))
+    if caption:
+        st.caption(CAPTION)
 
 
-def data_uri(kind="hero"):
-    p = asset_path()
-    if not p:
-        return None
-    data, mime = _prepared(str(p), p.stat().st_mtime, kind)
-    return f"data:{mime};base64,{data}"
-
-
-def html(width=220, caption=True, float_=True):
-    """Hero mascot markup: the supplied artwork (cropped to the cat) if present, otherwise the labelled placeholder."""
-    uri = data_uri("hero")
-    if uri:
-        cap = f'<div style="text-align:center;font-weight:700;font-size:.78rem;line-height:1.25;margin-top:.35rem;color:var(--text)">{CAPTION}</div>' if caption else ""
-        return (f'<div class="mascot-img{" float" if float_ else ""}" style="width:{width}px"><img alt="Hoomi, {CAPTION}" '
-                f'style="width:100%;display:block" src="{uri}">{cap}</div>')
-    return ('<div class="mascot-ph" role="img" aria-label="Hoomi mascot placeholder">'
-            '<div class="orb" aria-hidden="true">H</div><b>Hoomi</b>'
-            '<small>Mascot placeholder. The final Pixel Creative Strategist artwork is not installed yet '
-            '(add assets/hoomi/hoomi.png to show it here).</small></div>')
-
-
-def render(width=220, caption=True):
-    st.markdown(html(width, caption), unsafe_allow_html=True)
+FAB_CSS = f"""<style>
+.st-key-hoomi_fab3d {{position:fixed; right:10px; bottom:6px; z-index:1000; width:{FAB_SIZE}px !important; height:{FAB_SIZE}px;}}
+.st-key-hoomi_fab3d iframe {{border:0; background:transparent; color-scheme:light; width:{FAB_SIZE}px; height:{FAB_SIZE}px;}}
+.st-key-hoomi_fab3d::after {{content:"Ask Hoomi"; position:absolute; right:{FAB_SIZE - 14}px; top:30px; padding:3px 10px; border-radius:99px; font:700 .72rem 'Plus Jakarta Sans',sans-serif;
+    background:var(--surface); color:var(--text); border:1px solid var(--border); box-shadow:var(--shadow); opacity:0; transform:translateX(6px); transition:all .2s ease; pointer-events:none; white-space:nowrap;}}
+.st-key-hoomi_fab3d:hover::after {{opacity:1; transform:none;}}
+.st-key-hoomi_open_chat {{position:fixed; left:-9999px; top:0; width:1px; height:1px; overflow:hidden;}}   /* the 3D cat presses this: it must exist in the page, but never be seen */
+@media (max-width: 640px) {{.st-key-hoomi_fab3d, .st-key-hoomi_fab3d iframe {{width:96px !important; height:96px !important;}} .st-key-hoomi_fab3d {{right:6px; bottom:6px;}}}}
+@media (min-width: 641px) {{.block-container {{padding-bottom: 8rem;}}}}   /* content can scroll clear of the floating cat */
+</style>"""
 
 
 def fab(on_click):
-    """The small floating mascot at the bottom-right. Clicking it calls `on_click` (the app uses it to open Hoomi chat)."""
-    uri = data_uri("icon")
-    face = (f"background-image:url({uri});background-size:cover;background-position:center;" if uri
-            else "background:linear-gradient(135deg,var(--teal),var(--green));")
-    st.markdown(f"<style>.st-key-hoomi_fab button{{{face}}}</style>", unsafe_allow_html=True)
-    with st.container(key="hoomi_fab"):
-        st.button("Ask Hoomi", key="hoomi_fab_btn", help="Ask Hoomi", on_click=on_click)
+    """The floating 3D Hoomi (bottom-right) plus the hidden button that opens Ask Hoomi. `on_click` runs when the cat is clicked."""
+    st.markdown(FAB_CSS, unsafe_allow_html=True)
+    with st.container(key="hoomi_open_chat"):
+        st.button("Open Ask Hoomi", key="hoomi_open_chat_btn", on_click=on_click)
+    with st.container(key="hoomi_fab3d"):
+        st.iframe(f"{URL}?mode=fab", height=FAB_SIZE, width=FAB_SIZE)

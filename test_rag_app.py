@@ -35,14 +35,16 @@ def index(tmp_path, gtm, corpus):
 
 
 # ---------------------------------------------------------------- the documents
-def test_app_corpus_is_sanitized_and_aligned_with_the_demo_data():
+def test_app_corpus_is_the_seven_approved_documents():
     docs = app_index.build_documents(None)
-    assert len(docs) == 5 and all(d.metadata["sanitized"] is True for d in docs)
+    assert [d.metadata["source"] for d in docs] == [
+        "01_capabilities.md", "02_icp_model_evaluation.md", "03_icp_multilingual_speech_audio.md", "04_icp_robotics.md",
+        "05_case_study_model_evaluation.md", "06_case_study_physical_ai.md", "07_case_study_multilingual.md"]
+    assert all(d.metadata["sanitized"] is True for d in docs)
+    assert {d.metadata["doc_type"] for d in docs} == {"capabilities", "icp", "case_study"}
     text = " ".join(d.page_content for d in docs)
-    from gtm import schema
-    for name in schema.CAPABILITIES + schema.MODALITIES + schema.SEGMENTS:
-        assert name.lower().replace("-", " ") in text.lower().replace("-", " "), name
-    assert "fictional" in text and "@" not in text                                     # synthetic, with no contact details
+    assert "@" not in text and "http" not in text.lower()                              # no contact details or URLs
+    assert "Northwind" not in text and "fictional" not in text                         # none of the earlier synthetic corpus remains
 
 
 def test_unsanitized_corpus_file_is_refused(corpus, gtm):
@@ -65,7 +67,7 @@ def test_kyc_documents_are_one_per_account_written_as_quotable_sentences(gtm):
 # ---------------------------------------------------------------- incremental index
 def test_first_build_then_no_change_then_one_kyc_edit(index):
     store, info, gtm, corpus, idx = index
-    assert info["updated"] == 69 and info["chunks"] > 300 and info["rebuilt"]
+    assert info["updated"] == 71 and info["chunks"] > 300 and info["rebuilt"]
     before = store._collection.get(include=[])["ids"]
     store2, info2 = app_index.ensure_index(HashingEmbeddings(), gtm, persist_dir=idx, corpus_dir=corpus)
     assert info2["updated"] == 0 and not info2["rebuilt"] and sorted(store2._collection.get(include=[])["ids"]) == sorted(before)
@@ -81,11 +83,11 @@ def test_first_build_then_no_change_then_one_kyc_edit(index):
 
 def test_removed_documents_leave_the_index(index):
     store, info, gtm, corpus, idx = index
-    (corpus / "05_case_studies.md").unlink()
+    (corpus / "07_case_study_multilingual.md").unlink()
     store2, info2 = app_index.ensure_index(HashingEmbeddings(), gtm, persist_dir=idx, corpus_dir=corpus)
-    assert info2["removed"] == 1 and info2["documents"] == 68
-    assert store2._collection.get(where={"source": "05_case_studies.md"}, include=[])["ids"] == []
-    assert store2._collection.get(where={"source": "01_service_catalog.md"}, include=[])["ids"]
+    assert info2["removed"] == 1 and info2["documents"] == 70
+    assert store2._collection.get(where={"source": "07_case_study_multilingual.md"}, include=[])["ids"] == []
+    assert store2._collection.get(where={"source": "01_capabilities.md"}, include=[])["ids"]
 
 
 def test_a_different_embedding_model_rebuilds_everything(index):
@@ -100,7 +102,7 @@ def test_a_different_embedding_model_rebuilds_everything(index):
 
 def test_the_app_index_is_separate_from_the_evaluation_index():
     assert app_index.APP_INDEX_DIR.name == "app_chroma" and app_index.APP_INDEX_DIR != (ROOT / ".rag_index" / "chroma")
-    assert app_index.APP_CORPUS_DIR == ROOT / "rag_corpus" / "gtm"
+    assert app_index.APP_CORPUS_DIR == ROOT / "rag_corpus"
 
 
 # ---------------------------------------------------------------- scoping: KYC only for the account the question names
@@ -182,7 +184,7 @@ def test_gate_failure_refuses_without_searching_sentences(index):
 
 def test_similarity_floor_turns_weak_matches_into_unsupported_facts(index):
     store, _, _, _, _ = index
-    q = "What is the managed service?"
+    q = "What was the scope of the LLM evaluation case study?"
     assert offline.answer_offline(store, q, max_distance=9, context=ALL, where={"doc_type": {"$ne": "kyc"}}, floor=0.2).status == "answered"
     strict = offline.answer_offline(store, q, max_distance=9, context=ALL, where={"doc_type": {"$ne": "kyc"}}, floor=0.999)
     assert strict.status == "refused" and strict.reason == "nothing_supported" and not strict.facts[0].supported
@@ -191,16 +193,16 @@ def test_similarity_floor_turns_weak_matches_into_unsupported_facts(index):
 
 def test_a_multi_part_question_can_be_a_labelled_partial_answer(index, monkeypatch):
     store, _, _, _, _ = index
-    q = "What is the managed service? and what is quantum teleportation chocolate?"
-    monkeypatch.setattr(offline, "split_question", lambda question: ["What is the managed service", "xyzzy plugh frobnicate"])
-    ans = offline.answer_offline(store, q, max_distance=9, context=ALL, where={"doc_type": {"$ne": "kyc"}}, floor=0.45)
+    q = "What was the scope of the LLM evaluation case study? and what is quantum teleportation chocolate?"
+    monkeypatch.setattr(offline, "split_question", lambda question: ["What was the scope of the LLM evaluation case study", "xyzzy plugh frobnicate"])
+    ans = offline.answer_offline(store, q, max_distance=9, context=ALL, where={"doc_type": {"$ne": "kyc"}}, floor=0.2)
     assert ans.status == "partial" and [f.supported for f in ans.facts] == [True, False]
     assert "Partial answer" in ans.text and "xyzzy plugh frobnicate" in ans.text
 
 
 def test_shared_sentences_are_not_repeated_in_the_text(index, monkeypatch):
     store, _, _, _, _ = index
-    monkeypatch.setattr(offline, "split_question", lambda question: ["managed service recurring program", "managed service recurring program owns delivery"])
+    monkeypatch.setattr(offline, "split_question", lambda question: ["scope evaluation tasks prompts", "scope evaluation tasks prompts rubric questions"])
     ans = offline.answer_offline(store, "x", max_distance=9, context=ALL, where={"doc_type": {"$ne": "kyc"}}, floor=0.1)
     sentences = [s for s in ans.text.split(". ") if s]
     assert len(sentences) == len(set(sentences))

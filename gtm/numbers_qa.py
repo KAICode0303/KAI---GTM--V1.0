@@ -3,6 +3,8 @@
 Keeping this apart from RAG is deliberate: numbers must come from the data and match the dashboard exactly, whereas document
 questions are answered from approved text with citations. `route()` decides which path a question takes.
 """
+import re
+
 import metrics
 
 money = metrics.money
@@ -28,12 +30,19 @@ TOPICS = [
     ("sdr", ("top sdr", "best sdr", "sdr performance", "top-performing", "top performing", "best performing", "which sdr", "who is the top")),
     ("stalled", ("stalled", "at risk", "pipeline health", "no activity")),
     ("demand", ("most requested", "capabilities are requested", "requested capabilit", "service demand")),
-    ("target", ("target", "on track", "quota")),
+    # "target" alone is also a verb ("which buyers should we target"), so only metric phrasings select this topic
+    ("target", ("monthly target", "sales target", "revenue target", "our target", "the target", "target attainment", "against target", "vs target", "on track", "quota")),
 ]
+
+
+# a question about the future ("revenue in five years") is not a lookup of today's figures: it must not be answered with won revenue so far
+_FUTURE = re.compile(r"\b(forecast|predict\w*|projection|projected|(?:in|within|over) (?:the next )?(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten) years?|next (?:year|decade)|(?:five|5|ten|10)-year)\b")
 
 
 def topic(question):
     q = " " + question.lower() + " "
+    if _FUTURE.search(q):
+        return None
     for name, words in TOPICS:
         if any(w in q for w in words):
             return name

@@ -17,7 +17,7 @@ def v2_notes():
 
 **How Ask Hoomi answers (all local, zero hosted calls).**
 - *Numbers* (pipeline, revenue, win rate, follow-ups, top SDR…) are **calculated** from the workspace, never retrieved or generated.
-- *Documents* (services, ICPs, positioning, case studies, KYC profiles) go through local retrieval (FastEmbed vectors in a Chroma index) and an
+- *Documents* (the seven approved Kai's Company documents: capabilities, three ICPs, three case studies; plus KYC profiles) go through local retrieval (FastEmbed vectors in a Chroma index) and an
   **answerability gate**. The offline engine then **quotes the closest sentences** with citations. It is extractive: it cannot reason or paraphrase.
 - If the evidence is not close enough, Hoomi says **insufficient evidence** instead of guessing.
 - Fireworks AI (generate-then-verify) is an opt-in answer style in Ask Hoomi. It needs your own `.env` and a per-session approval; until then
@@ -26,8 +26,8 @@ def v2_notes():
 **Data.** Two separate local SQLite stores: the V2 workspace (`data/gtm_v2.db`) and the V1 store (`data/kai_gtm.db`). They start from the same
 records and are edited independently. There is no CRM integration; the CSV import is a local file feature.
 
-**Known limits.** Retrieval distance alone cannot separate every unanswerable question from an answerable one (see `eval/`), the offline engine
-shows verbatim sentences rather than composed answers, the Fireworks path has only been tested with mocks, and there is no authentication.
+**Known limits.** On the 20-question pack evaluation (`eval/pack_report.md`) the offline engine answered 16 and refused all 7 unanswerable ones; its misses are
+incomplete or off-target quotes on compound and cross-document questions, never invented text. The Fireworks path has only been tested with mocks, and there is no authentication.
 """)
     st.divider()
 

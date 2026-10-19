@@ -68,7 +68,7 @@ def test_rule_based_is_only_used_when_chosen_or_search_is_unavailable(env):
 
     explicit = chat.ask("What is our total pipeline?", "Rule-based", g, store, ws=None)
     assert explicit["kind"] == "insufficient" and explicit["meta"]["route"] == "rulebased"           # no V1 workspace given: honest, no crash
-    degraded = chat.ask("What is a managed service?", "Auto", g, None, "model missing", ws=None)
+    degraded = chat.ask("What was the scope of the LLM evaluation case study?", "Auto", g, None, "model missing", ws=None)
     assert degraded["kind"] == "insufficient" and "Document search is unavailable" in degraded["content"]
 
 
@@ -90,7 +90,7 @@ def test_unknown_route_falls_back_to_auto(env):
 
 def test_messages_carry_sources_with_verbatim_quotes_and_per_fact_checks(env):
     g, store = env
-    msg = chat.ask("What is a managed service?", "Documents", g, store)
+    msg = chat.ask("What was the scope of the LLM evaluation case study?", "Documents", g, store)
     assert msg["kind"] in ("answered", "partial") and msg["sources"] and msg["facts"]
     for s in msg["sources"]:
         assert s["quote"] in s["passage"] and s["citation"].startswith("[") and s["chunk_id"]
@@ -110,7 +110,7 @@ def test_the_chat_module_loads_no_provider_code_at_import_time():
 def test_every_source_shows_the_sentence_that_came_from_its_own_chunk(env):
     """A fact backed by sentences from two chunks must list each chunk with its own quote (never another chunk's)."""
     g, store = env
-    for q in ("What is a managed service?", "Who is the buyer at an AI lab and what signals matter?", "How do we position against crowd platforms?",
+    for q in ("What was the scope of the LLM evaluation case study?", "Who is the buyer at an AI lab and what signals matter?", "How do we position against crowd platforms?",
               "What does Deepcurrent Labs request?", "What is the difference between a fixed-scope project and a time-and-materials team?"):
         msg = chat.ask(q, "Documents", g, store)
         for s in msg["sources"]:
@@ -139,12 +139,12 @@ class ScriptedClient:
 
 def managed_service_replies(env):
     g, store = env
-    hits = retrieve(store, "managed service", k=15, where={"doc_type": {"$ne": "kyc"}})
-    chunk = next(h for h in hits if h.section == "Managed service")
-    sentence = "A managed service is a recurring program where Kai's Company owns delivery against quality and throughput targets."
-    gen = json.dumps({"requested_facts": ["what a managed service is"], "answer": sentence + " [fake.md › Invented]"})
-    ver = json.dumps({"facts": [{"fact": "what a managed service is", "status": "supported", "claim": sentence + " [fake.md › Invented]",
-                                 "supporting_chunk_ids": [chunk.chunk_id], "evidence_quote": "recurring program where Kai's Company owns delivery"}],
+    hits = retrieve(store, "scope of the LLM evaluation case study", k=15, where={"doc_type": {"$ne": "kyc"}})
+    chunk = next(h for h in hits if h.section == "Scope")
+    sentence = "The source engagement describes a large batch of evaluation tasks, with several independent reviews of each prompt and a structured set of rubric questions per task."
+    gen = json.dumps({"requested_facts": ["the scope of the LLM evaluation case study"], "answer": sentence + " [fake.md › Invented]"})
+    ver = json.dumps({"facts": [{"fact": "the scope of the LLM evaluation case study", "status": "supported", "claim": sentence + " [fake.md › Invented]",
+                                 "supporting_chunk_ids": [chunk.chunk_id], "evidence_quote": "a large batch of evaluation tasks"}],
                       "unaddressed_parts": []})
     return gen, ver, chunk
 
@@ -153,7 +153,7 @@ def test_an_approved_client_gives_a_verified_natural_language_answer(env):
     g, store = env
     gen, ver, chunk = managed_service_replies(env)
     client = ScriptedClient(gen, ver)
-    msg = chat.ask("What is a managed service?", "Documents", g, store, hosted=client)
+    msg = chat.ask("What was the scope of the LLM evaluation case study?", "Documents", g, store, hosted=client)
     assert msg["kind"] == "answered" and msg["meta"]["engine"] == "fireworks-verified" and msg["meta"]["hosted_calls"] == 2
     assert len(client.prompts) == 2 and "Passage id:" in client.prompts[0]
     assert "fake.md" not in msg["content"] and "Invented" not in msg["content"]               # model-written citations never reach the user
@@ -163,7 +163,7 @@ def test_an_approved_client_gives_a_verified_natural_language_answer(env):
 
 def test_the_default_is_offline_so_nothing_is_ever_sent(env):
     g, store = env
-    msg = chat.ask("What is a managed service?", "Documents", g, store)                       # hosted=None
+    msg = chat.ask("What was the scope of the LLM evaluation case study?", "Documents", g, store)                       # hosted=None
     assert msg["meta"]["model_calls"] == 0 and msg["meta"]["engine"] == "offline-extractive"
 
 
@@ -173,7 +173,7 @@ def test_the_default_is_offline_so_nothing_is_ever_sent(env):
 ])
 def test_a_failed_hosted_answer_falls_back_to_the_labelled_offline_answer(env, replies, reason):
     g, store = env
-    msg = chat.ask("What is a managed service?", "Documents", g, store, hosted=ScriptedClient(*replies))
+    msg = chat.ask("What was the scope of the LLM evaluation case study?", "Documents", g, store, hosted=ScriptedClient(*replies))
     assert reason in msg["content"].lower() and "offline answer instead" in msg["content"]
     assert msg["kind"] in ("answered", "partial") and msg["meta"]["engine"] == "offline-extractive" and msg["meta"]["hosted_fallback"]
     assert all(s["quote"] in s["passage"] for s in msg["sources"])
@@ -182,10 +182,10 @@ def test_a_failed_hosted_answer_falls_back_to_the_labelled_offline_answer(env, r
 def test_an_unverifiable_hosted_answer_is_not_shown_as_verified(env):
     g, store = env
     gen, _ver, chunk = managed_service_replies(env)
-    bad_ver = json.dumps({"facts": [{"fact": "what a managed service is", "status": "supported", "claim": "A managed service is a recurring program.",
+    bad_ver = json.dumps({"facts": [{"fact": "the scope of the LLM evaluation case study", "status": "supported", "claim": "The scope was ten thousand tasks.",
                                      "supporting_chunk_ids": [chunk.chunk_id], "evidence_quote": "guaranteed ten-fold return on investment"}],
                           "unaddressed_parts": []})
-    msg = chat.ask("What is a managed service?", "Documents", g, store, hosted=ScriptedClient(gen, bad_ver))
+    msg = chat.ask("What was the scope of the LLM evaluation case study?", "Documents", g, store, hosted=ScriptedClient(gen, bad_ver))
     assert msg["kind"] == "insufficient" and "Insufficient evidence" in msg["content"] and msg["sources"] == []   # fails closed, no invented support
 
 
@@ -200,7 +200,7 @@ def test_a_gate_refusal_stays_a_refusal_even_with_an_approved_client(env, monkey
 def test_a_configuration_error_from_the_client_becomes_a_message_not_a_crash(env):
     from rag.providers import HostedCallNotApproved
     g, store = env
-    msg = chat.ask("What is a managed service?", "Documents", g, store, hosted=ScriptedClient(HostedCallNotApproved("not approved")))
+    msg = chat.ask("What was the scope of the LLM evaluation case study?", "Documents", g, store, hosted=ScriptedClient(HostedCallNotApproved("not approved")))
     assert msg["kind"] == "insufficient" and "Fireworks is not available" in msg["content"] and "not approved" in msg["content"]
 
 

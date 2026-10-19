@@ -39,8 +39,15 @@ def load_knowledge(gtm_store):
         return None, f"{type(exc).__name__}: {str(exc)[:140]}", {}
 
 
+def source_title(citation):
+    """'[05_case_study_model_evaluation.md › Scope]' -> ('05_case_study_model_evaluation.md', 'Scope')."""
+    body = citation.strip("[]")
+    file, _, section = body.partition(" › ")
+    return file, section
+
+
 def render_message(msg):
-    """One chat message: a status badge, the text, the sources with verified quotes, and how it was checked."""
+    """One chat message: a status badge, the answer, readable citation cards, and an expandable Technical Details section."""
     if msg["role"] == "user":
         st.markdown(theme.safe(msg["content"]))
         return
@@ -51,18 +58,24 @@ def render_message(msg):
     st.markdown(f'<span class="badge {cls}">{label}</span>', unsafe_allow_html=True)
     st.markdown(theme.safe(msg["content"]))
     if msg.get("sources"):
-        with st.expander(f"Sources ({len(msg['sources'])})"):
-            for s in msg["sources"]:
-                kyc = " · KYC profile" if s.get("doc_type") == "kyc" else ""
-                st.markdown(theme.safe(f'<div class="src"><span class="cite">{s["citation"]}</span> <small>{s["chunk_id"]} · distance {s["distance"]:.2f}{kyc}</small>'
-                                       f'<br><q>{s["quote"]}</q></div>'), unsafe_allow_html=True)
-    if msg.get("facts"):
-        with st.expander("How this was checked"):
-            for f in msg["facts"]:
+        cards = []
+        for s in msg["sources"]:
+            file, section = source_title(s["citation"])
+            kyc = " · KYC profile" if s.get("doc_type") == "kyc" else ""
+            cards.append(f'<div class="src"><span class="cite">📄 {file}</span> <span class="sec">› {section}{kyc}</span><br><q>{s["quote"]}</q></div>')
+        st.markdown(theme.safe(f'<div class="src-head">Sources ({len(cards)})</div>' + "".join(cards)), unsafe_allow_html=True)
+    technical = msg.get("facts") or meta
+    if technical:
+        with st.expander("Technical Details"):
+            for f in msg.get("facts", []):
                 mark = "✅" if f["supported"] else "⚠️"
                 score = f" (similarity {f['score']:.2f})" if f.get("score") is not None else ""
                 st.markdown(theme.safe(f"{mark} **{f['fact']}**{score}: {f['detail']}"))
+            for s in msg.get("sources", []):
+                st.markdown(theme.safe(f'<small><code>{s["chunk_id"]}</code> · distance {s["distance"]:.2f} · {s["citation"]}</small>'), unsafe_allow_html=True)
             bits = []
+            if meta.get("engine"):
+                bits.append(f"engine: {meta['engine']}" + (f", route: {meta['route']}" if meta.get("route") else ""))
             if meta.get("best_distance") is not None:
                 bits.append(f"closest passage distance {meta['best_distance']:.2f} against a gate of {meta['gate']:g}")
             if meta.get("scope_account"):
@@ -104,38 +117,68 @@ def hosted_setup():
     return held[1], f"Approved for this session: {cfg.provider} / {cfg.model}."
 
 
+def knowledge_panel(info, cited):
+    """All seven approved source documents, always visible. Documents cited in this conversation are highlighted."""
+    from rag.ingest import load_documents
+    rows = []
+    try:
+        docs = load_documents(app_index.APP_CORPUS_DIR)
+    except Exception:
+        docs = []
+    for d in docs:
+        md = d.metadata
+        on = " on" if md["source"] in cited else ""
+        rows.append(f'<div class="kb-doc{on}"><span class="kb-type">{md["doc_type"].replace("_", " ")}</span><b>{md["title"]}</b><small>{md["source"]}</small></div>')
+    st.markdown(theme.safe(f'<div class="kb"><div class="kb-title">Knowledge base · {len(docs)} sources</div>' + "".join(rows) +
+                           '<div class="kb-foot">Answers quote these documents. The sources used are shown under each answer.</div></div>'), unsafe_allow_html=True)
+
+
+def history_panel():
+    """Recent questions from this session; clicking one asks it again."""
+    asked = [m["content"] for m in st.session_state.get("hoomi_chat", []) if m["role"] == "user"]
+    if not asked:
+        st.markdown('<div class="kb"><div class="kb-title">History</div><div class="kb-foot">Your questions will appear here.</div></div>', unsafe_allow_html=True)
+        return
+    st.markdown('<div class="kb-title" style="margin-top:.2rem">History</div>', unsafe_allow_html=True)
+    for i, q in enumerate(reversed(asked[-6:])):
+        st.button(q if len(q) < 60 else q[:57] + "…", key=f"hhist_{i}", width="stretch", on_click=_suggest, args=(q,), help="Ask this again")
+
+
 def _chat(ws, name, gtm_store):
-    """Controls, suggestions, the conversation, and the pinned chat input (this must run at the page's top level so the input stays visible)."""
+    """Suggestions, settings, the conversation, the knowledge base panel and the pinned chat input (the input must be created at the page's top level)."""
     st.session_state.setdefault("hoomi_chat", [])
     knowledge, error, info = load_knowledge(gtm_store)
-    c1, c2 = st.columns([3, 3], vertical_alignment="center")
-    with c1:
-        st.radio("Answer from", chat.ROUTES, key="hoomi_route", horizontal=True, label_visibility="collapsed",
-                 help="Auto sends metric questions to the calculations and everything else to the documents. 'Rule-based' is the classic V1 Hoomi.")
-    with c2:
-        engine = st.radio("Answer style", ENGINES, key="hoomi_engine", horizontal=True, label_visibility="collapsed",
-                          help="Offline answers quote the documents. Fireworks writes a natural-language answer, then every claim is checked against the sources.")
-    client, status = (None, "")
-    if engine == ENGINES[1]:
-        client, status = hosted_setup()
-        (st.success if client else st.info)(status)
+    with st.expander("⚙️ Answer settings", expanded=False):
+        c1, c2 = st.columns(2, vertical_alignment="center")
+        with c1:
+            st.radio("Answer from", chat.ROUTES, key="hoomi_route", horizontal=True,
+                     help="Auto sends metric questions to the calculations and everything else to the documents. 'Rule-based' is the classic V1 Hoomi.")
+        with c2:
+            engine = st.radio("Answer style", ENGINES, key="hoomi_engine", horizontal=True,
+                              help="Offline answers quote the documents. Fireworks writes a natural-language answer, then every claim is checked against the sources.")
+        client, status = (None, "")
+        if engine == ENGINES[1]:
+            client, status = hosted_setup()
+            (st.success if client else st.info)(status)
+    engine = st.session_state.get("hoomi_engine", ENGINES[0])
     if knowledge is not None:
-        st.caption(f"Knowledge base: {info['chunks']} passages from {info['documents'] - info['kyc_documents']} documents and {info['kyc_documents']} KYC profiles · "
+        st.caption(f"{info['chunks']} passages from {info['documents'] - info['kyc_documents']} documents and {info['kyc_documents']} KYC profiles · "
                    f"gate distance {chat.gate_text()} (provisional) · searched locally.")
     else:
         st.markdown(theme.safe(f'<div class="warn"><b>Document search is unavailable.</b> {error}. Metric questions and the classic rule-based Hoomi still work. '
                                f'To enable document search, run <code>python -m rag.app_index</code> once (see README).</div>'), unsafe_allow_html=True)
 
-    st.markdown("**Try a question**")
-    cols = st.columns(3)
-    for i, q in enumerate(chat.DOC_SUGGESTIONS[:3] + numbers_qa.SUGGESTIONS[:3]):
-        cols[i % 3].button(q, key=f"hsug_{i}", width="stretch", on_click=_suggest, args=(q,))
-
-    conversation = st.container()                                       # filled below, after the input has been read
-    with st.expander("📋 Classic briefing (V1 data)"):
-        _briefing(ws, name)
-
-    prompt = st.chat_input("Ask Hoomi about services, segments, positioning, a KYC profile, or the numbers…")
+    main, side = st.columns([2.6, 1.15], gap="large")
+    with side:
+        knowledge_slot = st.container()
+        history_slot = st.container()
+    with main:
+        st.markdown('<div class="sug-head">Try a question</div>', unsafe_allow_html=True)
+        cols = st.columns(3)
+        for i, q in enumerate(chat.DOC_SUGGESTIONS[:4] + numbers_qa.SUGGESTIONS[:2]):
+            cols[i % 3].button(q, key=f"hsug_{i}", width="stretch", on_click=_suggest, args=(q,))
+        conversation = st.container()                                   # filled below, after the input has been read
+    prompt = st.chat_input("Ask Hoomi about capabilities, ideal customers, case studies, a KYC profile, or the numbers…")
     question = st.session_state.pop("hoomi_pending", None) or prompt
     if question:
         history = st.session_state.hoomi_chat
@@ -148,16 +191,21 @@ def _chat(ws, name, gtm_store):
         history += [{"role": "user", "content": shown}, reply]
         del history[:-MAX_HISTORY]
     history = st.session_state.hoomi_chat
+    cited = {s["chunk_id"].split("#")[0] for m in history for s in m.get("sources", [])}
     with conversation:
         if not history:
-            theme.empty_state("Ask me anything about Kai's Company", "I quote approved documents with citations, work out the numbers from the workspace, "
-                              "and tell you plainly when I don't have enough evidence. Type below.", "💬")
+            theme.empty_state("Ask me anything about Kai's Company", "I quote the approved documents with citations, work out the numbers from the workspace, "
+                              "and tell you plainly when I don't have enough evidence. Pick a question above or type below.", "💬")
         for m in history:
-            with st.chat_message(m["role"]):
+            with st.chat_message(m["role"], avatar="🧑‍💼" if m["role"] == "user" else "🐱"):
                 render_message(m)
         if history and st.button("Clear conversation", key="hoomi_clear"):
             st.session_state.hoomi_chat = []
             st.rerun()
+    with knowledge_slot:
+        knowledge_panel(info, cited)
+    with history_slot:
+        history_panel()
 
 
 def _briefing(ws, name):
@@ -221,12 +269,12 @@ def _briefing(ws, name):
 def render(ws, name="", gtm_store=None):
     left, right = st.columns([1, 3], vertical_alignment="center")
     with left:
-        mascot.render(190)
+        mascot.render(170)
     with right:
         st.markdown(f'<div class="hero" style="margin:0">{theme.sparkles()}<div class="eyebrow">Hoomi · your GTM assistant</div><h1>Ask Hoomi</h1>'
-                    f'<p>Ask in plain language. Answers come from approved documents with citations, from calculations over the workspace, or a plain '
+                    f'<p>Ask in plain language. Answers come from the approved documents with citations, from calculations over the workspace, or a plain '
                     f'"I don\'t have enough evidence".</p></div>', unsafe_allow_html=True)
-    st.markdown('<div class="mode-bar"><span class="badge ok">Offline demo by default</span> '
+    st.markdown('<div class="mode-bar"><span class="badge ok">Offline by default</span> '
                 '<span style="color:var(--muted);font-size:.84rem">Nothing leaves this computer unless you choose Fireworks and approve it</span></div>',
                 unsafe_allow_html=True)
     _chat(ws, name, gtm_store)

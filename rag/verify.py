@@ -77,6 +77,32 @@ def _fold(text):
     return _ws(str(text).replace("’", "'").replace("‘", "'").replace("“", '"').replace("”", '"')).lower()
 
 
+def _loose(text):
+    """_fold plus formatting that is not content: markdown markers (#, *, _, `, list dashes), dash variants and the citation arrow.
+    Only for deciding whether a quote is literally in a passage; the words themselves must still match exactly."""
+    t = _fold(text)
+    t = re.sub(r"(?m)^\s*(?:#+|[-*])\s+", "", t)
+    t = re.sub(r"[#*_`]", "", t)
+    t = t.replace("\u2014", "-").replace("\u2013", "-").replace("\u2192", "->")
+    return _ws(t)
+
+
+def quote_in(quote, text):
+    """True if `quote` is verbatim in `text` (formatting-insensitive). A quote with an ellipsis is accepted when every part between the
+    ellipses is verbatim in the text, in order, and the parts together are long enough to be evidence."""
+    hay = _loose(text)
+    parts = [p for p in (_ws(x) for x in re.split(r"\.\.\.|\u2026", _loose(quote))) if p]
+    if not parts or sum(len(p) for p in parts) < MIN_QUOTE_CHARS:
+        return False
+    pos = 0
+    for part in parts:
+        i = hay.find(part, pos)
+        if i < 0:
+            return False
+        pos = i + len(part)
+    return True
+
+
 _CITATION = re.compile(r"\s*\[[^\[\]]*(?:\.md|›|#\d)[^\[\]]*\]")
 
 
@@ -158,7 +184,7 @@ def _ground(fact, entry, hits_by_id, draft):
     quote = _fold(entry["evidence_quote"])
     if len(quote) < MIN_QUOTE_CHARS:
         return FactResult(fact, False, reason="quote_missing_or_too_short")
-    verified = [i for i in dict.fromkeys(ids) if quote in _fold(hits_by_id[i].text)]
+    verified = [i for i in dict.fromkeys(ids) if quote_in(entry["evidence_quote"], hits_by_id[i].text)]
     if not verified:
         return FactResult(fact, False, reason="quote_not_in_cited_chunk")
     claim = _ws(entry["claim"])

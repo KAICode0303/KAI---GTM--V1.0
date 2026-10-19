@@ -1,0 +1,638 @@
+[
+ {
+  "id": "D1",
+  "category": "direct",
+  "question": "What are Kai's Company's core AI evaluation capabilities?",
+  "sources": [
+   "01_capabilities.md"
+  ],
+  "phrases": [
+   "red teaming"
+  ],
+  "offline": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "01_capabilities.md",
+    "02_icp_model_evaluation.md"
+   ],
+   "pass": true,
+   "answer": "Support may include rubric-based quality review, prompt evaluation and expert assessment of AI outputs. Model evaluation and benchmarking; human evaluation and preference judgments; prompt/response evaluation; AI agent and computer-use-agent testing; model validation; adversarial testing, red teaming and trust-and-safety assessments; specialized evaluators and subject-matter experts. Organizations actively developing, fine-tuning, testing, benchmarking or evaluating AI models that require scalable human evaluation, specialized expertise, evaluation datasets, validation and continuous model improvement."
+  },
+  "hosted_mock_faithful": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "01_capabilities.md"
+   ],
+   "pass": true,
+   "answer": "## AI model evaluation and human feedback Model evaluation and benchmarking; human evaluation and preference judgments; prompt/response evaluation; AI agent and computer-use-agent testing; model validation; adversarial testing, red teaming and trust-and-safety assessments; specialized evaluators and subject-matter experts."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "D2",
+  "category": "direct",
+  "question": "Which buyer personas should we target at a speech AI company?",
+  "sources": [
+   "03_icp_multilingual_speech_audio.md"
+  ],
+  "phrases": [
+   "Head of ASR"
+  ],
+  "offline": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "03_icp_multilingual_speech_audio.md"
+   ],
+   "pass": true,
+   "answer": "Executive sponsors: CTO, VP AI/ML, Head of Speech AI, Head of Conversational AI. Technical buyers: Head of ASR, Speech ML Lead, Director of AI Data, Head of Data Operations, Speech Data Engineering Lead."
+  },
+  "hosted_mock_faithful": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "03_icp_multilingual_speech_audio.md"
+   ],
+   "pass": true,
+   "answer": "- Technical buyers: Head of ASR, Speech ML Lead, Director of AI Data, Head of Data Operations, Speech Data Engineering Lead."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "D3",
+  "category": "direct",
+  "question": "Which priority segments does the robotics ICP list as Tier 1?",
+  "sources": [
+   "04_icp_robotics.md"
+  ],
+  "phrases": [
+   "humanoid robotics"
+  ],
+  "offline": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "04_icp_robotics.md"
+   ],
+   "pass": true,
+   "answer": "Tier 3: robotics research labs. Tier 1: humanoid robotics, home/consumer robotics, autonomous vehicles and ADAS, robot learning/embodied AI. Tier 2: warehouse/logistics robotics, industrial robotics, drones/autonomous aerial systems, medical robotics and agricultural robotics."
+  },
+  "hosted_mock_faithful": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "04_icp_robotics.md"
+   ],
+   "pass": true,
+   "answer": "## Priority segments Tier 1: humanoid robotics, home/consumer robotics, autonomous vehicles and ADAS, robot learning/embodied AI."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "D4",
+  "category": "direct",
+  "question": "What was the scope of the LLM evaluation case study?",
+  "sources": [
+   "05_case_study_model_evaluation.md"
+  ],
+  "phrases": [
+   "a large batch of evaluation tasks"
+  ],
+  "offline": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "05_case_study_model_evaluation.md"
+   ],
+   "pass": true,
+   "answer": "The source engagement describes a large batch of evaluation tasks, with several independent reviews of each prompt and a structured set of rubric questions per task. The case study reports support for high-volume evaluation throughput, improved consistency through multiple reviews, structured assessment across multiple model-quality dimensions and evidence-based model-performance insights."
+  },
+  "hosted_mock_faithful": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "05_case_study_model_evaluation.md"
+   ],
+   "pass": true,
+   "answer": "## Scope The source engagement describes a large batch of evaluation tasks, with several independent reviews of each prompt and a structured set of rubric questions per task."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "D5",
+  "category": "direct",
+  "question": "Which devices and video settings were used in the first-person household activity engagement?",
+  "sources": [
+   "06_case_study_physical_ai.md"
+  ],
+  "phrases": [
+   "high-definition capture"
+  ],
+  "offline": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "06_case_study_physical_ai.md"
+   ],
+   "pass": false,
+   "answer": "Collection of first-person household activity recordings for an unnamed AI data program. Capture physical household tasks from a consistent first-person viewpoint while maintaining device, resolution, privacy and submission quality requirements. Broader first-person household activity coverage, more consistent activity recordings and privacy/QC controls in the collection workflow."
+  },
+  "hosted_mock_faithful": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "06_case_study_physical_ai.md"
+   ],
+   "pass": true,
+   "answer": "## Scope A short activity-recording engagement using compatible consumer mobile devices, specified wide-angle lens configurations and high-definition capture."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "D6",
+  "category": "direct",
+  "question": "How was multilingual transcription work organized and how large was the program?",
+  "sources": [
+   "07_case_study_multilingual.md"
+  ],
+  "phrases": [
+   "multi-language program"
+  ],
+  "offline": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "03_icp_multilingual_speech_audio.md",
+    "07_case_study_multilingual.md"
+   ],
+   "pass": true,
+   "answer": "Transcription and annotation operations across a reported multi-language program. Large-scale multilingual transcription and annotation operations for an unnamed AI data program. The source describes an expanded multi-language program, with a planned pool of candidates for each language and a large resource base overall."
+  },
+  "hosted_mock_faithful": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "07_case_study_multilingual.md"
+   ],
+   "pass": true,
+   "answer": "## Scope The source describes an expanded multi-language program, with a planned pool of candidates for each language and a large resource base overall."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "D7",
+  "category": "direct",
+  "question": "Who are the evaluation owners at AI model development companies?",
+  "sources": [
+   "02_icp_model_evaluation.md"
+  ],
+  "phrases": [
+   "Head of AI Evaluation"
+  ],
+  "offline": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "02_icp_model_evaluation.md"
+   ],
+   "pass": true,
+   "answer": "Evaluation owners: Head of AI Evaluation, Head of Model Quality, Evaluation Lead, Model Validation Lead."
+  },
+  "hosted_mock_faithful": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "02_icp_model_evaluation.md"
+   ],
+   "pass": true,
+   "answer": "Evaluation owners: Head of AI Evaluation, Head of Model Quality, Evaluation Lead, Model Validation Lead."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "D8",
+  "category": "direct",
+  "question": "What are the layers of Kai's Company's core delivery model?",
+  "sources": [
+   "01_capabilities.md"
+  ],
+  "phrases": [
+   "four complementary layers"
+  ],
+  "offline": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "01_capabilities.md"
+   ],
+   "pass": true,
+   "answer": "Four complementary layers support engagements: (1) human contributors and domain expertise, (2) technology, AI/ML automation and digital workflows, (3) global language, market and industry expertise, and (4) security, compliance and quality guardrails."
+  },
+  "hosted_mock_faithful": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "01_capabilities.md"
+   ],
+   "pass": true,
+   "answer": "## Core delivery model Four complementary layers support engagements: (1) human contributors and domain expertise, (2) technology, AI/ML automation and digital workflows, (3) global language, market and industry expertise, and (4) security, compliance and quality guardrails."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "X1",
+  "category": "cross-document",
+  "question": "Compare the buying personas for robotics companies and for speech AI companies.",
+  "sources": [
+   "04_icp_robotics.md",
+   "03_icp_multilingual_speech_audio.md"
+  ],
+  "phrases": [
+   "Head of Robotics",
+   "Head of ASR"
+  ],
+  "offline": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "02_icp_model_evaluation.md",
+    "03_icp_multilingual_speech_audio.md",
+    "04_icp_robotics.md"
+   ],
+   "pass": false,
+   "answer": "Decision makers: CTO, Chief AI Officer, VP AI/ML, VP Robotics, VP Engineering, Head of Robotics, Head of AI/ML. Technical buyers: Director of Robotics, Director of AI/ML, Director of Data, Robotics Engineering Manager, ML Engineering Manager, Head of Data Operations, Head of AI Evaluation. Commercial stakeholders: procurement, sourcing, vendor management and AI operations. Executive sponsors: CTO, VP AI/ML, Head of Speech AI, Head of Conversational AI."
+  },
+  "hosted_mock_faithful": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "02_icp_model_evaluation.md"
+   ],
+   "pass": false,
+   "answer": "## Buying personas Decision makers: CTO, Chief AI Officer, VP AI/ML, VP Robotics, VP Engineering, Head of Robotics, Head of AI/ML."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "X2",
+  "category": "cross-document",
+  "question": "Which case study supports the multilingual speech ICP, and what does the ICP say about evidence?",
+  "sources": [
+   "07_case_study_multilingual.md",
+   "03_icp_multilingual_speech_audio.md"
+  ],
+  "phrases": [
+   "multi-language program"
+  ],
+  "offline": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "03_icp_multilingual_speech_audio.md"
+   ],
+   "pass": false,
+   "answer": "This ICP is an adaptation synthesized from the supplied capability deck and the speech/audio/transcription engagements in the case-study deck. It is **not** a separately supplied or independently validated original ICP."
+  },
+  "hosted_mock_faithful": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "03_icp_multilingual_speech_audio.md"
+   ],
+   "pass": true,
+   "answer": "- Transcription and annotation operations across a reported multi-language program."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "X3",
+  "category": "cross-document",
+  "question": "What capabilities and which ideal customer profile relate to the LLM evaluation case study?",
+  "sources": [
+   "05_case_study_model_evaluation.md",
+   "02_icp_model_evaluation.md"
+  ],
+  "phrases": [
+   "evaluation"
+  ],
+  "offline": {
+   "status": "partial",
+   "reason": "",
+   "cited": [
+    "02_icp_model_evaluation.md"
+   ],
+   "pass": false,
+   "answer": "Partial answer: only part of your question is supported by the approved documents.\n\nNeed for specialist judgments → domain experts, technical experts, language specialists and specialized evaluators. Need for evaluation data → collection, annotation, enrichment, preference data and QA. Continuous evaluation across tasks, languages and domains → model evaluation, benchmarking, prompt evaluation, QA and validation.\n\nNot found in the approved documents: What capabilities"
+  },
+  "hosted_mock_faithful": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "05_case_study_model_evaluation.md"
+   ],
+   "pass": true,
+   "answer": "## Reported outcomes The case study reports support for high-volume evaluation throughput, improved consistency through multiple reviews, structured assessment across multiple model-quality dimensions and evidence-based model-performance insights."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "X4",
+  "category": "cross-document",
+  "question": "What privacy or compliance controls appear for physical-AI data collection and in the general capabilities?",
+  "sources": [
+   "06_case_study_physical_ai.md",
+   "01_capabilities.md"
+  ],
+  "phrases": [
+   "privacy"
+  ],
+  "offline": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "01_capabilities.md",
+    "06_case_study_physical_ai.md"
+   ],
+   "pass": true,
+   "answer": "Real-world physical-task data collection; first-person or egocentric activity video; human demonstrations; sensor and LiDAR/geospatial data; environment data; annotation and physical-world validation support. Broader first-person household activity coverage, more consistent activity recordings and privacy/QC controls in the collection workflow. These are relevant capabilities for robotics and embodied-AI workflows; an individual case study does not establish a particular robot deployment."
+  },
+  "hosted_mock_faithful": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "06_case_study_physical_ai.md"
+   ],
+   "pass": true,
+   "answer": "## Reported outcomes Broader first-person household activity coverage, more consistent activity recordings and privacy/QC controls in the collection workflow."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "X5",
+  "category": "cross-document",
+  "question": "Describe the first-person activity data case study and its limitations.",
+  "sources": [
+   "06_case_study_physical_ai.md"
+  ],
+  "phrases": [
+   "does not state that a robot was deployed"
+  ],
+  "offline": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "06_case_study_physical_ai.md"
+   ],
+   "pass": true,
+   "answer": "Collection of first-person household activity recordings for an unnamed AI data program. Broader first-person household activity coverage, more consistent activity recordings and privacy/QC controls in the collection workflow. The source does not quantify model-performance gains. The source connects the dataset to embodied-AI and activity-understanding workflows; it does not state that a robot was deployed or trained successfully."
+  },
+  "hosted_mock_faithful": {
+   "status": "answered",
+   "reason": "",
+   "cited": [
+    "06_case_study_physical_ai.md"
+   ],
+   "pass": true,
+   "answer": "The source connects the dataset to embodied-AI and activity-understanding workflows; it does not state that a robot was deployed or trained successfully."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "U1",
+  "category": "unanswerable",
+  "question": "What is Kai's Company's hourly price?",
+  "sources": [],
+  "phrases": [],
+  "offline": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "cited": [],
+   "pass": true,
+   "answer": "I don't have enough evidence in the approved GTM documents to answer that. Try rephrasing, or add a relevant document to the knowledge base."
+  },
+  "hosted_mock_faithful": {
+   "status": "refused",
+   "reason": "model_insufficient",
+   "cited": [],
+   "pass": true,
+   "answer": "I don't have enough evidence in the approved GTM documents to answer that. Try rephrasing, or add a relevant document to the knowledge base."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "U2",
+  "category": "unanswerable",
+  "question": "Which named customer bought these services?",
+  "sources": [],
+  "phrases": [],
+  "offline": {
+   "status": "refused",
+   "reason": "gate",
+   "cited": [],
+   "pass": true,
+   "answer": "I don't have enough evidence in the approved GTM documents to answer that. Try rephrasing, or add a relevant document to the knowledge base."
+  },
+  "hosted_mock_faithful": {
+   "status": "refused",
+   "reason": "gate",
+   "cited": [],
+   "pass": true,
+   "answer": "I don't have enough evidence in the approved GTM documents to answer that. Try rephrasing, or add a relevant document to the knowledge base."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "gate",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "U3",
+  "category": "unanswerable",
+  "question": "What will Kai's Company's revenue be in five years?",
+  "sources": [],
+  "phrases": [],
+  "offline": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "cited": [],
+   "pass": true,
+   "answer": "I don't have enough evidence in the approved GTM documents to answer that. Try rephrasing, or add a relevant document to the knowledge base."
+  },
+  "hosted_mock_faithful": {
+   "status": "refused",
+   "reason": "model_insufficient",
+   "cited": [],
+   "pass": true,
+   "answer": "I don't have enough evidence in the approved GTM documents to answer that. Try rephrasing, or add a relevant document to the knowledge base."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "U4",
+  "category": "unanswerable",
+  "question": "By what percentage did the LLM evaluation case study improve model accuracy?",
+  "sources": [],
+  "phrases": [],
+  "offline": {
+   "status": "refused",
+   "reason": "documented_gap",
+   "cited": [
+    "05_case_study_model_evaluation.md"
+   ],
+   "pass": true,
+   "answer": "The approved documents say this is not available: \"No numerical accuracy uplift or financial return is reported.\" [05_case_study_model_evaluation.md › Reported outcomes]. I won't guess a figure or detail they do not state."
+  },
+  "hosted_mock_faithful": {
+   "status": "refused",
+   "reason": "model_insufficient",
+   "cited": [],
+   "pass": true,
+   "answer": "I don't have enough evidence in the approved GTM documents to answer that. Try rephrasing, or add a relevant document to the knowledge base."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "U5",
+  "category": "unanswerable",
+  "question": "Who won the football world cup?",
+  "sources": [],
+  "phrases": [],
+  "offline": {
+   "status": "refused",
+   "reason": "gate",
+   "cited": [],
+   "pass": true,
+   "answer": "I don't have enough evidence in the approved GTM documents to answer that. Try rephrasing, or add a relevant document to the knowledge base."
+  },
+  "hosted_mock_faithful": {
+   "status": "refused",
+   "reason": "gate",
+   "cited": [],
+   "pass": true,
+   "answer": "I don't have enough evidence in the approved GTM documents to answer that. Try rephrasing, or add a relevant document to the knowledge base."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "gate",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "U6",
+  "category": "unanswerable",
+  "question": "What is the street address of Kai's Company's headquarters?",
+  "sources": [],
+  "phrases": [],
+  "offline": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "cited": [],
+   "pass": true,
+   "answer": "I don't have enough evidence in the approved GTM documents to answer that. Try rephrasing, or add a relevant document to the knowledge base."
+  },
+  "hosted_mock_faithful": {
+   "status": "refused",
+   "reason": "model_insufficient",
+   "cited": [],
+   "pass": true,
+   "answer": "I don't have enough evidence in the approved GTM documents to answer that. Try rephrasing, or add a relevant document to the knowledge base."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ },
+ {
+  "id": "U7",
+  "category": "unanswerable",
+  "question": "Which competitors does Kai's Company beat on price?",
+  "sources": [],
+  "phrases": [],
+  "offline": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "cited": [],
+   "pass": true,
+   "answer": "I don't have enough evidence in the approved GTM documents to answer that. Try rephrasing, or add a relevant document to the knowledge base."
+  },
+  "hosted_mock_faithful": {
+   "status": "refused",
+   "reason": "model_insufficient",
+   "cited": [],
+   "pass": true,
+   "answer": "I don't have enough evidence in the approved GTM documents to answer that. Try rephrasing, or add a relevant document to the knowledge base."
+  },
+  "hosted_mock_hallucinating": {
+   "status": "refused",
+   "reason": "nothing_supported",
+   "invented_text_shown": false
+  }
+ }
+]

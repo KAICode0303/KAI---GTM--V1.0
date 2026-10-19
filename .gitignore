@@ -39,3 +39,7 @@ backup_v1/
 docs/screenshots/v1/
 SUBMISSION_GUIDE.md
 docs/PROJECT_DOCUMENT_DRAFT.md
+
+# --- Supplied knowledge-pack download folder and zips (source material; the 7 approved .md files live in rag_corpus/) ---
+Kai_Company_RAG_Knowledge_Pack_v2*/
+*.zip

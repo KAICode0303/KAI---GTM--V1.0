@@ -86,12 +86,11 @@ def test_welcome_screen_shows_greeting_placeholder_and_both_views():
     page = texts(at.markdown)
     assert "Meet Hoomi" in page and "Hey, I'm Hoomi! Your GTM copilot. Ready to make some moves?" in page
     from views import mascot
-    if mascot.asset_path():                                                              # the supplied artwork is shown, with its caption
-        assert "data:image/png;base64" in page and mascot.CAPTION in page and "Mascot placeholder" not in page
-    else:                                                                                # otherwise a labelled placeholder, no invented artwork
-        assert "Mascot placeholder" in page and "Pixel Creative Strategist" in page
+    frames = [e for e in at.main if getattr(e, "type", "") == "iframe"] or list(at.get("iframe"))
+    assert any("mode=hero" in str(getattr(f.proto, "src", "")) for f in frames), "the 3D Hoomi hero is not on the Welcome page"
+    assert "Pixel" not in page and "Mascot placeholder" not in page
     assert "not a login" in page.lower() and "no authentication" in page.lower()
-    assert {b.label for b in at.button} == {"Enter the Leadership Hub", "Enter the GTM Team"}
+    assert {b.label for b in at.button} == {"Enter the Leadership Hub", "Enter the GTM Team", "Open Ask Hoomi"}
     assert "Leadership Hub" in page and "GTM Team" in page and "Executive Pulse" in page and "GTM Workspace" in page
 
 
@@ -215,7 +214,7 @@ def test_hoomi_chat_is_visible_with_a_working_input_and_defaults_to_offline():
     clean(at)
     assert len(at.chat_input) == 1 and "Ask Hoomi about" in at.chat_input[0].placeholder       # a chat input is on the page (pinned at the bottom)
     page = texts(at.markdown).lower()
-    assert "offline demo" in page and "nothing leaves this computer unless you choose fireworks and approve it" in page
+    assert "offline by default" in page and "nothing leaves this computer unless you choose fireworks and approve it" in page
     assert at.radio(key="hoomi_engine").value.startswith("Offline demo")                          # hosted answers are not the default
     assert not any(c.key == "hoomi_hosted_ok" for c in at.checkbox)                              # no approval box until Fireworks is chosen
     import ast
@@ -229,7 +228,7 @@ def test_hoomi_chat_is_visible_with_a_working_input_and_defaults_to_offline():
 def test_the_environment_variable_alone_never_enables_hosted_answers(monkeypatch):
     monkeypatch.setenv("RAG_ALLOW_HOSTED_CALLS", "1")
     at = goto(start(), HOOMI)
-    ask(at, "What is a managed service?")
+    ask(at, "What was the scope of the LLM evaluation case study?")
     assert at.session_state.hoomi_chat[-1]["meta"]["model_calls"] == 0 and "hoomi_client" not in at.session_state
 
 
@@ -246,13 +245,13 @@ class FakeFireworksModel:
         self.prompts.append(prompt)
         if self.fail:
             raise RuntimeError("network down")
-        sentence = "A managed service is a recurring program where Kai's Company owns delivery against quality and throughput targets."
+        sentence = "The source engagement describes a large batch of evaluation tasks, with several independent reviews of each prompt and a structured set of rubric questions per task."
         if "evidence checker" in prompt:
-            cid = re.search(r"Passage id: (\S+) \| source: 02_delivery_modalities.md › Managed service", prompt).group(1)
-            body = {"facts": [{"fact": "what a managed service is", "status": "supported", "claim": sentence, "supporting_chunk_ids": [cid],
-                               "evidence_quote": "recurring program where Kai's Company owns delivery"}], "unaddressed_parts": []}
+            cid = re.search(r"Passage id: (\S+) \| source: 05_case_study_model_evaluation.md › Scope", prompt).group(1)
+            body = {"facts": [{"fact": "the scope of the LLM evaluation case study", "status": "supported", "claim": sentence, "supporting_chunk_ids": [cid],
+                               "evidence_quote": "a large batch of evaluation tasks"}], "unaddressed_parts": []}
         else:
-            body = {"requested_facts": ["what a managed service is"], "answer": sentence}
+            body = {"requested_facts": ["the scope of the LLM evaluation case study"], "answer": sentence}
         return type("Msg", (), {"content": json.dumps(body), "usage_metadata": {"input_tokens": 700, "output_tokens": 90, "total_tokens": 790}})()
 
 
@@ -273,7 +272,7 @@ def test_choosing_fireworks_without_configuration_explains_what_is_missing(monke
     clean(at)
     assert "not set up yet" in texts(at.info) and "LLM_MODEL" in texts(at.info) and "FIREWORKS_API_KEY" in texts(at.info) and ".env" in texts(at.info)
     assert not any(c.key == "hoomi_hosted_ok" for c in at.checkbox)
-    ask(at, "What is a managed service?")
+    ask(at, "What was the scope of the LLM evaluation case study?")
     assert at.session_state.hoomi_chat[-1]["meta"]["model_calls"] == 0
 
 
@@ -283,7 +282,7 @@ def test_fireworks_is_not_used_until_the_user_approves(configured_fireworks):
     clean(at)
     box = at.checkbox(key="hoomi_hosted_ok")
     assert box.value is False and "Waiting for your approval" in texts(at.info) and "sending my question and the retrieved passages" in box.label
-    ask(at, "What is a managed service?")
+    ask(at, "What was the scope of the LLM evaluation case study?")
     assert configured_fireworks.prompts == [] and at.session_state.hoomi_chat[-1]["meta"]["model_calls"] == 0     # unapproved: offline, nothing sent
 
 
@@ -293,11 +292,11 @@ def test_approved_fireworks_gives_a_verified_answer_with_real_citations(configur
     at.checkbox(key="hoomi_hosted_ok").check().run()
     clean(at)
     assert "Approved for this session" in texts(at.success)
-    ask(at, "What is a managed service?")
+    ask(at, "What was the scope of the LLM evaluation case study?")
     msg = at.session_state.hoomi_chat[-1]
     assert msg["kind"] == "answered" and msg["meta"]["engine"] == "fireworks-verified" and msg["meta"]["hosted_calls"] == 2
     assert len(configured_fireworks.prompts) == 2 and msg["meta"]["usage"]["input_tokens"] == 1400
-    assert [s["citation"] for s in msg["sources"]] == ["[02_delivery_modalities.md › Managed service]"]
+    assert [s["citation"] for s in msg["sources"]] == ["[05_case_study_model_evaluation.md › Scope]"]
     reply = last_reply(at)
     assert "Fireworks, verified against sources" in reply
     assert "2 hosted call(s) to Fireworks, approved by you (1400 in, 180 out)" in " ".join(c.value for c in at.caption)
@@ -309,7 +308,7 @@ def test_a_hosted_failure_falls_back_to_the_offline_answer(configured_fireworks)
     at = goto(start(), HOOMI)
     at.radio(key="hoomi_engine").set_value(at.radio(key="hoomi_engine").options[1]).run()
     at.checkbox(key="hoomi_hosted_ok").check().run()
-    ask(at, "What is a managed service?")
+    ask(at, "What was the scope of the LLM evaluation case study?")
     reply = last_reply(at)
     assert "offline answer instead" in reply and "RuntimeError" in reply and "network down" not in reply
     assert at.session_state.hoomi_chat[-1]["meta"]["engine"] == "offline-extractive"
@@ -317,35 +316,62 @@ def test_a_hosted_failure_falls_back_to_the_offline_answer(configured_fireworks)
 
 # ---------------------------------------------------------------- one mascot everywhere: a floating Hoomi that opens the chat
 def fab_present(at):
-    return any(b.key == "hoomi_fab_btn" for b in at.button)
+    return any(b.key == "hoomi_open_chat_btn" for b in at.button)
+
+
+def fab_iframes(at):
+    return [f for f in at.get("iframe") if "mode=fab" in str(getattr(f.proto, "src", ""))]
 
 
 @pytest.mark.parametrize("page", [PULSE, WORKSPACE, "🏠  Command Center", "💰  Revenue & GP", "ℹ️  About"])
-def test_the_floating_mascot_is_on_every_page_except_the_chat_and_opens_it(page):
+def test_the_floating_3d_mascot_is_on_every_page_except_the_chat_and_opens_it(page):
     at = goto(start(), page)
     clean(at)
-    assert fab_present(at)
-    at.button(key="hoomi_fab_btn").click().run()
+    assert fab_present(at) and len(fab_iframes(at)) == 1
+    at.button(key="hoomi_open_chat_btn").click().run()            # what the 3D cat presses when it is clicked
     clean(at)
     assert at.session_state.nav == HOOMI and len(at.chat_input) == 1 and at.session_state.nav_classic is None
-    assert not fab_present(at)                                                              # no second mascot on the chat page itself
+    assert not fab_present(at) and not fab_iframes(at)                                      # no second floating cat on the chat page itself
 
 
-def test_the_welcome_screen_has_no_floating_mascot():
+def test_the_welcome_screen_has_the_floating_mascot_and_clicking_it_opens_ask_hoomi():
     at = AppTest.from_file(APP, default_timeout=180)
     at.run()
-    assert not fab_present(at)
+    clean(at)
+    assert fab_present(at) and len(fab_iframes(at)) == 1
+    at.button(key="hoomi_open_chat_btn").click().run()
+    clean(at)
+    assert at.session_state.role == "Leadership Hub" and at.session_state.nav == HOOMI and len(at.chat_input) == 1
 
 
-def test_the_floating_mascot_uses_the_same_artwork_and_respects_reduced_motion():
-    from views import mascot
+def test_the_welcome_sidebar_lists_every_section():
+    at = AppTest.from_file(APP, default_timeout=180)
+    at.run()
+    clean(at)
+    listed = set(at.sidebar.radio(key="nav_primary").options) | set(at.sidebar.radio(key="nav_classic").options)
+    for name in ("Executive Pulse", "Ask Hoomi", "GTM Workspace", "Market Intelligence", "SDR Activity", "Command Center", "Accounts & Prospecting",
+                 "Content & Collaterals", "Leads & Opportunities", "Revenue & GP", "About"):
+        assert any(name in item for item in listed), name
+
+
+def test_picking_a_section_from_the_welcome_sidebar_enters_it_without_a_login():
+    at = AppTest.from_file(APP, default_timeout=180)
+    at.run()
+    at.sidebar.radio(key="nav_classic").set_value("🔭  Market Intelligence").run()
+    clean(at)
+    assert at.session_state.role == "Leadership Hub" and at.session_state.nav == "🔭  Market Intelligence"
+
+
+def test_the_floating_mascot_is_a_fixed_bottom_right_3d_component_that_respects_reduced_motion():
     import theme
-    if not mascot.asset_path():
-        pytest.skip("no mascot artwork installed")
+    from views import mascot
     at = start()
-    css = " ".join(m.value for m in at.markdown if "st-key-hoomi_fab" in m.value)
-    assert "background-image:url(data:image/png;base64" in css                              # the round icon cut from the supplied artwork
-    assert ".st-key-hoomi_fab" in theme.V2_CSS and "prefers-reduced-motion" in theme.V2_CSS and "hoomi-bob" in theme.V2_CSS
+    css = " ".join(m.value for m in at.markdown if "st-key-hoomi_fab3d" in m.value)
+    assert "position:fixed" in css and "right:" in css and "bottom:" in css and "st-key-hoomi_open_chat" in css
+    assert "color-scheme:light" in css                                                       # keeps the transparent canvas transparent in dark mode
+    js = (ROOT / "static" / "hoomi3d" / "hoomi3d.js").read_text()
+    assert "prefers-reduced-motion" in js and "WebGLRenderer" in js and "visibilitychange" in js
+    assert mascot.URL.startswith("/app/static/") and "enableStaticServing = true" in (ROOT / ".streamlit" / "config.toml").read_text()
 
 
 def test_the_old_robot_mascot_and_floating_panel_are_gone_from_every_page():
@@ -390,13 +416,14 @@ def test_welcome_voice_controls_are_local_only_with_play_and_mute():
 
 def test_documents_question_gets_a_quoted_answer_with_sources_and_checks():
     at = goto(start(), HOOMI)
-    ask(at, "What is a managed service?")
+    ask(at, "What was the scope of the LLM evaluation case study?")
     reply = last_reply(at)
-    assert "Answered" in reply and "managed service" in reply.lower()
-    assert any(e.label.startswith("Sources (") for e in at.expander) and any(e.label == "How this was checked" for e in at.expander)
-    src = texts([m for e in at.expander if e.label.startswith("Sources (") for m in e.markdown])
-    assert "02_delivery_modalities.md" in src and "distance" in src
-    check = texts([m for e in at.expander if e.label == "How this was checked" for m in e.markdown])
+    assert "Answered" in reply
+    assert any(e.label == "Technical Details" for e in at.expander)
+    assert "Sources (" in reply and "05_case_study_model_evaluation.md" in reply                 # readable citation cards, visible without opening anything
+    tech = texts([m for e in at.expander if e.label == "Technical Details" for m in e.markdown])
+    assert "distance" in tech and "05_case_study_model_evaluation.md#" in tech
+    check = tech
     assert "zero hosted calls" in " ".join(c.value for c in at.caption)
 
 
@@ -420,7 +447,7 @@ def test_numbers_question_is_calculated_not_retrieved(tmp_path):
 
 def test_history_persists_across_turns_and_can_be_cleared():
     at = goto(start(), HOOMI)
-    ask(at, "What is a managed service?")
+    ask(at, "What was the scope of the LLM evaluation case study?")
     ask(at, "What is our win rate?")
     assert len(at.chat_message) == 4 and len(at.session_state.hoomi_chat) == 4
     at.button(key="hoomi_clear").click().run()
@@ -438,10 +465,9 @@ def test_suggestion_buttons_ask_the_question():
 def test_account_questions_use_that_accounts_kyc_profile():
     at = goto(start(), HOOMI)
     ask(at, "What are the requested capabilities for Deepcurrent Labs?")
-    src = texts([m for e in at.expander if e.label.startswith("Sources (") for m in e.markdown])
-    assert "kyc_ACC-101.md" in src and "KYC profile" in src
-    ask(at, "What services does Kai's Company offer?")
-    src2 = texts([m for e in at.expander if e.label.startswith("Sources (") for m in e.markdown][-4:])
+    tech = texts([m for e in at.expander if e.label == "Technical Details" for m in e.markdown])
+    assert "kyc_ACC-101.md" in tech and "KYC profile" in last_reply(at)
+    ask(at, "What are Kai's Company's core AI evaluation capabilities?")
     assert "kyc_" not in texts(at.chat_message[-1].markdown)                             # a general question never quotes a KYC profile
 
 
@@ -464,14 +490,14 @@ def test_document_search_failure_degrades_gracefully(monkeypatch):
     assert "Document search is unavailable" in texts(at.markdown)
     ask(at, "What is our open pipeline?")                                                # numbers still work
     assert "Workspace figures" in last_reply(at)
-    ask(at, "What is a managed service?")                                               # documents degrade to the labelled classic Hoomi
+    ask(at, "What was the scope of the LLM evaluation case study?")                                               # documents degrade to the labelled classic Hoomi
     assert "Document search is unavailable" in last_reply(at)
 
 
-def test_classic_briefing_tab_is_preserved():
+def test_the_classic_briefing_is_no_longer_on_the_chat_page():
     at = goto(start(), HOOMI)
     page = texts(at.markdown)
-    assert "Top 5 priorities" in page and "Classic Hoomi (V1)" in page
+    assert "Top 5 priorities" not in page and "Classic Hoomi (V1)" not in page and "sales intelligence buddy" not in page
 
 
 # ---------------------------------------------------------------- workspace: row-level writes through the UI
@@ -659,33 +685,24 @@ def test_the_ui_does_not_label_its_data_as_synthetic_or_demo():
     for name, page_text in seen:
         for phrase in FORBIDDEN_UI_WORDING:
             assert phrase not in page_text, (name, phrase)
-    assert "offline demo" in dict(seen)[HOOMI]                                            # the explicit, requested mode label stays
+    assert "offline by default" in dict(seen)[HOOMI]                                            # the explicit, requested mode label stays
 
 
-# ---------------------------------------------------------------- mascot: display crop of the hero only, original untouched
-def test_mascot_crops_show_only_the_cat_and_never_edit_the_original():
-    import base64
-    import hashlib
-    import re
-    from io import BytesIO
-
-    from PIL import Image
+# ---------------------------------------------------------------- mascot: the 3D Hoomi component; the retired 2D artwork is a backup only
+def test_the_mascot_is_a_3d_threejs_cat_and_the_pixel_branding_is_gone():
     from views import mascot
-    path = mascot.asset_path()
-    if not path:
-        pytest.skip("no mascot artwork installed")
-    before = hashlib.md5(path.read_bytes()).hexdigest()
-    original = Image.open(path)
-
-    def decoded(kind):
-        return Image.open(BytesIO(base64.b64decode(re.search(r"base64,([A-Za-z0-9+/=]+)", mascot.data_uri(kind)).group(1))))
-    hero, icon = decoded("hero"), decoded("icon")
-    assert hashlib.md5(path.read_bytes()).hexdigest() == before                              # the artwork file is unchanged
-    assert mascot.CAPTION == "Pixel — Your Creative GTM Strategist" and mascot.CAPTION in mascot.html(230)
-    if original.size == mascot.SHEET_SIZE:
-        x0, y0, x1, y1 = mascot.CAT_CROP
-        assert x1 <= 680 and y1 < original.height / 1.8 and x0 > 300                         # excludes the title text, the speech bubble and the "Muse-Inspired" panel
-        assert abs(hero.width / hero.height - (x1 - x0) / (y1 - y0)) < 0.02 and hero.width <= mascot.WIDTHS["hero"]
-        ix0, iy0, ix1, iy1 = mascot.ICON_CROP
-        assert iy0 > original.height * 0.75 and ix1 < original.width * 0.2                   # the round app-icon tile, bottom-left of the sheet
-        assert icon.mode == "RGBA" and icon.getpixel((0, 0))[3] == 0 and icon.getpixel((icon.width // 2, icon.height // 2))[3] == 255   # circular, transparent corners
+    comp = ROOT / "static" / "hoomi3d"
+    assert (comp / "hoomi3d.html").is_file() and (comp / "hoomi3d.js").is_file() and (comp / "three.module.min.js").is_file()
+    js = (comp / "hoomi3d.js").read_text()
+    assert "import * as THREE from './three.module.min.js'" in js and "http://" not in js and "https://" not in js and "fetch(" not in js   # local only
+    for part in ("earGeo", "TorusGeometry", "blinkPhase", "pointermove", "openChat", "hover"):
+        assert part in js, part
+    assert "<img" not in (comp / "hoomi3d.html").read_text()                                  # not an image
+    assert mascot.NAME == "Hoomi" and "Pixel" not in mascot.CAPTION
+    sources = "".join(p.read_text() for p in [ROOT / "views" / "mascot.py", ROOT / "views" / "welcome.py", ROOT / "app.py", ROOT / "theme.py",
+                                                 comp / "hoomi3d.js", comp / "hoomi3d.html"])
+    import re
+    assert not re.search(r"\bPixel\b", sources)                                                 # (three.js's own setPixelRatio is not branding)
+    assert not (ROOT / "assets" / "hoomi").exists()                                           # the old slot is gone
+    backup = ROOT / "assets" / "hoomi_pixel_backup"
+    assert (backup / "hoomi_pixel_retired.png").is_file() and "backup only" in (backup / "README.md").read_text().lower()

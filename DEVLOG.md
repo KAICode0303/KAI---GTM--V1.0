@@ -53,3 +53,8 @@ Use this for the "process" section of your Maven document. Add your own reflecti
 | 22 | V2 data layer | Linked store with validation, dedupe, stop rules, audit log; seeded from the V1 CSVs through a mapping. Commercial KPIs match V1's independent code. | Cross-check new code against old code. |
 | 23 | UI tests found real bugs | Account questions were answered with workspace-wide numbers; a quote was shown under the wrong citation; warnings inside `st.form` never appeared. All fixed. | Drive the real app in tests; forms do not rerun on change. |
 | 24 | Screenshots found more | Dark-mode sidebar was unreadable and the phone layout was broken. Fixed, plus a contrast test. | Look at the real pixels in both themes and at phone width. |
+
+| 25 | Real corpus | Audited the seven-document pack (no names, contacts or URLs), moved the synthetic corpus to a legacy fixture folder, rebuilt Chroma locally. | Back up, then replace; keep the old data as test fixtures. |
+| 26 | Evaluation found real bugs | The offline engine answered "hourly price" with an unrelated sentence, and "buyers we should *target*" was routed to the revenue calculator. Fixed with a topic-word requirement and a metric-only "target" rule. | Test through the routing layer, not just the engine. |
+| 27 | Mock the model, test the verifier | A hallucinating mock (invented price plus a fake quote) was never shown to the user in 20 questions. | The point of the verifier is the model that misbehaves. |
+| 28 | 3D Hoomi | Three.js cat in an isolated static iframe; fur as noise-textured shells; found by screenshots that the first ears read as a bunny and `Object3D.add()` returns the parent (three scale bugs). | Look at the render; check what an API returns. |

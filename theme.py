@@ -117,25 +117,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {background:var(--surface); bord
 
 
 V2_CSS = """
-/* ---- V2: welcome, role cards, mascot placeholder, chat, badges, footer ---- */
-.mascot-ph {display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:.4rem; padding:1.2rem 1rem;
-    border-radius:28px; border:2px dashed color-mix(in srgb,var(--teal) 45%,transparent); background:
-    linear-gradient(160deg,color-mix(in srgb,var(--teal) 10%,var(--surface)),color-mix(in srgb,var(--pink) 22%,var(--surface)));}
-.mascot-ph .orb {width:92px; height:92px; border-radius:50%; display:flex; align-items:center; justify-content:center; font:800 2rem 'Sora',sans-serif;
-    color:var(--on_accent); background:linear-gradient(135deg,var(--teal),var(--green)); box-shadow:0 8px 24px color-mix(in srgb,var(--teal) 35%,transparent);}
-.mascot-ph b {color:var(--text); font-family:'Sora',sans-serif;} .mascot-ph small {color:var(--muted); line-height:1.35; max-width:230px;}
-.mascot-img {border-radius:28px; overflow:hidden;}
-.mascot-img.float {animation:hoomi-bob 5.5s ease-in-out infinite;}
-@keyframes hoomi-bob {0%,100% {transform:translateY(0)} 50% {transform:translateY(-7px)}}
-.st-key-hoomi_fab {position:fixed; right:22px; bottom:22px; z-index:1000; width:auto !important; animation:hoomi-bob 4s ease-in-out infinite;}
-.st-key-hoomi_fab button {width:68px; height:68px; min-height:68px; padding:0; border-radius:50% !important; border:3px solid var(--surface) !important;
-    box-shadow:0 10px 26px color-mix(in srgb,var(--teal) 45%,transparent); font-size:0 !important; color:transparent !important; overflow:hidden; transition:box-shadow .2s ease, filter .2s ease;}
-.st-key-hoomi_fab button p {display:none;}
-.st-key-hoomi_fab button:hover {box-shadow:0 14px 34px color-mix(in srgb,var(--pink) 70%,transparent); filter:brightness(1.06);}
-.st-key-hoomi_fab::after {content:"Ask Hoomi"; position:absolute; right:78px; top:20px; padding:3px 10px; border-radius:99px; font:700 .72rem 'Plus Jakarta Sans',sans-serif;
-    background:var(--surface); color:var(--text); border:1px solid var(--border); box-shadow:var(--shadow); opacity:0; transform:translateX(6px); transition:all .2s ease; pointer-events:none; white-space:nowrap;}
-.st-key-hoomi_fab:hover::after {opacity:1; transform:none;}
-@media (prefers-reduced-motion: reduce) {.mascot-img.float, .st-key-hoomi_fab {animation:none;}}
+/* ---- V2: welcome, role cards, chat, badges, footer ---- */
+/* the 3D Hoomi lives in an isolated iframe component (views/mascot.py, static/hoomi3d/) */
 .role-card {background:var(--surface); border:1px solid var(--border); border-radius:22px; padding:1.1rem 1.2rem .9rem; box-shadow:var(--shadow); height:100%;}
 .role-card h3 {margin:.1rem 0 .35rem;} .role-card p {color:var(--muted); font-size:.9rem; margin:0 0 .5rem;}
 .role-card ul {margin:.2rem 0 .6rem 1.1rem; padding:0; color:var(--text); font-size:.88rem;}
@@ -153,7 +136,22 @@ V2_CSS = """
 .panel {background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:.8rem 1rem; box-shadow:var(--shadow); height:100%;}
 .panel h4 {margin:.1rem 0 .4rem; font-size:.95rem;} .panel ul {margin:.2rem 0 0 1.05rem; padding:0; font-size:.86rem;} .panel li {margin:.22rem 0;}
 .src {border-left:3px solid var(--teal); background:var(--chip); border-radius:8px; padding:.45rem .7rem; margin:.3rem 0; font-size:.84rem;}
-.src .cite {font-weight:700; color:var(--teal_d);} .src q {color:var(--muted); font-style:italic;}
+.src .cite {font-weight:700; color:var(--teal_d);} .src .sec {color:var(--muted); font-size:.8rem;} .src q {color:var(--text); font-style:italic; display:block; margin-top:.15rem;}
+.src-head {font-size:.72rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:.6rem 0 .1rem;}
+.sug-head {font-size:.72rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:.2rem 0 .3rem;}
+.kb {background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:.7rem .8rem; box-shadow:var(--shadow); margin-bottom:.8rem;}
+.kb-title {font-size:.72rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:.4rem;}
+.kb-doc {display:flex; flex-direction:column; gap:1px; padding:.35rem .5rem; border-radius:10px; margin:.2rem 0; border:1px solid transparent; font-size:.82rem;}
+.kb-doc small {color:var(--muted); font-size:.7rem;} .kb-doc b {color:var(--text); line-height:1.25; font-weight:700;}
+.kb-doc.on {background:color-mix(in srgb,var(--teal) 12%,transparent); border-color:color-mix(in srgb,var(--teal) 45%,transparent);}
+.kb-type {align-self:flex-start; font-size:.6rem; font-weight:800; text-transform:uppercase; letter-spacing:.05em; padding:0 7px; border-radius:99px; background:var(--chip); color:var(--teal_d);}
+.kb-foot {font-size:.74rem; color:var(--muted); margin-top:.4rem;}
+/* a prominent, modern chat box */
+[data-testid="stChatInput"] {border:2px solid color-mix(in srgb,var(--teal) 55%,transparent) !important; border-radius:22px !important; box-shadow:0 8px 30px color-mix(in srgb,var(--teal) 22%,transparent);}
+[data-testid="stChatInput"] textarea {font-size:1.02rem !important; min-height:2.9rem;}
+[data-testid="stChatInput"]:focus-within {border-color:var(--pink) !important;}
+/* the sidebar stays put on wide screens: no collapse control */
+@media (min-width: 992px) {[data-testid="stSidebarCollapseButton"], [data-testid="stSidebarCollapsedControl"], [data-testid="stExpandSidebarButton"] {display:none !important;}}
 .mode-bar {display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; margin:.2rem 0 .6rem;}
 .sb-role {font-size:.8rem; padding:.45rem .7rem; border-radius:12px; background:var(--chip); border:1px solid var(--border);}
 [data-testid="stChatMessage"] {background:var(--surface); border:1px solid var(--border); border-radius:18px; box-shadow:var(--shadow);}

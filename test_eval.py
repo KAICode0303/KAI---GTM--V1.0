@@ -11,12 +11,12 @@ import pytest
 from rag import evaluate as ev
 from rag import ingest, retriever
 from rag.answer import ContextPolicy
-from test_rag import HashingEmbeddings
+from test_rag import LEGACY_CORPUS, HashingEmbeddings
 
 
 @pytest.fixture(scope="module")
 def chunks():
-    return ingest.chunk_documents(ingest.load_documents())
+    return ingest.chunk_documents(ingest.load_documents(LEGACY_CORPUS))
 
 
 @pytest.fixture(scope="module")

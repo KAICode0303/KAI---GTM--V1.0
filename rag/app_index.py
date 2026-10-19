@@ -1,6 +1,6 @@
-"""The Hoomi app's own knowledge index: synthetic documents in rag_corpus/gtm plus KYC profiles from the workspace.
+"""The Hoomi app's own knowledge index: the seven approved Kai's Company documents in rag_corpus/ plus KYC profiles from the workspace.
 
-Separate from the evaluation index (.rag_index/chroma and rag_corpus/*.md), so evaluation results are never disturbed.
+Separate from the plain-corpus index (.rag_index/chroma, used by the smoke test and evaluation), so each can be rebuilt on its own.
 Everything is local: cached FastEmbed model (downloads blocked unless you pass --allow-model-download to the CLI) and Chroma.
 
     python -m rag.app_index                       build or refresh the index (no downloads)
@@ -22,7 +22,7 @@ from rag.ingest import chunk_documents, load_documents
 from rag.retriever import build_index, get_store
 
 ROOT = Path(__file__).resolve().parent.parent
-APP_CORPUS_DIR = ROOT / "rag_corpus" / "gtm"
+APP_CORPUS_DIR = ROOT / "rag_corpus"
 APP_INDEX_DIR = ROOT / ".rag_index" / "app_chroma"
 COLLECTION = "hoomi_app"
 KYC_SECTIONS = [  # (heading, [(field key, how it reads)])

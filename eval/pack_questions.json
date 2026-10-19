@@ -1,0 +1,22 @@
+[
+ {"id": "D1", "category": "direct", "question": "What are Kai's Company's core AI evaluation capabilities?", "sources": ["01_capabilities.md"], "phrases": ["red teaming"]},
+ {"id": "D2", "category": "direct", "question": "Which buyer personas should we target at a speech AI company?", "sources": ["03_icp_multilingual_speech_audio.md"], "phrases": ["Head of ASR"]},
+ {"id": "D3", "category": "direct", "question": "Which priority segments does the robotics ICP list as Tier 1?", "sources": ["04_icp_robotics.md"], "phrases": ["humanoid robotics"]},
+ {"id": "D4", "category": "direct", "question": "What was the scope of the LLM evaluation case study?", "sources": ["05_case_study_model_evaluation.md"], "phrases": ["a large batch of evaluation tasks"]},
+ {"id": "D5", "category": "direct", "question": "Which devices and video settings were used in the first-person household activity engagement?", "sources": ["06_case_study_physical_ai.md"], "phrases": ["high-definition capture"]},
+ {"id": "D6", "category": "direct", "question": "How was multilingual transcription work organized and how large was the program?", "sources": ["07_case_study_multilingual.md"], "phrases": ["multi-language program"]},
+ {"id": "D7", "category": "direct", "question": "Who are the evaluation owners at AI model development companies?", "sources": ["02_icp_model_evaluation.md"], "phrases": ["Head of AI Evaluation"]},
+ {"id": "D8", "category": "direct", "question": "What are the layers of Kai's Company's core delivery model?", "sources": ["01_capabilities.md"], "phrases": ["four complementary layers"]},
+ {"id": "X1", "category": "cross-document", "question": "Compare the buying personas for robotics companies and for speech AI companies.", "sources": ["04_icp_robotics.md", "03_icp_multilingual_speech_audio.md"], "phrases": ["Head of Robotics", "Head of ASR"]},
+ {"id": "X2", "category": "cross-document", "question": "Which case study supports the multilingual speech ICP, and what does the ICP say about evidence?", "sources": ["07_case_study_multilingual.md", "03_icp_multilingual_speech_audio.md"], "phrases": ["multi-language program"]},
+ {"id": "X3", "category": "cross-document", "question": "What capabilities and which ideal customer profile relate to the LLM evaluation case study?", "sources": ["05_case_study_model_evaluation.md", "02_icp_model_evaluation.md"], "phrases": ["evaluation"]},
+ {"id": "X4", "category": "cross-document", "question": "What privacy or compliance controls appear for physical-AI data collection and in the general capabilities?", "sources": ["06_case_study_physical_ai.md", "01_capabilities.md"], "phrases": ["privacy"]},
+ {"id": "X5", "category": "cross-document", "question": "Describe the first-person activity data case study and its limitations.", "sources": ["06_case_study_physical_ai.md"], "phrases": ["does not state that a robot was deployed"]},
+ {"id": "U1", "category": "unanswerable", "question": "What is Kai's Company's hourly price?", "sources": [], "phrases": []},
+ {"id": "U2", "category": "unanswerable", "question": "Which named customer bought these services?", "sources": [], "phrases": []},
+ {"id": "U3", "category": "unanswerable", "question": "What will Kai's Company's revenue be in five years?", "sources": [], "phrases": []},
+ {"id": "U4", "category": "unanswerable", "question": "By what percentage did the LLM evaluation case study improve model accuracy?", "sources": [], "phrases": []},
+ {"id": "U5", "category": "unanswerable", "question": "Who won the football world cup?", "sources": [], "phrases": []},
+ {"id": "U6", "category": "unanswerable", "question": "What is the street address of Kai's Company's headquarters?", "sources": [], "phrases": []},
+ {"id": "U7", "category": "unanswerable", "question": "Which competitors does Kai's Company beat on price?", "sources": [], "phrases": []}
+]

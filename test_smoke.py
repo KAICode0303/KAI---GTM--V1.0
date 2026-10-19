@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from rag import ingest, retriever, smoke
-from test_rag import HashingEmbeddings
+from test_rag import LEGACY_CORPUS, HashingEmbeddings
 
 ROOT = Path(__file__).resolve().parent
 FAKE_KEY = "fake-key-for-tests-not-real"
@@ -29,7 +29,7 @@ def stable_retrieval_settings(monkeypatch):
 @pytest.fixture()
 def store(tmp_path):
     s = retriever.get_store(HashingEmbeddings(), persist_dir=tmp_path / "chroma")
-    retriever.build_index(s, ingest.chunk_documents(ingest.load_documents()))
+    retriever.build_index(s, ingest.chunk_documents(ingest.load_documents(LEGACY_CORPUS)))
     return s
 
 

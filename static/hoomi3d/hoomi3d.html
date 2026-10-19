@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hoomi 3D</title>
+<style>
+  html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; }
+  #stage { position: fixed; inset: 0; cursor: pointer; outline: none; touch-action: none; }
+  canvas { display: block; width: 100%; height: 100%; }
+  #fallback { display: none; position: fixed; inset: 0; align-items: center; justify-content: center; text-align: center;
+              font: 700 14px system-ui, sans-serif; color: #3B6BFF; cursor: pointer; padding: 8px; }
+  #fallback span { display: block; font-weight: 500; font-size: 12px; opacity: .8; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div id="stage" role="button" tabindex="0" aria-label="Hoomi, a 3D robotic cat. Click to open Ask Hoomi.">
+  <div id="fallback" role="img" aria-label="Hoomi">Hoomi<span>3D view unavailable in this browser. Click to ask Hoomi.</span></div>
+</div>
+<script type="module" src="./hoomi3d.js"></script>
+</body>
+</html>

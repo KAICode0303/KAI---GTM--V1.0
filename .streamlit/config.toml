@@ -10,3 +10,4 @@ gatherUsageStats = false
 
 [server]
 headless = true
+enableStaticServing = true      # serves ./static (the isolated 3D Hoomi component) at /app/static

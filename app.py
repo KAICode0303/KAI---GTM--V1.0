@@ -21,7 +21,7 @@ import workspace
 from gtm.store import GTMStore, default_path
 from views import about, accounts, content, executive, hoomi_page, leads_opps, mascot, pulse, research, revenue, sdr, welcome, workspace_gtm
 
-st.set_page_config(page_title="Kai's GTM V2.0 | Hoomi", page_icon="✨", layout="wide", initial_sidebar_state="auto")
+st.set_page_config(page_title="Kai's GTM V2.0 | Hoomi", page_icon="✨", layout="wide", initial_sidebar_state="expanded")
 st.session_state.setdefault("dark", False)
 st.session_state.setdefault("role", None)
 theme.apply_theme()
@@ -53,52 +53,66 @@ if st.session_state.role is None and "view" in st.query_params:
             st.session_state.nav = st.session_state.nav_primary = landing
     st.query_params.clear()
 
-# ------------------------------------------------------------------ welcome gate
-if st.session_state.role is None:
-    with st.sidebar:
-        sidebar_brand()
-        st.toggle("🌙 Dark mode", key="dark")
-        st.caption("No login needed")
-    welcome.render()
-    st.stop()
-
+# ------------------------------------------------------------------ persistent sidebar (always visible, on Welcome too)
 role = st.session_state.role
-primary = welcome.ROLES[role]["order"]
-if st.session_state.get("nav") not in primary + CLASSIC:
+primary = welcome.ROLES[role or "Leadership Hub"]["order"]           # before a view is chosen, the sidebar still lists every page
+if role and st.session_state.get("nav") not in primary + CLASSIC:
     st.session_state.nav = primary[0]
     st.session_state.nav_primary = primary[0]
 
 
+def _enter(page):
+    """Navigation only. Picking a page from the sidebar before choosing a view enters the Leadership Hub (no login, nothing is restricted)."""
+    if st.session_state.role is None:
+        st.session_state.role = "Leadership Hub"
+    st.session_state.nav = page
+
+
 def go_primary():
-    st.session_state.nav = st.session_state.nav_primary
+    _enter(st.session_state.nav_primary)
     st.session_state.nav_classic = None
 
 
 def go_classic():
-    st.session_state.nav = st.session_state.nav_classic
+    _enter(st.session_state.nav_classic)
     st.session_state.nav_primary = None
 
 
 def switch_role():
     st.session_state.role = None
+    st.session_state.nav_primary = st.session_state.nav_classic = None
 
 
 def open_chat():
-    """The floating mascot: jump to the Ask Hoomi chat (navigation only)."""
-    st.session_state.nav = st.session_state.nav_primary = HOOMI
+    """The floating 3D Hoomi: jump to the Ask Hoomi chat (navigation only; from Welcome it enters the Leadership Hub)."""
+    _enter(HOOMI)
+    st.session_state.nav_primary = HOOMI
     st.session_state.nav_classic = None
 
 
-# ------------------------------------------------------------------ sidebar
 with st.sidebar:
     sidebar_brand()
-    st.markdown(f'<div class="sb-role">{welcome.ROLES[role]["icon"]} <b>{role}</b> · navigation only</div>', unsafe_allow_html=True)
-    st.button("← Back to Welcome", key="switch_role", on_click=switch_role, width="stretch")
+    if role:
+        st.markdown(f'<div class="sb-role">{welcome.ROLES[role]["icon"]} <b>{role}</b> · navigation only</div>', unsafe_allow_html=True)
+        st.button("← Back to Welcome", key="switch_role", on_click=switch_role, width="stretch")
+    else:
+        st.markdown('<div class="sb-role">👋 Welcome · pick a view or any page</div>', unsafe_allow_html=True)
     st.toggle("🌙 Dark mode", key="dark")
     st.markdown('<div class="sb-label">Hoomi V2</div>', unsafe_allow_html=True)
     st.radio("Navigate", primary, index=None, key="nav_primary", label_visibility="collapsed", on_change=go_primary)
     st.markdown('<div class="sb-label">Classic sections</div>', unsafe_allow_html=True)     # all the original sections, always visible
     st.radio("Classic sections", CLASSIC, index=None, key="nav_classic", label_visibility="collapsed", on_change=go_classic)
+
+if st.session_state.role is None:                                      # Welcome: the role choice, with the sidebar still in place
+    with st.sidebar:
+        st.caption("No login needed")
+    welcome.render()
+    mascot.fab(open_chat)
+    st.stop()
+
+role = st.session_state.role
+primary = welcome.ROLES[role]["order"]
+with st.sidebar:
     page = st.session_state.nav
 
     name = welcome.clean_name(st.text_input("Hoomi calls you…", key="user_name", placeholder="Your first name"))
